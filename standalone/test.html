@@ -22,17 +22,20 @@ var db = openDatabase("dolibarr", "0.1", "Dolibarr Standalone DB", 100000000);
 var date_last_sync_product = 0:
 if(localStorage.getItem('date_last_sync_product')){  date_last_sync_product		= localStorage.getItem('date_last_sync_product'); }
 
-var TProduct = _sync_product();
+var TProduct = new Array;
+if(localStorage.getItem('products')){
+ TProduct = JSON.parse(localStorage.getItem('products') ); 
+}
 
-$(TProduct).each(function(i, product) {
+TProduct = _sync_product(TProduct, date_last_sync_product);
 
-});
+var products = JSON.stringify(TProduct);
 
+localStorage.setItem(products);
 
-function _sync_product() {
-  var Tab = new Array;
+function _sync_product(TProduct, date_last_sync_product) {
   
-  return Tab;
+  return TProduct;
 }
 
 </script>
