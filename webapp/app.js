@@ -9,10 +9,14 @@ $(document).ready(function() {
 
 	refreshproductList();
 	
+	
+	if(localStorage.interface_url) {  $('#interface_url').val(localStorage.interface_url); }
+	
 });
 function saveConfig() {
 	
 	localStorage.interface_url = $('#interface_url').val();	
+	alert('Configuration saved !');
 	
 }
 function syncronize() {
