@@ -10,6 +10,37 @@
 <body>
 <script type="text/javascript" src="app.js"></script>
 
+<div id="home" data-role="page">
+	<div data-role="header">
+		<h1>Home</h1>
+	</div><!-- /header -->
+	<div data-role="content">	
+		<ul data-role="listview">
+			<li><a href="#product-list">Products</a></li>	
+			<li><a href="#thirdparty-list">Thirdparties</a></li>	
+			
+		</ul>
+	</div>
+	<div data-role="footer">
+		<a href="#config">Configs</a>
+	</div><!-- /footer -->
+</div>
+
+<div id="config" data-role="page">
+
+	<div data-role="header">
+		<a href="#home" data-icon="back" data-rel="back">Home</a>
+		<h1>Config</h1>
+		<a href="javascript:saveConfig();" data-icon="valid">Save</a>
+	</div><!-- /header -->
+	<div data-role="content">	
+	
+		interface url : <input type="text" name="interface_url" id="interface_url" value="" />
+	
+	</div>
+
+	
+</div>
 <div id="product-list" data-role="page">
 
 	<div data-role="header">
