@@ -25,7 +25,17 @@
 			
 			break;
 		
-		
+		case 'product':
+			$id = GETPOST('id','int');
+			
+			if($id) {
+				__out(_getProduct($id));
+			}
+			else{
+				__out(_getListProduct());	
+			}
+			
+			break;
 	}	
 
 	switch ($put) {
@@ -37,23 +47,42 @@
 			break;
 	}
 	
-		
+	
+function _getListProduct() {
+
+	$ATMdb = new TPDOdb;
+	
+	$ATMdb->Execute("SET NAMES utf8");
+	$Tab = $ATMdb->ExecuteAsArray("SELECT rowid, label  FROM ".MAIN_DB_PREFIX."product WHERE tosell = 1 ORDER BY label ");	
+	return $Tab;
+	
+}	
+function _getProduct($id) {
+global $db;	
+	
+	$o=new Product($db);
+	
+	$o->fetch($id);
+	
+	return $o;
+	
+}			
 function _getThirdparty($id) {
 global $db;	
 	
-	$s=new Societe($db);
+	$o=new Societe($db);
 	
-	$s->fetch($id);
+	$o->fetch($id);
 	
-	return $s;
+	return $o;
 	
 }	
 	
 function _getListThirdparty() {
-global $db;	
+
 	
 	$ATMdb = new TPDOdb;
-	
+	$ATMdb->Execute("SET NAMES utf8");
 	$Tab = $ATMdb->ExecuteAsArray("SELECT rowid, nom FROM ".MAIN_DB_PREFIX." WHERE status = 1 ORDER BY nom");	
 		
 	return $Tab;
