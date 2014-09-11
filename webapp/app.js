@@ -10,7 +10,11 @@ $(document).ready(function() {
 	refreshproductList();
 	
 });
-
+function saveConfig() {
+	
+	localStorage.interface_url = $('#interface_url').val();	
+	
+}
 function syncronize() {
 	
 	$.mobile.loading( "show", {
@@ -38,7 +42,7 @@ function syncronize() {
 function _sync_product(TProduct, date_last_sync_product) {
   
   $.ajax({
-  	url : "http://127.0.0.1/dolibarr/3.6/htdocs/custom/standalone/script/interface.php"
+  	url : 	localStorage.interface_url
   	,data : {
   		get:'product'
   		,json: 1
