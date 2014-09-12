@@ -12,6 +12,11 @@
 
 
 	switch ($get) {
+		case 'check':
+			__out('ok');
+			
+			break;
+		
 		case 'thirdparty':
 			
 			$id = GETPOST('id','int');
