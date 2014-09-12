@@ -23,9 +23,22 @@
 		<h1>Home</h1>
 	</div><!-- /header -->
 	<div data-role="content">	
-		<ul data-role="listview">
+		<ul data-role="listview" data-inset="false">
 			<li><a href="#product-list">Products</a></li>	
-			<li><a href="#thirdparty-list">Thirdparties</a></li>	
+			<li data-role="collapsible" data-iconpos="right" data-inset="false">
+				<h2>Thirdparties</h2>
+				
+				<ul data-role="listview"  data-theme="b">
+					<li><a href="#thirdparty-list">All</a></li>	
+					<li><a href="#thirdparty-list">Customers</a></li>	
+					<li><a href="#thirdparty-list">Prospects</a></li>	
+				</ul>	
+			</li>	
+			
+				
+			<li><a href="#propal-list">Propals</a></li>	
+			<li><a href="#order-list">Orders</a></li>	
+			<li><a href="#bill-list">Bills</a></li>	
 			
 		</ul>
 	</div>
@@ -98,6 +111,11 @@
 		
 		thirdparty description
 		
+		<ul data-role="listview">Customer documents
+			<li><a href="#propal-list">Propals</a></li>	
+			<li><a href="#order-list">Orders</a></li>	
+			<li><a href="#bill-list">Bills</a></li>		
+		</ul>
 	</div>
 	<div data-role="footer">
 		<h4>Footer content</h4>
