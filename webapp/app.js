@@ -2,8 +2,7 @@
 var TProduct = new Array;
 var TThirdParty = new Array;
 
-$( document ).on( "mobileinit", function() {
-
+$(document).ready(function() {
 	if(localStorage.products){
 	 	TProduct = JSON.parse(localStorage.products ); 
 	}
@@ -12,19 +11,42 @@ $( document ).on( "mobileinit", function() {
 	 	TThirdparty = JSON.parse(localStorage.thirdparties ); 
 	}
 
-	refreshproductList();
-	refreshthirdpartyList();
+	$('#product-list').page({
+	create:function(event,ui) {
+		
+		refreshproductList();
+	}
+	});
 	
+	$('#config').page({
+		create:function(event,ui) {
+			if(localStorage.interface_url) {  $('#interface_url').val(localStorage.interface_url); }
 	
-	if(localStorage.interface_url) {  $('#interface_url').val(localStorage.interface_url); }
+		}
+	});
 	
+	$('#thirdparty-list').page({
+		create:function(event,ui) {
+			refreshthirdpartyList();
+		}
+	});
+
 });
+
+
 function saveConfig() {
 	
 	localStorage.interface_url = $('#interface_url').val();	
 	
 	$.ajax({
-			url:localStorage.interface_url+'?get=check'
+			url:localStorage.interface_url
+			
+			,data : {
+  				get:'check'
+  				,jsonp: 1
+  			}
+  	,dataType:'jsonp'
+  	,async : true
 	}).done(function() { alert('Configuration saved !'); }).fail(function() { alert('Configuration saved... But i think it\'s wrong.'); });
 	
 	
@@ -38,23 +60,19 @@ function syncronize() {
 		html: ""
 	});
 	
-	TProduct = _sync_product(TProduct);
-	var products = JSON.stringify(TProduct);
-	localStorage.products = products;
+	_sync_product();
 	
-	refreshproductList();
+
 	
-	TThirdParty = _sync_thirdparty(TThirdParty);
-	var thirdparties = JSON.stringify(TThirdParty);
-	localStorage.thirdparties = thirdparties;
+	_sync_thirdparty();
 	
-	refreshthirdpartyList();
+	
 	
 	$.mobile.loading( "hide" );
 	
 }
 
-function _sync_product(TProduct) {
+function _sync_product() {
   var date_last_sync_product = 0;
   if(localStorage.date_last_sync_product){  date_last_sync_product = localStorage.date_last_sync_product; }
 	
@@ -63,10 +81,10 @@ function _sync_product(TProduct) {
   	url : 	localStorage.interface_url
   	,data : {
   		get:'product'
-  		,json: 1
+  		,jsonp: 1
   		,date_last_sync : date_last_sync_product
   	}
-  	,dataType:'json'
+  	,dataType:'jsonp'
   	,async : false
   })
   .done(function(data) {
@@ -86,6 +104,11 @@ function _sync_product(TProduct) {
 	  		if(!find) TProduct.push(item);
 	  	});
 	  	
+	  	
+	  	var products = JSON.stringify(TProduct);
+		localStorage.products = products;
+
+	  	refreshproductList();
   })
   .fail(function() {
   		
@@ -99,7 +122,7 @@ function _sync_product(TProduct) {
 }
 
 
-function _sync_thirdparty(Tab, date_last_sync) {
+function _sync_thirdparty() {
   var date_last_sync_thirdparty = 0;
   if(localStorage.date_last_sync_thirdparty){  date_last_sync_thirdparty = localStorage.date_last_sync_thirdparty; }
 
@@ -107,40 +130,43 @@ function _sync_thirdparty(Tab, date_last_sync) {
   	url : 	localStorage.interface_url
   	,data : {
   		get:'thirdparty'
-  		,json: 1
+  		,jsonp: 1
   		,date_last_sync : date_last_sync_thirdparty
   	}
-  	,dataType:'json'
+  	,dataType:'jsonp'
   	,async : false
-  })
-  .done(function(data) {
+  }).done(function(data) {
 
 	  	localStorage.date_last_sync_thirdparty = $.now(); 
 	  	
 	  	$.each(data, function(i, item) {
 	  		var find = false;
-	  		for(x in Tab){
+	  		for(x in TThirdParty){
 	  			
-	  			if(Tab[x].rowid == item.rowid) {
-	  				Tab[x] = item;
+	  			if(TThirdParty[x].rowid == item.rowid) {
+	  				TThirdParty[x] = item;
 	  				find = true;
 	  			}
 	  		}
 	  		
-	  		if(!find) Tab.push(item);
+	  		if(!find) TThirdParty.push(item);
 	  	});
 	  	
+	  	var thirdparties = JSON.stringify(TThirdParty);
+		localStorage.thirdparties = thirdparties;
+	
+	  	refreshthirdpartyList();
   })
   
   
   
-  return Tab;
+  return TThirdParty;
   
 }
 function refreshthirdpartyList() {
 	$('#thirdparty-list ul').empty();
 	
-	$.each(TProduct,function(i, item) {
+	$.each(TThirdParty,function(i, item) {
 		$('#thirdparty-list ul').append('<li><a href="#thirdparty-card" itemid="'+item.rowid+'">'+item.nom+'</a></li>');
 		
 	});
