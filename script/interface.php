@@ -88,7 +88,7 @@ function _getListThirdparty() {
 	
 	$ATMdb = new TPDOdb;
 	$ATMdb->Execute("SET NAMES utf8");
-	$Tab = $ATMdb->ExecuteAsArray("SELECT rowid, nom FROM ".MAIN_DB_PREFIX."societe WHERE status = 1 ORDER BY nom LIMIT 100");	
+	$Tab = $ATMdb->ExecuteAsArray("SELECT rowid, nom FROM ".MAIN_DB_PREFIX."societe WHERE status = 1 ORDER BY nom");	
 		
 	return $Tab;
 }
