@@ -1,13 +1,19 @@
 
 var TProduct = new Array;
+var TThirdParty = new Array;
 
-$(document).ready(function() {
+$( document ).on( "mobileinit", function() {
 
 	if(localStorage.products){
 	 	TProduct = JSON.parse(localStorage.products ); 
 	}
 
+	if(localStorage.thirdparties){
+	 	TThirdparty = JSON.parse(localStorage.thirdparties ); 
+	}
+
 	refreshproductList();
+	refreshthirdpartyList();
 	
 	
 	if(localStorage.interface_url) {  $('#interface_url').val(localStorage.interface_url); }
@@ -16,7 +22,11 @@ $(document).ready(function() {
 function saveConfig() {
 	
 	localStorage.interface_url = $('#interface_url').val();	
-	alert('Configuration saved !');
+	
+	$.ajax({
+			url:localStorage.interface_url+'?get=check'
+	}).done(function() { alert('Configuration saved !'); }).fail(function() { alert('Configuration saved... But i think it\'s wrong.'); });
+	
 	
 }
 function syncronize() {
@@ -28,19 +38,13 @@ function syncronize() {
 		html: ""
 	});
 	
-	var date_last_sync_product = 0;
-	if(localStorage.date_last_sync_product){  date_last_sync_product = localStorage.date_last_sync_product; }
-	
-	var date_last_sync_thirdparty = 0;
-	if(localStorage.date_last_sync_thirdparty){  date_last_sync_thirdparty = localStorage.date_last_sync_thirdparty; }
-	
-	TProduct = _sync_product(TProduct, date_last_sync_product);
+	TProduct = _sync_product(TProduct);
 	var products = JSON.stringify(TProduct);
 	localStorage.products = products;
 	
 	refreshproductList();
 	
-	TThirdParty = _sync_thirdparty(TThirdParty, date_last_sync_thirdparty);
+	TThirdParty = _sync_thirdparty(TThirdParty);
 	var thirdparties = JSON.stringify(TThirdParty);
 	localStorage.thirdparties = thirdparties;
 	
@@ -50,14 +54,17 @@ function syncronize() {
 	
 }
 
-function _sync_product(TProduct, date_last_sync) {
-  
+function _sync_product(TProduct) {
+  var date_last_sync_product = 0;
+  if(localStorage.date_last_sync_product){  date_last_sync_product = localStorage.date_last_sync_product; }
+	
+ 
   $.ajax({
   	url : 	localStorage.interface_url
   	,data : {
   		get:'product'
   		,json: 1
-  		,date_last_sync : date_last_sync
+  		,date_last_sync : date_last_sync_product
   	}
   	,dataType:'json'
   	,async : false
@@ -93,13 +100,15 @@ function _sync_product(TProduct, date_last_sync) {
 
 
 function _sync_thirdparty(Tab, date_last_sync) {
-  
+  var date_last_sync_thirdparty = 0;
+  if(localStorage.date_last_sync_thirdparty){  date_last_sync_thirdparty = localStorage.date_last_sync_thirdparty; }
+
   $.ajax({
   	url : 	localStorage.interface_url
   	,data : {
   		get:'thirdparty'
   		,json: 1
-  		,date_last_sync : date_last_sync
+  		,date_last_sync : date_last_sync_thirdparty
   	}
   	,dataType:'json'
   	,async : false
@@ -122,14 +131,10 @@ function _sync_thirdparty(Tab, date_last_sync) {
 	  	});
 	  	
   })
-  .fail(function() {
-  		
-  		alert("I think youre are not connected to internet, am i right ?");
-  	
-  });
   
   
-  return TProduct;
+  
+  return Tab;
   
 }
 function refreshthirdpartyList() {
