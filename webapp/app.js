@@ -12,12 +12,16 @@ $(document).ready(function() {
 	}
 
 	$('#product-list').page({
-	create:function(event,ui) {
-		
-		refreshproductList();
-	}
+		create:function(event,ui) {
+			refreshproductList();
+		}
 	});
-	
+	$('#thirdparty-list').page({
+		create:function(event,ui) {
+			refreshthirdpartyList();
+		}
+	});
+
 	$('#config').page({
 		create:function(event,ui) {
 			if(localStorage.interface_url) {  $('#interface_url').val(localStorage.interface_url); }
@@ -25,11 +29,7 @@ $(document).ready(function() {
 		}
 	});
 	
-	$('#thirdparty-list').page({
-		create:function(event,ui) {
-			refreshthirdpartyList();
-		}
-	});
+	
 
 });
 
@@ -51,6 +51,7 @@ function saveConfig() {
 	
 	
 }
+
 function syncronize() {
 	
 	$.mobile.loading( "show", {
@@ -108,7 +109,8 @@ function _sync_product() {
 	  	var products = JSON.stringify(TProduct);
 		localStorage.products = products;
 
-	  	refreshproductList();
+
+		refreshproductList();
   })
   .fail(function() {
   		
