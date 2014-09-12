@@ -4,11 +4,11 @@ var TThirdParty = new Array;
 
 $(document).ready(function() {
 	if(localStorage.products){
-	 	TProduct = JSON.parse(localStorage.products ); 
+	 	TProduct = JSON.parse( LZString.decompress( localStorage.products ) ); 
 	}
 
 	if(localStorage.thirdparties){
-	 	TThirdparty = JSON.parse(localStorage.thirdparties ); 
+	 	TThirdParty = JSON.parse( LZString.decompress( localStorage.thirdparties ) ); 
 	}
 
 	$('#product-list').page({
@@ -107,7 +107,7 @@ function _sync_product() {
 	  	
 	  	
 	  	var products = JSON.stringify(TProduct);
-		localStorage.products = products;
+		localStorage.products = LZString.compress(products);
 
 
 		refreshproductList();
@@ -155,7 +155,7 @@ function _sync_thirdparty() {
 	  	});
 	  	
 	  	var thirdparties = JSON.stringify(TThirdParty);
-		localStorage.thirdparties = thirdparties;
+		localStorage.thirdparties = LZString.compress(thirdparties);
 	
 	  	refreshthirdpartyList();
   })
@@ -167,7 +167,6 @@ function _sync_thirdparty() {
 }
 function refreshthirdpartyList() {
 	$('#thirdparty-list ul').empty();
-	
 	$.each(TThirdParty,function(i, item) {
 		$('#thirdparty-list ul').append('<li><a href="#thirdparty-card" itemid="'+item.rowid+'">'+item.nom+'</a></li>');
 		
