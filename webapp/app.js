@@ -79,7 +79,7 @@ function _sync_product() {
 	  		var find = false;
 	  		for(x in TProduct){
 	  			
-	  			if(TProduct[x].rowid == item.rowid) {
+	  			if(TProduct[x].id == item.id) {
 	  				TProduct[x] = item;
 	  				find = true;
 	  			
@@ -143,7 +143,7 @@ function _sync_thirdparty() {
 	  		var find = false;
 	  		for(x in TThirdParty){
 	  			
-	  			if(TThirdParty[x].rowid == item.rowid) {
+	  			if(TThirdParty[x].id == item.id) {
 	  				TThirdParty[x] = item;
 	  				find = true;
 	  			}
@@ -180,7 +180,7 @@ function refreshproductList() {
 	$('#product-list ul').empty();
 	$.each(TProduct,function(i, item) {
 		
-		$('#product-list ul').append('<li><a href="#product-card" itemid="'+item.rowid+'">'+item.label+'</a></li>');
+		$('#product-list ul').append('<li><a href="javascript:dolibarr.indexedDB.getItem(\'product\', '+item.id+', showProduct)">'+item.label+'</a></li>');
 		
 	});
 	
@@ -191,4 +191,22 @@ function refreshproductList() {
 	}
 	
 	
+}
+
+function setItemInHTML($container, item) {
+	
+	for(x in item) {
+		
+		value = item[x];
+		
+		$container.find('[rel='+x+']').html(value);
+		
+	}
+	
+}
+function showProduct(item) {
+	
+	setItemInHTML($('#product-card'), item);
+	
+	$.mobile.changePage('#product-card');
 }

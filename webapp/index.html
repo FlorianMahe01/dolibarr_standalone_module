@@ -45,6 +45,8 @@
 	
 		interface url : <input type="text" name="interface_url" id="interface_url" value="" />
 	
+		<a href="javascript:dolibarr.indexedDB.clear();" data-role="button">Clear Database</a>
+	
 	</div>
 
 	
@@ -106,11 +108,12 @@
 
 	<div data-role="header">
 		<a href="#home" data-icon="back" data-rel="back">Back</a>
-		<h1>Product</h1>
+		<h1 rel="label">Product</h1>
 	</div><!-- /header -->
 	<div data-role="content">	
 		
-		Product description
+		<div rel="description"></div>
+		<div rel="price"></div>
 		
 	</div>
 	<div data-role="footer">
