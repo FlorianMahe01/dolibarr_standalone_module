@@ -1,19 +1,18 @@
 
 var TProduct = new Array;
 var TThirdParty = new Array;
+var db = null;
+
 
 $(document).ready(function() {
-	if(localStorage.products){
-	 	TProduct = JSON.parse( LZString.decompress( localStorage.products ) ); 
-	}
+     
+    db = window.openDatabase("Dolibarr", "1.0", "Dolibarr Standalone Data", 10000000);
+    
+    db.transaction(loadLocalData, errorCB);
 
-	if(localStorage.thirdparties){
-	 	TThirdParty = JSON.parse( LZString.decompress( localStorage.thirdparties ) ); 
-	}
-
-	$('#product-list').page({
+ 	$('#product-list').page({
 		create:function(event,ui) {
-			refreshproductList();
+			
 		}
 	});
 	$('#thirdparty-list').page({
@@ -29,9 +28,44 @@ $(document).ready(function() {
 		}
 	});
 	
-	
-
+        
 });
+
+function errorCB(tx, err) {
+	alert("SQL Error : "+err.code);
+}
+
+function loadLocalData(tx) {
+	
+	//tx.executeSql('DROP TABLE IF EXISTS llx_product');
+    tx.executeSql('CREATE TABLE IF NOT EXISTS llx_product (rowid, localid,ref, label, description)');
+    tx.executeSql('CREATE TABLE IF NOT EXISTS llx_societe (rowid, localid, nom)');
+
+    tx.executeSql('SELECT rowid, label FROM llx_product', [], loadLocalDataProduct, errorCB);
+    tx.executeSql('SELECT rowid, nom FROM llx_societe', [], loadLocalDataThirdparty, errorCB);
+	
+}
+function loadLocalDataThirdparty(tx, results) {
+
+   var len = results.rows.length;
+   for (var i=0; i<len; i++){
+        TThirdParty.push(results.rows.item(i));
+    }
+   
+   refreshthirdpartyList();
+   
+}
+
+function loadLocalDataProduct(tx, results) {
+
+   var len = results.rows.length;
+   for (var i=0; i<len; i++){
+        TProduct.push(results.rows.item(i));
+    }
+   
+   refreshproductList();
+   
+}
 
 
 function saveConfig() {
@@ -63,11 +97,7 @@ function syncronize() {
 	
 	_sync_product();
 	
-
-	
 	_sync_thirdparty();
-	
-	
 	
 	$.mobile.loading( "hide" );
 	
@@ -77,7 +107,6 @@ function _sync_product() {
   var date_last_sync_product = 0;
   if(localStorage.date_last_sync_product){  date_last_sync_product = localStorage.date_last_sync_product; }
 	
- 
   $.ajax({
   	url : 	localStorage.interface_url
   	,data : {
@@ -93,23 +122,23 @@ function _sync_product() {
 	  	localStorage.date_last_sync_product = $.now(); 
 	  	
 	  	$.each(data, function(i, item) {
+	  		
 	  		var find = false;
 	  		for(x in TProduct){
 	  			
 	  			if(TProduct[x].rowid == item.rowid) {
 	  				TProduct[x] = item;
 	  				find = true;
+	  			
 	  			}
 	  		}
 	  		
 	  		if(!find) TProduct.push(item);
+	  		
+	  		
 	  	});
 	  	
-	  	
-	  	var products = JSON.stringify(TProduct);
-		localStorage.products = LZString.compress(products);
-
-
+	  	db.transaction(_synchronize_local_product, errorCB);
 		refreshproductList();
   })
   .fail(function() {
@@ -122,7 +151,28 @@ function _sync_product() {
   return TProduct;
   
 }
-
+function _synchronize_local_product(tx) {
+	for(x in TProduct) {
+		item = TProduct[x];
+		
+		tx.executeSql('DELETE FROM llx_product WHERE rowid = '+item.rowid);	
+		
+		tx.executeSql('INSERT INTO llx_product (rowid, label) VALUES ('+item.rowid+', "'+item.label+'")');	
+	}
+	
+	
+}
+function _synchronize_local_thirdparty(tx) {
+	for(x in TThirdParty) {
+		item = TThirdParty[x];
+		
+		tx.executeSql('DELETE FROM llx_societe WHERE rowid = '+item.rowid);	
+		
+		tx.executeSql('INSERT INTO llx_societe (rowid, nom) VALUES ('+item.rowid+', "'+item.nom+'")');	
+	}
+	
+	
+}
 
 function _sync_thirdparty() {
   var date_last_sync_thirdparty = 0;
@@ -153,11 +203,9 @@ function _sync_thirdparty() {
 	  		
 	  		if(!find) TThirdParty.push(item);
 	  	});
-	  	
-	  	var thirdparties = JSON.stringify(TThirdParty);
-		localStorage.thirdparties = LZString.compress(thirdparties);
-	
-	  	refreshthirdpartyList();
+	 	  	
+	  	db.transaction(_synchronize_local_thirdparty, errorCB);
+		refreshthirdpartyList();
   })
   
   
@@ -179,8 +227,8 @@ function refreshthirdpartyList() {
 function refreshproductList() {
 	
 	$('#product-list ul').empty();
-	
 	$.each(TProduct,function(i, item) {
+		
 		$('#product-list ul').append('<li><a href="#product-card" itemid="'+item.rowid+'">'+item.label+'</a></li>');
 		
 	});

@@ -4,10 +4,8 @@
 	version = "0.0.1" 
 	versionCode = "1">
 
-
-
-    <name>Dolibarr Phone Apps</name>
-    <description>Application de consultation, synchronisation pour Dolibarr sur télépgone</description>
+    <name>DolibarrStandalone</name>
+    <description>Application de consultation, synchronisation pour Dolibarr sur téléphone</description>
     <author href="http://www.atm-consulting.fr" email="support@atm-consulting.fr">ATM Consulting</author>
 
     <icon src="images/icon.png" />
