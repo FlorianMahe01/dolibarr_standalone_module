@@ -1,27 +1,16 @@
 
-var TProduct = new Array;
-var TThirdParty = new Array;
-var db = null;
+
+
+var dolibarr = {};
+TProduct = new Array;
+TThirdParty = new Array;
 
 
 $(document).ready(function() {
-     
-    db = window.openDatabase("Dolibarr", "1.0", "Dolibarr Standalone Data", 10000000);
-    
-    db.transaction(loadLocalData, errorCB);
-
- 	$('#product-list').page({
-		create:function(event,ui) {
-			
-		}
-	});
-	$('#thirdparty-list').page({
-		create:function(event,ui) {
-			refreshthirdpartyList();
-		}
-	});
-
-	$('#config').page({
+    dolibarr.indexedDB.db = null;
+    dolibarr.indexedDB.open();
+  
+ 	$('#config').page({
 		create:function(event,ui) {
 			if(localStorage.interface_url) {  $('#interface_url').val(localStorage.interface_url); }
 	
@@ -30,42 +19,6 @@ $(document).ready(function() {
 	
         
 });
-
-function errorCB(tx, err) {
-	alert("SQL Error : "+err.code);
-}
-
-function loadLocalData(tx) {
-	
-	//tx.executeSql('DROP TABLE IF EXISTS llx_product');
-    tx.executeSql('CREATE TABLE IF NOT EXISTS llx_product (rowid, localid,ref, label, description)');
-    tx.executeSql('CREATE TABLE IF NOT EXISTS llx_societe (rowid, localid, nom)');
-
-    tx.executeSql('SELECT rowid, label FROM llx_product', [], loadLocalDataProduct, errorCB);
-    tx.executeSql('SELECT rowid, nom FROM llx_societe', [], loadLocalDataThirdparty, errorCB);
-	
-}
-function loadLocalDataThirdparty(tx, results) {
-
-   var len = results.rows.length;
-   for (var i=0; i<len; i++){
-        TThirdParty.push(results.rows.item(i));
-    }
-   
-   refreshthirdpartyList();
-   
-}
-
-function loadLocalDataProduct(tx, results) {
-
-   var len = results.rows.length;
-   for (var i=0; i<len; i++){
-        TProduct.push(results.rows.item(i));
-    }
-   
-   refreshproductList();
-   
-}
 
 
 function saveConfig() {
@@ -138,7 +91,7 @@ function _sync_product() {
 	  		
 	  	});
 	  	
-	  	db.transaction(_synchronize_local_product, errorCB);
+	  	_synchronize_local_product();
 		refreshproductList();
   })
   .fail(function() {
@@ -155,9 +108,7 @@ function _synchronize_local_product(tx) {
 	for(x in TProduct) {
 		item = TProduct[x];
 		
-		tx.executeSql('DELETE FROM llx_product WHERE rowid = '+item.rowid);	
-		
-		tx.executeSql('INSERT INTO llx_product (rowid, label) VALUES ('+item.rowid+', "'+item.label+'")');	
+		dolibarr.indexedDB.addProduct(item);
 	}
 	
 	
@@ -166,11 +117,8 @@ function _synchronize_local_thirdparty(tx) {
 	for(x in TThirdParty) {
 		item = TThirdParty[x];
 		
-		tx.executeSql('DELETE FROM llx_societe WHERE rowid = '+item.rowid);	
-		
-		tx.executeSql('INSERT INTO llx_societe (rowid, nom) VALUES ('+item.rowid+', "'+item.nom+'")');	
+		dolibarr.indexedDB.addThirdparty(item);
 	}
-	
 	
 }
 
@@ -204,7 +152,7 @@ function _sync_thirdparty() {
 	  		if(!find) TThirdParty.push(item);
 	  	});
 	 	  	
-	  	db.transaction(_synchronize_local_thirdparty, errorCB);
+	  	_synchronize_local_thirdparty();
 		refreshthirdpartyList();
   })
   
@@ -220,8 +168,11 @@ function refreshthirdpartyList() {
 		
 	});
 	
-	$('#thirdparty-list ul').listview("refresh");
-	
+	if ($('#thirdparty-list ul').hasClass('ui-listview')) {
+		    $('#thirdparty-list ul').listview('refresh');
+	} else {
+	    $('#thirdparty-list ul').listview();
+	}
 	
 }
 function refreshproductList() {
@@ -233,6 +184,11 @@ function refreshproductList() {
 		
 	});
 	
-	$('#product-list ul').listview("refresh");
+	if ($('#product-list ul').hasClass('ui-listview')) {
+		    $('#product-list ul').listview('refresh');
+	} else {
+	    $('#product-list ul').listview();
+	}
+	
 	
 }
