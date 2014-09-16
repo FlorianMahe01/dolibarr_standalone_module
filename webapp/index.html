@@ -42,8 +42,9 @@
 			
 		</ul>
 	</div>
-	<div data-role="footer">
-		<a href="#config">Configs</a>
+	<div data-role="footer" class="ui-bar">
+		<a href="#config" data-role="button">Configs</a>
+		<a href="javascript:syncronize();"  data-role="button" data-icon="refresh">Synchronize</a>
 	</div><!-- /footer -->
 </div>
 
@@ -68,10 +69,11 @@
 			<label for="dolibarr_password">Dolibarr password :</label>
 		 	<input type="password" name="dolibarr_password" id="dolibarr_password" value="" />
 		</div>
-
-		<a href="javascript:dolibarr.indexedDB.clear();" data-role="button">Clear Database</a>
+		
 	</div>
-
+	<div data-role="footer" class="ui-bar">
+			<a href="javascript:dolibarr.indexedDB.clear();" data-role="button">Clear Database</a>
+	</div>
 	
 </div>
 <div id="product-list" data-role="page">
@@ -79,7 +81,8 @@
 	<div data-role="header">
 		<a href="#home" data-icon="back">Home</a>
 		<h1>Products</h1>
-		<a href="javascript:syncronize();" data-icon="refresh">Synchronize</a>
+		<!-- <a href="javascript:addProduct();" data-role="button" data-icon="plus" data-iconpos="notext">New product</a> -->
+		
 	</div><!-- /header -->
 	<div data-role="content">	
 		<ul data-role="listview"  data-filter="true" data-filter-placeholder="Search..." data-inset="true" data-autodividers="true">
@@ -87,8 +90,10 @@
 			
 		</ul>
 	</div>
-	<div data-role="footer">
-		<h4>Footer content</h4>
+	<div data-role="footer" class="ui-bar">
+		<a href="#product-list" doli-filter="none" data-role="button">All</a>
+		<a href="#product-list" doli-filter="product" data-role="button">Products</a>
+		<a href="#product-list" doli-filter="service" data-role="button">Services</a>
 	</div><!-- /footer -->
 	
 </div>
@@ -97,7 +102,8 @@
 	<div data-role="header">
 		<a href="#home" data-icon="back">Home</a>
 		<h1>Thirdparties</h1>
-		<a href="javascript:syncronize();" data-icon="refresh">Synchronize</a>
+		<!-- <a href="javascript:addThirdparty();" data-role="button" data-icon="plus" data-iconpos="notext">Add</a> -->
+		
 	</div><!-- /header -->
 	<div data-role="content">	
 		<ul data-role="listview"  data-filter="true" data-filter-placeholder="Search..." data-inset="true" data-autodividers="true">
@@ -105,8 +111,10 @@
 			
 		</ul>
 	</div>
-	<div data-role="footer">
-		<a href="#thirdparty-list" doli-filter="customer">Customer</a>
+	<div data-role="footer" class="ui-bar">
+		<a href="#thirdparty-list" doli-filter="none" data-role="button">All</a>
+		<a href="#thirdparty-list" doli-filter="customer" data-role="button">Customers</a>
+		<a href="#thirdparty-list" doli-filter="prospect" data-role="button">Prospects</a>
 	</div><!-- /footer -->
 	
 </div>
@@ -147,6 +155,18 @@
 	<div data-role="footer">
 		<h4>Footer content</h4>
 	</div><!-- /footer -->
+	
+</div>
+
+<div id="syncronize-page" data-role="page">
+
+	<div data-role="header">
+		<a href="#home" data-icon="back" data-rel="back">Back</a>
+		<h1>Synchronize</h1>
+	</div><!-- /header -->
+	<div data-role="content">	
+		<div class="sync-info"></div>
+	</div>
 	
 </div>
 

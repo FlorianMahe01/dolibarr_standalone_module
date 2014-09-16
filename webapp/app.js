@@ -41,16 +41,16 @@ function saveConfig() {
 
 function syncronize() {
 	
-	$.mobile.loading( "show", {
-		text: "Synchonisation in progress...",
-		textVisible: true,
-		theme: "z",
-		html: ""
-	});
+	$('#syncronize-page .sync-info').html('');
+	$.mobile.changePage('#syncronize-page');
 	
+	$('#syncronize-page .sync-info').append('Fetching products... ');
 	_sync_product();
+	$('#syncronize-page .sync-info').append('Done<br />');
 	
+	$('#syncronize-page .sync-info').append('Fetching thirdparties... ');
 	_sync_thirdparty();
+	$('#syncronize-page .sync-info').append('Done<br />');
 	
 	$.mobile.loading( "hide" );
 	
