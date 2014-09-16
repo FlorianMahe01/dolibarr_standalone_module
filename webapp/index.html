@@ -39,12 +39,22 @@
 	<div data-role="header">
 		<a href="#home" data-icon="back" data-rel="back">Home</a>
 		<h1>Config</h1>
-		<a href="javascript:saveConfig();" data-icon="valid">Save</a>
+		<a href="javascript:saveConfig();" data-icon="check">Save</a>
 	</div><!-- /header -->
 	<div data-role="content">	
-	
-		interface url : <input type="text" name="interface_url" id="interface_url" value="" />
-	
+		<div data-role="fieldcontain">
+			<label for="interface_url">Interface url :</label>
+		 	<input type="text" name="interface_url" id="interface_url" value="" />
+		</div>
+		<div data-role="fieldcontain">
+			<label for="dolibarr_login">Dolibarr Login :</label>
+			<input type="text" name="dolibarr_login" id="dolibarr_login" value="" />
+		</div>
+		
+		<div data-role="fieldcontain">
+			<label for="dolibarr_password">Dolibarr password :</label>
+		 	<input type="password" name="dolibarr_password" id="dolibarr_password" value="" />
+		</div>
 	</div>
 
 	
@@ -57,7 +67,7 @@
 		<a href="javascript:syncronize();" data-icon="refresh">Synchronize</a>
 	</div><!-- /header -->
 	<div data-role="content">	
-		<ul data-role="listview" data-filter="true" data-filter-placeholder="Search..." data-inset="true">
+		<ul data-role="listview"  data-filter="true" data-filter-placeholder="Search..." data-inset="true" data-autodividers="true">
 			
 			
 		</ul>
