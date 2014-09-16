@@ -58,8 +58,16 @@ function _getListProduct() {
 	$ATMdb = new TPDOdb;
 	
 	$ATMdb->Execute("SET NAMES utf8");
-	$Tab = $ATMdb->ExecuteAsArray("SELECT rowid, label  FROM ".MAIN_DB_PREFIX."product WHERE tosell = 1 ORDER BY label ");	
-	return $Tab;
+	$Tab = $ATMdb->ExecuteAsArray("SELECT rowid  FROM ".MAIN_DB_PREFIX."product WHERE tosell = 1 ORDER BY label ");	
+	
+	$TResult = array();
+	foreach ($Tab as $row) {
+		
+		$TResult[] = _getProduct($row->rowid);
+		
+	}
+		
+	return $TResult;
 	
 }	
 function _getProduct($id) {
@@ -88,7 +96,14 @@ function _getListThirdparty() {
 	
 	$ATMdb = new TPDOdb;
 	$ATMdb->Execute("SET NAMES utf8");
-	$Tab = $ATMdb->ExecuteAsArray("SELECT rowid, nom FROM ".MAIN_DB_PREFIX."societe WHERE status = 1 ORDER BY nom");	
+	$Tab = $ATMdb->ExecuteAsArray("SELECT rowid FROM ".MAIN_DB_PREFIX."societe WHERE status = 1 ORDER BY nom");	
+	
+	$TResult = array();
+	foreach ($Tab as $row) {
 		
-	return $Tab;
+		$TResult[] = _getThirdparty($row->rowid);
+		
+	}
+		
+	return $TResult;
 }
