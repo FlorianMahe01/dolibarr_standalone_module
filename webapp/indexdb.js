@@ -18,6 +18,7 @@ dolibarr.indexedDB.open = function() {
                                      { keyPath: "id", autoIncrement: true });
  
         objectStore.createIndex("id", "id", { unique: true });
+        objectStore.createIndex("label", "label", { unique: false });
         
         var objectStore = db.createObjectStore("societe", 
                                      { keyPath: "id", autoIncrement: true });
