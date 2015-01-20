@@ -1,4 +1,4 @@
-<widget id="com.example.hello" version="0.0.9" id="dolibarr.standalone.atm">
+<widget version="0.0.9" id="dolibarr.standalone.atm">
      <name>DolibarrStandalone</name>
     <description>Application de consultation, synchronisation pour Dolibarr sur téléphone</description>
     <author href="http://www.atm-consulting.fr" email="support@atm-consulting.fr">ATM Consulting</author>
