@@ -6,6 +6,4 @@
     <access origin="*" />
     <preference name="phonegap-version" value="3.6.3" />
     <plugin name="Camera" value="org.apache.cordova.CameraLauncher" />
-	<feature name="http://api.phonegap.com/1.0/camera"/>
-	<feature name="http://api.phonegap.com/1.0/file"/>
 </widget>
