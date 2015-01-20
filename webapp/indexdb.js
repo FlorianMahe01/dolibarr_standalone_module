@@ -33,44 +33,94 @@ dolibarr.indexedDB.open = function() {
 
 
 dolibarr.indexedDB.addProduct = function(item) {
-  var db = dolibarr.indexedDB.db;
-  var trans = db.transaction(["product"], "readwrite");
-  var store = trans.objectStore("product");
+	dolibarr.indexedDB.addItem('product',item,function(item) {
+		TProduct.push(item);
+		refreshproductList();
+	});
+};
+dolibarr.indexedDB.addThirdparty = function(item) {
+
+	dolibarr.indexedDB.addItem('societe',item,function(item) {
+		TThirdParty.push(item);
+		refreshthirdpartyList();
+	});
+
+};
+
+dolibarr.indexedDB.getAll= function(storename, TArray, callback) {
+  var trans = regul.indexedDB.db.transaction(storename, IDBTransaction.READ_ONLY);
+  var store = trans.objectStore(storename);
+   
+  TArray.splice(0,TArray.length);
+  // Get everything in the store;
+  var keyRange = IDBKeyRange.lowerBound(0);
+  var cursorRequest = store.openCursor(keyRange);
+
+  cursorRequest.onsuccess = function(e) {
+    var result = e.target.result;
+    if(result) {
+    	
+		TArray.push(result.value);
+		result.continue();
+    	
+    }
+    else{
+    	
+    	callback();
+    }
+      
+	
+  };
+
+  cursorRequest.oncomplete = function() {
+  	
+  	
+  };
+
+  cursorRequest.onerror = regul.indexedDB.onerror;
+};
+
+dolibarr.indexedDB.getNewId =function(storename) {
+	return storename+'-'+Math.floor((1 + Math.random()) * 0x100000000)
+               .toString(16)
+               .substring(1)
+               +'-'+Math.floor((1 + Math.random()) * 0x100000000)
+               .toString(16)
+               .substring(1);
+};
+
+dolibarr.indexedDB.addItem = function(storename,item, callbackfct) {
+  var trans = regul.indexedDB.db.transaction(storename, "readwrite");
+  var store = trans.objectStore([storename]);
   store.delete(item.id);
   var request = store.put(item);
 
   trans.oncomplete = function(e) {
-   
+   	callbackfct(item);
   };
 
   request.onerror = function(e) {
     console.log(e.value);
   };
 };
-dolibarr.indexedDB.addThirdparty = function(item) {
-  var db = dolibarr.indexedDB.db;
-  var trans = db.transaction(["societe"], "readwrite");
-  var store = trans.objectStore("societe");
-  
-  store.delete(item.id);
-  
-  var request = store.put(item);
 
-  trans.oncomplete = function(e) {
-   
-  };
-
-  request.onerror = function(e) {
-    console.log(e.value);
-  };
+dolibarr.indexedDB.deleteItem = function (storename, id, callbackfct) {
+	var trans = regul.indexedDB.db.transaction(storename, "readwrite");
+	var store = trans.objectStore([storename]);
+	store.delete(id);
+	
+	trans.onsuccess = function(e) {
+	   	if(callbackfct) callbackfct();
+	};
+	
+	
 };
 
 dolibarr.indexedDB.getItem = function (storename, id, callbackfct) {
 	
-	  var db = dolibarr.indexedDB.db;
+	  var db = regul.indexedDB.db;
 	  var trans = db.transaction(storename, "readwrite");
 	  var store = trans.objectStore(storename);
-	 
 	 
 	  var request = store.get(id.toString()); 
 	  request.onsuccess = function() {

@@ -121,7 +121,18 @@ function _synchronize_local_thirdparty(tx) {
 	}
 	
 }
-
+function takePicture() {
+      navigator.camera.getPicture( function( imageURI ) {
+        alert( imageURI );
+      },
+      function( message ) {
+        alert( message );
+      },
+      {
+        quality: 50,
+        destinationType: Camera.DestinationType.FILE_URI
+      });
+}
 function _sync_thirdparty() {
   var date_last_sync_thirdparty = 0;
   if(localStorage.date_last_sync_thirdparty){  date_last_sync_thirdparty = localStorage.date_last_sync_thirdparty; }
