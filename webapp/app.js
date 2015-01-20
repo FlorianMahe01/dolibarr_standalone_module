@@ -131,7 +131,8 @@ function takePicture() {
 	        function( fileEntry){
 	            alert("got image file entry: " + fileEntry.fullPath);
 	        },
-	        function(){//error}
+	        function(){//error
+	        }
 	    );
 	
 	}, function (){
