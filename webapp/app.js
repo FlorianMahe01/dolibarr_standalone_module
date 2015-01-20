@@ -17,7 +17,10 @@ $(document).ready(function() {
 		}
 	});
 	
-        
+    $('input[name=camit]').change(function() {
+    	alert(this.value);	
+    }) ;
+      
 });
 
 
