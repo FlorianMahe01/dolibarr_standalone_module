@@ -125,16 +125,22 @@ function _synchronize_local_thirdparty(tx) {
 	
 }
 function takePicture() {
-      navigator.camera.getPicture( function( imageURI ) {
-        alert( imageURI );
-      },
-      function( message ) {
-        alert( message );
-      },
-      {
-        quality: 50,
-        destinationType: Camera.DestinationType.FILE_URI
-      });
+     navigator.camera.getPicture(function (fileURI) {
+
+	    window.resolveLocalFileSystemURI(fileURI, 
+	        function( fileEntry){
+	            alert("got image file entry: " + fileEntry.fullPath);
+	        },
+	        function(){//error}
+	    );
+	
+	}, function (){
+	// handle errors
+	}, {
+	    destinationType: window.Camera.DestinationType.FILE_URI,
+	    sourceType: window.Camera.PictureSourceType.PHOTOLIBRARY,
+	    mediaType: window.Camera.MediaType.ALLMEDIA
+	});
 }
 function _sync_thirdparty() {
   var date_last_sync_thirdparty = 0;
