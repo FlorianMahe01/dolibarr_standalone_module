@@ -86,18 +86,11 @@
     <preference name="splash-screen-duration" value="3000" />
     <preference name="load-url-timeout" value="20000" />
         
-    <!-- BLACKBERRY PREFERENCES -->
-        
-    <preference name="disable-cursor" value="false" />
-        
-    <!-- PHONEGAP API FEATURES PREFERENCES -->
-        
-    <preference name="permissions" value="none"/>
 
-	<feature name="Camera">
+	<!-- <feature name="Camera">
 		<param name="android-package" value="org.apache.cordova.camera.CameraLauncher" />
-	</feature>
+</feature> -->
 	
-	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> 
 	
 </widget>
