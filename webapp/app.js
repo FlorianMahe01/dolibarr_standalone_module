@@ -154,7 +154,7 @@ function _sync_thirdparty() {
 	 	  	
 	  	_synchronize_local_thirdparty();
 		refreshthirdpartyList();
-  })
+  });
   
   
   
