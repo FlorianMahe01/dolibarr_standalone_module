@@ -5,5 +5,7 @@
 	<content src="index.html" />
     <access origin="*" />
     <preference name="phonegap-version" value="3.6.3" />
-    <plugin name="Camera" value="org.apache.cordova.CameraLauncher" />
+    <gap:plugin name="org.apache.cordova.device" />
+    <gap:plugin name="org.apache.cordova.CameraLauncher" />
+    
 </widget>
