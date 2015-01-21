@@ -4,6 +4,6 @@
     <author href="http://www.atm-consulting.fr" email="support@atm-consulting.fr">ATM Consulting</author>
 	<content src="index.html" />
     <access origin="*" />
-    <preference name="phonegap-version" value="2.9.1" />
+    <preference name="phonegap-version" value="3.6.3" />
     <plugin name="Camera" value="org.apache.cordova.CameraLauncher" />
 </widget>
