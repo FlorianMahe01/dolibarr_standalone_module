@@ -2,7 +2,7 @@ dolibarr.indexedDB = {};
 
 dolibarr.indexedDB.open = function() {
 	
-  var version = 7;
+  var version = 8;
   var request = indexedDB.open("dolibarr", version);
 
   request.onsuccess = function(e) {
@@ -14,13 +14,28 @@ dolibarr.indexedDB.open = function() {
   request.onupgradeneeded = function (evt) { 
   		var db = evt.currentTarget.result;
   		        
+  		try {
+  			db.deleteObjectStore("product");	
+  		}
+  		catch(e) {
+  			
+  		}
+  	    
+  		try {
+	  	    db.deleteObjectStore("thirdparty");
+  		}
+  		catch(e) {
+  			
+  		}
+  	    
+  	    	        
         var objectStore = db.createObjectStore("product", 
                                      { keyPath: "id", autoIncrement: true });
  
         objectStore.createIndex("id", "id", { unique: true });
         objectStore.createIndex("label", "label", { unique: false });
         
-        var objectStore = db.createObjectStore("societe", 
+        var objectStore = db.createObjectStore("thirdparty", 
                                      { keyPath: "id", autoIncrement: true });
  
         objectStore.createIndex("id", "id", { unique: true });
@@ -40,7 +55,7 @@ dolibarr.indexedDB.addProduct = function(item) {
 };
 dolibarr.indexedDB.addThirdparty = function(item) {
 
-	dolibarr.indexedDB.addItem('societe',item,function(item) {
+	dolibarr.indexedDB.addItem('thirdparty',item,function(item) {
 		TThirdParty.push(item);
 		refreshthirdpartyList();
 	});
@@ -48,7 +63,7 @@ dolibarr.indexedDB.addThirdparty = function(item) {
 };
 
 dolibarr.indexedDB.getAll= function(storename, TArray, callback) {
-  var trans = regul.indexedDB.db.transaction(storename, IDBTransaction.READ_ONLY);
+  var trans = dolibarr.indexedDB.db.transaction(storename, IDBTransaction.READ_ONLY);
   var store = trans.objectStore(storename);
    
   TArray.splice(0,TArray.length);
@@ -77,7 +92,7 @@ dolibarr.indexedDB.getAll= function(storename, TArray, callback) {
   	
   };
 
-  cursorRequest.onerror = regul.indexedDB.onerror;
+  cursorRequest.onerror = dolibarr.indexedDB.onerror;
 };
 
 dolibarr.indexedDB.getNewId =function(storename) {
@@ -90,7 +105,7 @@ dolibarr.indexedDB.getNewId =function(storename) {
 };
 
 dolibarr.indexedDB.addItem = function(storename,item, callbackfct) {
-  var trans = regul.indexedDB.db.transaction(storename, "readwrite");
+  var trans = dolibarr.indexedDB.db.transaction(storename, "readwrite");
   var store = trans.objectStore([storename]);
   store.delete(item.id);
   var request = store.put(item);
@@ -105,7 +120,7 @@ dolibarr.indexedDB.addItem = function(storename,item, callbackfct) {
 };
 
 dolibarr.indexedDB.deleteItem = function (storename, id, callbackfct) {
-	var trans = regul.indexedDB.db.transaction(storename, "readwrite");
+	var trans = dolibarr.indexedDB.db.transaction(storename, "readwrite");
 	var store = trans.objectStore([storename]);
 	store.delete(id);
 	
@@ -118,7 +133,7 @@ dolibarr.indexedDB.deleteItem = function (storename, id, callbackfct) {
 
 dolibarr.indexedDB.getItem = function (storename, id, callbackfct) {
 	
-	  var db = regul.indexedDB.db;
+	  var db = dolibarr.indexedDB.db;
 	  var trans = db.transaction(storename, "readwrite");
 	  var store = trans.objectStore(storename);
 	 
@@ -175,8 +190,8 @@ dolibarr.indexedDB.getAllProduct = function() {
 dolibarr.indexedDB.getAllThirdparty = function() {
   
   var db = dolibarr.indexedDB.db;
-  var trans = db.transaction(["societe"], "readwrite");
-  var store = trans.objectStore("societe");
+  var trans = db.transaction(["thirdparty"], "readwrite");
+  var store = trans.objectStore("thirdparty");
 
   // Get everything in the store;
   var keyRange = IDBKeyRange.lowerBound(0);

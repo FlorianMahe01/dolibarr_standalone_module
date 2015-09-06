@@ -185,7 +185,7 @@ function _sync_thirdparty() {
 function refreshthirdpartyList() {
 	$('#thirdparty-list ul').empty();
 	$.each(TThirdParty,function(i, item) {
-		$('#thirdparty-list ul').append('<li><a href="#thirdparty-card" itemid="'+item.rowid+'">'+item.nom+'</a></li>');
+		$('#thirdparty-list ul').append('<li><a href="javascript:dolibarr.indexedDB.getItem(\'thirdparty\', '+item.id+', showThirdparty)">'+item.nom+'</a></li>');
 		
 	});
 	
@@ -226,8 +226,15 @@ function setItemInHTML($container, item) {
 	
 }
 function showProduct(item) {
+	showItem(item, 'product-card');
+}
+function showThirdparty(item) {
+	showItem(item, 'thirdparty-card');
+}
+
+function showItem(item, page) {
+	console.log(item, page);
+	setItemInHTML($('#'+page), item);
 	
-	setItemInHTML($('#product-card'), item);
-	
-	$.mobile.changePage('#product-card');
+	$.mobile.changePage('#'+page);
 }

@@ -10,7 +10,7 @@
 		<script src="jq/jquery.min.js" type="text/javascript"></script>
 		<script src="jq/jquery.mobile-1.4.3.min.js" type="text/javascript"></script>
 
-		<script type="text/javascript" charset="utf-8" src="cordova.js"></script> 
+		<!-- <script type="text/javascript" charset="utf-8" src="cordova.js"></script> --> 
 		<script type="text/javascript" src="app.js"></script>
 		<script type="text/javascript" src="indexdb.js"></script>		
 		<script type="text/javascript" src="IndexedDBShim.js"></script>		
@@ -125,17 +125,25 @@
 
 	<div data-role="header">
 		<a href="#home" data-icon="back" data-rel="back">Back</a>
-		<h1>thirdparty</h1>
+		<h1 rel="name">thirdparty</h1>
 	</div><!-- /header -->
 	<div data-role="content">	
+		<div rel="address"></div>
+		<div>
+			<span rel="zip"></span>
+			&nbsp;&nbsp;<span rel="town"></span>
+		</div>
 		
-		thirdparty description
 		
+		<br /><br />
+		<div>
 		<ul data-role="listview">Customer documents
 			<li><a href="#propal-list">Propals</a></li>	
 			<li><a href="#order-list">Orders</a></li>	
 			<li><a href="#bill-list">Bills</a></li>		
 		</ul>
+		</div>
+		
 	</div>
 	<div data-role="footer">
 		<h4>Footer content</h4>
