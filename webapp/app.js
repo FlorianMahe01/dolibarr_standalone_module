@@ -10,9 +10,14 @@ $(document).ready(function() {
     dolibarr.indexedDB.db = null;
     dolibarr.indexedDB.open();
   
- 	if(localStorage.interface_url) {  $('#interface_url').val(localStorage.interface_url); }
- 	if(localStorage.dolibarr_login) {  $('#dolibarr_login').val(localStorage.dolibarr_login); }
- 	if(localStorage.dolibarr_password) {  $('#dolibarr_password').val(localStorage.dolibarr_password); }
+ 	if(localStorage.interface_url) {  
+ 		$('#interface_url').val(localStorage.interface_url); 
+	 	if(localStorage.dolibarr_login) {  $('#dolibarr_login').val(localStorage.dolibarr_login); }
+	 	if(localStorage.dolibarr_password) {  $('#dolibarr_password').val(localStorage.dolibarr_password); }
+ 	}
+ 	else {
+ 		$('#navigation a[href="#config"]').tab('show');
+ 	}
 	
     $('input[name=camit]').change(function() {
     	alert(this.value);	
@@ -23,6 +28,7 @@ $(document).ready(function() {
 function tpl_append(url,container) {
 		$.get(url, function (data ) {
 			$(container).prepend(data);
+			applyAllTrans();
 		});
 
 }
@@ -50,7 +56,7 @@ function saveConfig() {
 function syncronize() {
 	
 	$('#syncronize-page .sync-info').html('');
-	$('a[href="#syncronize-page"]').tab('show');
+	$('#navigation a[href="#syncronize-page"]').tab('show');
 	
 	$('#syncronize-page .sync-info').append('Fetching products... ');
 	_sync_product();

@@ -12,13 +12,16 @@
 ?>
 $(document).ready(function() {
 	
+	applyAllTrans();
+});
+
+function applyAllTrans() {
 	$('langs[trans]').each(function(i,item){
 		key = $(item).attr('trans');
 		$(item).html(langsTrans(key));
-		
+		$(item).removeAttr('trans');
 	});
-	
-});
+}
 
 function langsTrans(key) {
 	

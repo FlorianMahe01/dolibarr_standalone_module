@@ -1,4 +1,4 @@
-<nav class="navbar navbar-fixed-top navbar-default">
+<nav class="navbar navbar-fixed-top navbar-default" id="navigation">
 	<div class="container-fluid">
 		<div class="navbar-header">
 	      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#menu-standalone" aria-expanded="false">
@@ -23,8 +23,10 @@
 						<div class="button-group">
 					        <a type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-cog"></span> <span class="caret"></span></a>
 								<ul class="dropdown-menu" id="select-user-list">
-									<li class="btn"><a data-toggle="tab" href="#config"><langs trans="Params"></langs></a></li>
-									<li class="btn"><a data-toggle="tab" href="javascript:disconnect()"><langs trans="Deconnect"></langs></a></li>
+									<li class="btn btn-default "><a data-toggle="tab" href="#config"><langs trans="Params"></langs></a></li>
+									<li class="btn btn-default hidden"><a data-toggle="tab" href="#syncronize-page"><langs trans="Synchronize"></langs></a></li>
+									<li class="btn btn-default "><a href="javascript:syncronize()"><langs trans="Synchronize"></langs></a></li>
+									<li class="btn btn-default "><a href="javascript:disconnect()"><langs trans="Deconnect"></langs></a></li>
 								</ul>
 						
 						</div>
