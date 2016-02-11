@@ -1,0 +1,20 @@
+.list-group>:nth-child(odd) { 
+	background: #5f6e7d; 
+}
+.list-group a {
+	color:#fff;
+}
+ul li.active a {
+	color:#000;
+}
+.list-group .running {
+	background: #dff0d8; 
+}
+
+.list-group .running div.container-fluid,.list-group .running a {
+	color:#000;
+}
+
+body {
+	padding-top:70px;
+}

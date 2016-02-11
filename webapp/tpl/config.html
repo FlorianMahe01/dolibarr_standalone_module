@@ -1,0 +1,36 @@
+<div class="tab-pane" id="config">
+	<div class="container-fluid">
+		<div class="row">
+			<div data-role="content">	
+				<div data-role="fieldcontain">
+					<label for="interface_url">Interface url :</label>
+				 	<input type="text" name="interface_url" id="interface_url" value="" />
+				</div>
+				<div data-role="fieldcontain">
+					<label for="dolibarr_login">Dolibarr Login :</label>
+					<input type="text" name="dolibarr_login" id="dolibarr_login" value="" />
+				</div>
+				
+				<div data-role="fieldcontain">
+					<label for="dolibarr_password">Dolibarr password :</label>
+				 	<input type="password" name="dolibarr_password" id="dolibarr_password" value="" />
+				</div>
+				
+			</div>
+			<a href="javascript:dolibarr.indexedDB.clear();" class="btn btn-danger"><langs trans="ClearDatabase"></langs></a>
+			<a href="javascript:saveConfig();" class="btn btn-primary"><langs trans="SaveConfig"></langs></a>
+			
+		</div>	
+	</div>
+</div>
+
+
+<div id="syncronize-page" lass="tab-pane">
+	<div class="container-fluid">
+		<div class="row">
+			<div data-role="content">	
+				<div class="sync-info"></div>
+			</div>
+		</div>
+	</div>
+</div>

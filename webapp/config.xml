@@ -1,10 +1,17 @@
 <widget version="0.0.9" id="dolibarr.standalone.atm">
-     <name>DolibarrStandalone</name>
+    <name>DolibarrStandalone</name>
     <description>Application de consultation, synchronisation pour Dolibarr sur téléphone</description>
     <author href="http://www.atm-consulting.fr" email="support@atm-consulting.fr">ATM Consulting</author>
 	<content src="index.html" />
     <access origin="*" />
     <preference name="phonegap-version" value="3.6.3" />
+    
+     <feature name="Device">
+        <param name="android-package" value="org.apache.cordova.device.Device" />
+     </feature>
+    
+    <gap:platform name="android" />
+    
     <gap:plugin name="org.apache.cordova.device" />
     <gap:plugin name="org.apache.cordova.CameraLauncher" />
     

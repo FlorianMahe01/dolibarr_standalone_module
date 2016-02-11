@@ -10,12 +10,9 @@ $(document).ready(function() {
     dolibarr.indexedDB.db = null;
     dolibarr.indexedDB.open();
   
- 	$('#config').page({
-		create:function(event,ui) {
-			if(localStorage.interface_url) {  $('#interface_url').val(localStorage.interface_url); }
-	
-		}
-	});
+ 	if(localStorage.interface_url) {  $('#interface_url').val(localStorage.interface_url); }
+ 	if(localStorage.dolibarr_login) {  $('#dolibarr_login').val(localStorage.dolibarr_login); }
+ 	if(localStorage.dolibarr_password) {  $('#dolibarr_password').val(localStorage.dolibarr_password); }
 	
     $('input[name=camit]').change(function() {
     	alert(this.value);	
@@ -23,10 +20,18 @@ $(document).ready(function() {
       
 });
 
+function tpl_append(url,container) {
+		$.get(url, function (data ) {
+			$(container).prepend(data);
+		});
+
+}
 
 function saveConfig() {
 	
 	localStorage.interface_url = $('#interface_url').val();	
+	localStorage.dolibarr_login = $('#dolibarr_login').val();	
+	localStorage.dolibarr_password = $('#dolibarr_password').val();	
 	
 	$.ajax({
 			url:localStorage.interface_url
@@ -45,7 +50,7 @@ function saveConfig() {
 function syncronize() {
 	
 	$('#syncronize-page .sync-info').html('');
-	$.mobile.changePage('#syncronize-page');
+	$('a[href="#syncronize-page"]').tab('show');
 	
 	$('#syncronize-page .sync-info').append('Fetching products... ');
 	_sync_product();
@@ -54,8 +59,6 @@ function syncronize() {
 	$('#syncronize-page .sync-info').append('Fetching thirdparties... ');
 	_sync_thirdparty();
 	$('#syncronize-page .sync-info').append('Done<br />');
-	
-	$.mobile.loading( "hide" );
 	
 }
 
@@ -185,56 +188,38 @@ function _sync_thirdparty() {
 function refreshthirdpartyList() {
 	$('#thirdparty-list ul').empty();
 	$.each(TThirdParty,function(i, item) {
-		$('#thirdparty-list ul').append('<li><a href="javascript:dolibarr.indexedDB.getItem(\'thirdparty\', '+item.id+', showThirdparty)">'+item.nom+'</a></li>');
-		
+		$('#thirdparty-list ul').append('<li class="list-group-item"><a href="javascript:dolibarr.indexedDB.getItem(\'thirdparty\', '+item.id+', showThirdparty)">'+item.nom+'</a></li>');
+		if(i>20) return false;
 	});
-	
-	if ($('#thirdparty-list ul').hasClass('ui-listview')) {
-		    $('#thirdparty-list ul').listview('refresh');
-	} else {
-	    $('#thirdparty-list ul').listview();
-	}
-	
+
 }
 function refreshproductList() {
 	
 	$('#product-list ul').empty();
 	$.each(TProduct,function(i, item) {
-		
-		$('#product-list ul').append('<li><a href="javascript:dolibarr.indexedDB.getItem(\'product\', '+item.id+', showProduct)">'+item.label+'</a></li>');
-		
+		$('#product-list ul').append('<li class="list-group-item"><a href="javascript:dolibarr.indexedDB.getItem(\'product\', '+item.id+', showProduct)">'+item.label+'</a></li>');
+		if(i>20) return false;
 	});
-	
-	if ($('#product-list ul').hasClass('ui-listview')) {
-		    $('#product-list ul').listview('refresh');
-	} else {
-	    $('#product-list ul').listview();
-	}
-	
 	
 }
 
 function setItemInHTML($container, item) {
 	
 	for(x in item) {
-		
 		value = item[x];
-		
 		$container.find('[rel='+x+']').html(value);
-		
 	}
 	
 }
 function showProduct(item) {
 	showItem(item, 'product-card');
+	$('a[href="#product-list"]').tab('show');
 }
 function showThirdparty(item) {
 	showItem(item, 'thirdparty-card');
+	$('a[href="#thirdparty-list"]').tab('show');
 }
 
 function showItem(item, page) {
-	console.log(item, page);
 	setItemInHTML($('#'+page), item);
-	
-	$.mobile.changePage('#'+page);
 }
