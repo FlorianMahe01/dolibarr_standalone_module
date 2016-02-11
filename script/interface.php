@@ -7,6 +7,9 @@
 	dol_include_once("/contact/class/contact.class.php");
 	dol_include_once("/product/class/product.class.php");
 
+// TODO check login / pass
+// TODO sync event, propal, order, invoice in order to allow view and edit
+
 	$get = GETPOST('get');
 	$put = GETPOST('put');
 
@@ -54,11 +57,15 @@
 	
 	
 function _getListProduct() {
-
-	$ATMdb = new TPDOdb;
+global $conf;
+	$PDOdb = new TPDOdb;
 	
-	$ATMdb->Execute("SET NAMES utf8");
-	$Tab = $ATMdb->ExecuteAsArray("SELECT rowid  FROM ".MAIN_DB_PREFIX."product WHERE tosell = 1 ORDER BY label ");	
+	$limit = empty($conf->global->STANDALONE_SYNC_LIMIT_LAST_ELEMENT) ? 100 : $conf->global->STANDALONE_SYNC_LIMIT_LAST_ELEMENT;
+	
+	$Tab = $PDOdb->ExecuteAsArray("SELECT rowid  FROM ".MAIN_DB_PREFIX."product 
+	WHERE tosell = 1 
+	ORDER BY tms DESC
+	LIMIT ".$limit);	
 	
 	$TResult = array();
 	foreach ($Tab as $row) {
@@ -93,10 +100,10 @@ global $db;
 	
 function _getListThirdparty() {
 
+	$limit = empty($conf->global->STANDALONE_SYNC_LIMIT_LAST_ELEMENT) ? 100 : $conf->global->STANDALONE_SYNC_LIMIT_LAST_ELEMENT;
 	
-	$ATMdb = new TPDOdb;
-	$ATMdb->Execute("SET NAMES utf8");
-	$Tab = $ATMdb->ExecuteAsArray("SELECT rowid FROM ".MAIN_DB_PREFIX."societe WHERE status = 1 ORDER BY nom");	
+	$PDOdb = new TPDOdb;
+	$Tab = $PDOdb->ExecuteAsArray("SELECT rowid FROM ".MAIN_DB_PREFIX."societe WHERE status = 1 ORDER BY tms LIMIT ".$limit);	
 	
 	$TResult = array();
 	foreach ($Tab as $row) {
