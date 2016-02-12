@@ -1,14 +1,19 @@
-<widget version="0.0.9" id="dolibarr.standalone.atm">
+<?xml version="1.0" encoding="UTF-8" ?>
+    <widget xmlns   = "http://www.w3.org/ns/widgets" xmlns:gap   = "http://phonegap.com/ns/1.0" id  = "com.phonegap.example"
+        versionCode = "10" 
+        version     = "1.0.0" >
+
+    <!-- versionCode is optional and Android only -->
+
     <name>DolibarrStandalone</name>
+
     <description>Application de consultation, synchronisation pour Dolibarr sur téléphone</description>
-    <author href="http://www.atm-consulting.fr" email="support@atm-consulting.fr">ATM Consulting</author>
-	<content src="index.html" />
-    <access origin="*" />
-    <preference name="phonegap-version" value="3.6.3" />
     
-     <feature name="Device">
+    <author href="http://www.atm-consulting.fr" email="dolistore@atm-consulting.fr">ATM Consulting</author>
+	
+	<feature name="Device">
         <param name="android-package" value="org.apache.cordova.device.Device" />
-     </feature>
+    </feature>
     
     <gap:platform name="android" />
     
