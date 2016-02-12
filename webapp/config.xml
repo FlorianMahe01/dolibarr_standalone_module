@@ -14,10 +14,9 @@
 	<feature name="Device">
         <param name="android-package" value="org.apache.cordova.device.Device" />
     </feature>
-    
-    <gap:platform name="android" />
-    
-    <gap:plugin name="org.apache.cordova.device" />
-    <gap:plugin name="org.apache.cordova.CameraLauncher" />
+    <platform name="android">
+	  <preference name="phonegap-version" value="4.0.2" />
+	  
+	  </platform>
     
 </widget>
