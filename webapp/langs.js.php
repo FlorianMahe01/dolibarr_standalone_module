@@ -1,4 +1,6 @@
 <?php
+	define('INC_FROM_CRON_SCRIPT', true);
+
 	require '../config.php';
 	$TTrans = $langs->tab_translate;
 ?>

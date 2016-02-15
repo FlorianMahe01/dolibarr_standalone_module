@@ -194,7 +194,12 @@ function _sync_thirdparty() {
 function refreshthirdpartyList() {
 	$('#thirdparty-list ul').empty();
 	$.each(TThirdParty,function(i, item) {
-		$('#thirdparty-list ul').append('<li class="list-group-item"><a href="javascript:dolibarr.indexedDB.getItem(\'thirdparty\', '+item.id+', showThirdparty)">'+item.nom+'</a></li>');
+		$li = $('<li class="list-group-item"><a href="javascript:dolibarr.indexedDB.getItem(\'thirdparty\', '+item.id+', showThirdparty)">'+item.name+'</a></li>');
+	
+		if(item.client == 1) $li.append('<span class="badge client">C</span>');
+		if(item.fournisseur == 1) $li.append('<span class="badge fournisseur">F</span>');
+
+		$('#thirdparty-list ul').append($li);
 		if(i>20) return false;
 	});
 
@@ -223,7 +228,11 @@ function showProduct(item) {
 }
 function showThirdparty(item) {
 	showItem(item, 'thirdparty-card');
-	$('a[href="#thirdparty-list"]').tab('show');
+	console.log(item);
+	$a = $('a[href="#thirdparty-card"]');
+	$a.html(item.name);
+	$a.tab('show');
+	$a.closest('li').removeClass('hidden');
 }
 
 function showItem(item, page) {
