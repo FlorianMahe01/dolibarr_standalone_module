@@ -23,7 +23,21 @@ $(document).ready(function() {
     	alert(this.value);	
     }) ;
       
+      
+    $('#search-thirdparty').change(function() {
+    	var q = $(this).val();
+    });
+      
+    _checkOnline();
+      
 });
+
+function _checkOnline() {
+	
+	var online = navigator.onLine;
+    if(online) $('#is-online').removeClass('offline').addClass('online').html('online');
+	else $('#is-online').removeClass('online').addClass('offline').html('offline');
+}
 
 function tpl_append(url,container) {
 		$.get(url, function (data ) {

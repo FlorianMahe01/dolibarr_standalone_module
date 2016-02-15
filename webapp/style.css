@@ -60,3 +60,11 @@ li span.fournisseur {
 	right : 30px;
 	bottom : 70px;
 }
+.online {
+	font-weight: normal;
+	color:green;
+}
+.offline {
+	font-weight: bold;
+	color:red;
+}
