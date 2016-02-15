@@ -22,7 +22,8 @@ $(document).ready(function() {
     $('input[name=camit]').change(function() {
     	alert(this.value);	
     }) ;
-      
+     
+   // $("#home [rel=thirdparties] span.bubble").html(dolibarr.indexedDB.count('thirdparty'));
       
     _checkOnline();
       
@@ -31,8 +32,8 @@ $(document).ready(function() {
 function _checkOnline() {
 	
 	var online = navigator.onLine;
-    if(online) $('#is-online').removeClass('offline').addClass('online').html('online');
-	else $('#is-online').removeClass('online').addClass('offline').html('offline');
+    if(online) $('#is-online').removeClass('offline').addClass('online').attr('title','You are online');
+	else $('#is-online').removeClass('online').addClass('offline').attr('title','Offline !');
 }
 
 function tpl_append(url,container) {

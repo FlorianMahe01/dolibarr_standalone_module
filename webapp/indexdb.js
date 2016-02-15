@@ -133,6 +133,16 @@ dolibarr.indexedDB.deleteItem = function (storename, id, callbackfct) {
 	
 };
 
+dolibarr.indexedDB.count = function(storename) {
+	var db = dolibarr.indexedDB.db;
+	  
+	var transaction = db.transaction([storename], "readonly");
+	var objectStore = transaction.objectStore(storename);
+	var cursor = objectStore.openCursor();  
+    var count = objectStore.count();
+    
+    return count;
+};    
 dolibarr.indexedDB.getItemOnKey = function(storename, value, key, callbackfct) {
 	  var db = dolibarr.indexedDB.db;
 	  var trans = db.transaction(storename, "readwrite");
