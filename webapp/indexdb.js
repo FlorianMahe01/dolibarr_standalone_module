@@ -2,7 +2,7 @@ dolibarr.indexedDB = {};
 
 dolibarr.indexedDB.open = function() {
 	
-  var version = 8;
+  var version = 9;
   var request = indexedDB.open("dolibarr", version);
 
   request.onsuccess = function(e) {
@@ -39,6 +39,7 @@ dolibarr.indexedDB.open = function() {
                                      { keyPath: "id", autoIncrement: true });
  
         objectStore.createIndex("id", "id", { unique: true });
+        objectStore.createIndex("name", "name", { unique: false });
         
    };
 
@@ -131,8 +132,27 @@ dolibarr.indexedDB.deleteItem = function (storename, id, callbackfct) {
 	
 };
 
-dolibarr.indexedDB.getItem = function (storename, id, callbackfct) {
+dolibarr.indexedDB.getItemOnKey = function(storename, value, key, callbackfct) {
+	  var db = dolibarr.indexedDB.db;
+	  var trans = db.transaction(storename, "readwrite");
+	  var store = trans.objectStore(storename);
 	
+	  var index = store.index(key);
+
+	  index.get(value).onsuccess = function(event) {
+	  		console.log(event);
+	  	
+		  var matching = event.result;
+		  if (matching !== undefined) {
+		    callbackfct(matching);
+		  } else {
+		    alert('Item not found');
+		  }
+	  }; 
+	 
+};
+
+dolibarr.indexedDB.getItem = function (storename, id, callbackfct) {
 	  var db = dolibarr.indexedDB.db;
 	  var trans = db.transaction(storename, "readwrite");
 	  var store = trans.objectStore(storename);
@@ -146,9 +166,6 @@ dolibarr.indexedDB.getItem = function (storename, id, callbackfct) {
 		    alert('Item not found');
 		  }
 	 };
-	 
-		
-	
 };
 
 dolibarr.indexedDB.getAllProduct = function() {

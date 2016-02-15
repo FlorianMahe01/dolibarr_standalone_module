@@ -24,10 +24,6 @@ $(document).ready(function() {
     }) ;
       
       
-    $('#search-thirdparty').change(function() {
-    	var q = $(this).val();
-    });
-      
     _checkOnline();
       
 });
