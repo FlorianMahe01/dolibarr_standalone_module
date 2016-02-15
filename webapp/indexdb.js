@@ -2,7 +2,7 @@ dolibarr.indexedDB = {};
 
 dolibarr.indexedDB.open = function() {
 	
-  var version = 9;
+  var version = 10;
   var request = indexedDB.open("dolibarr", version);
 
   request.onsuccess = function(e) {
@@ -39,7 +39,7 @@ dolibarr.indexedDB.open = function() {
                                      { keyPath: "id", autoIncrement: true });
  
         objectStore.createIndex("id", "id", { unique: true });
-        objectStore.createIndex("name", "name", { unique: false });
+        objectStore.createIndex("name", "keyname", { unique: false });
         
    };
 
@@ -55,6 +55,7 @@ dolibarr.indexedDB.addProduct = function(item) {
 	});
 };
 dolibarr.indexedDB.addThirdparty = function(item) {
+	item.keyname = item.name.toLowerCase();
 
 	dolibarr.indexedDB.addItem('thirdparty',item,function(item) {
 		TThirdParty.push(item);
@@ -138,16 +139,23 @@ dolibarr.indexedDB.getItemOnKey = function(storename, value, key, callbackfct) {
 	  var store = trans.objectStore(storename);
 	
 	  var index = store.index(key);
+	  //var boundKeyRange = IDBKeyRange.bound("A","Z",true,true);
+	  //var boundKeyRange = IDBKeyRange.bound(value.toLowerCase(),value.toUpperCase()+"ZZZZZZZZZZZZZZZ",false, false);
+	  value = value.toLowerCase();
+	  var boundKeyRange = IDBKeyRange.bound(value,value+"zzzzzzzzzzz");
 
-	  index.get(value).onsuccess = function(event) {
-	  		console.log(event);
+	  index.openCursor(boundKeyRange).onsuccess = function(event) {
+	  		console.log(event.target.result);
 	  	
-		  var matching = event.result;
-		  if (matching !== undefined) {
-		    callbackfct(matching);
-		  } else {
-		    alert('Item not found');
+	  	  var cursor = event.target.result;
+		  if (cursor) {
+		    callbackfct(cursor.value);
+		  
+		    // Do something with the matches.
+		    cursor.continue();
 		  }
+	  	
+		  
 	  }; 
 	 
 };
@@ -241,7 +249,7 @@ dolibarr.indexedDB.clear=function() {
 		var db = dolibarr.indexedDB.db;
 		db.close();
 		
-  		var req = indexedDB.deleteDatabase("dolibarr");
+		var req = indexedDB.deleteDatabase("dolibarr");
 		req.onsuccess = function () {
 		    console.log("Deleted database successfully");
 		};

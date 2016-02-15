@@ -43,6 +43,17 @@ function tpl_append(url,container) {
 
 }
 
+function addToListThirdparty(item) {
+	
+	$li = $('<li class="list-group-item"><a href="javascript:dolibarr.indexedDB.getItem(\'thirdparty\', '+item.id+', showThirdparty)">'+item.name+'</a></li>');
+	
+	if(item.client == 1) $li.append('<span class="badge client">C</span>');
+	if(item.fournisseur == 1) $li.append('<span class="badge fournisseur">F</span>');
+
+	$('#thirdparty-list ul').append($li);
+
+}
+
 function saveConfig() {
 	
 	localStorage.interface_url = $('#interface_url').val();	
@@ -204,12 +215,8 @@ function _sync_thirdparty() {
 function refreshthirdpartyList() {
 	$('#thirdparty-list ul').empty();
 	$.each(TThirdParty,function(i, item) {
-		$li = $('<li class="list-group-item"><a href="javascript:dolibarr.indexedDB.getItem(\'thirdparty\', '+item.id+', showThirdparty)">'+item.name+'</a></li>');
-	
-		if(item.client == 1) $li.append('<span class="badge client">C</span>');
-		if(item.fournisseur == 1) $li.append('<span class="badge fournisseur">F</span>');
+		addToListThirdparty(item);
 
-		$('#thirdparty-list ul').append($li);
 		if(i>20) return false;
 	});
 

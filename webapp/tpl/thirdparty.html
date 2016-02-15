@@ -25,7 +25,8 @@
 	$('#search-thirdparty').change(function() {
     	var q = $(this).val();
     	console.log(q);
-    	dolibarr.indexedDB.getItemOnKey('thirdparty', q, 'name', 'showThirdparty');
+    	$('#thirdparty-list ul').empty();
+    	dolibarr.indexedDB.getItemOnKey('thirdparty', q, 'name', addToListThirdparty);
     });
 </script>
 <div id="thirdparty-card"  class="tab-pane">
