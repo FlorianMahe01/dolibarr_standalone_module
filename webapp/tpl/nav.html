@@ -22,9 +22,24 @@
 					<a href="#thirdparty-list" id="onglet3" role="tab" data-toggle="tab"><langs trans="Thirdparties"></langs></a>
 				</li>
 				<li class="hidden">
-					<a href="#thirdparty-card" role="tab" data-toggle="tab">Customer</a>
+					<a id="last-thirdparty" href="#thirdparty-card" role="tab" data-toggle="tab">Customer</a>
 				</li>
+				
+				<li>
+					<div class="button-group">
+						<a type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><langs trans="Thirdparties"></langs>&nbsp;<span class="caret"></span></a>
+						<ul class="dropdown-menu" id="select-user-list">
+							<li class="btn btn-default ">
+								<a data-toggle="tab" href="#thirdparty-list"><langs trans="SearchThirparty"></langs></a>
+							</li>
+							<li class="btn btn-default">
+								<a data-toggle="tab" href="#thirdparty-card"><langs trans="CreateThirparty"></langs></a>
+							</li>
+						</ul>
 
+					</div>
+				</li>
+				
 			</ul>
 
 			<ul class="nav navbar-nav navbar-right">
