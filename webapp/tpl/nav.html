@@ -1,40 +1,60 @@
 <nav class="navbar navbar-fixed-top navbar-default" id="navigation">
 	<div class="container-fluid">
 		<div class="navbar-header">
-	      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#menu-standalone" aria-expanded="false">
-	        <span class="sr-only">Toggle navigation</span>
-	        <span class="icon-bar"></span>
-	        <span class="icon-bar"></span>
-	        <span class="icon-bar"></span>
-	      </button>
-	      <a class="navbar-brand hidden-sm hidden-md hidden-lg" href="#">Menu</a>
-	    </div>
-			
-		<div class="collapse navbar-collapse " id="menu-tasklist">
-		    <ul class="nav navbar-nav" role="tablist">
-			  <li class="active"><a href="#home" role="tab" data-toggle="tab"><langs trans="Home"></langs></a></li>
-			  <li><a href="#product-list" id="onglet2"  role="tab" data-toggle="tab"><langs trans="Product"></langs></a></li>
-		      <li><a href="#thirdparty-list" id="onglet3" role="tab" data-toggle="tab"><langs trans="Thirdparties"></langs></a></li>
-		      <li class="hidden"><a href="#thirdparty-card" role="tab" data-toggle="tab">Customer</a></li>
-			
-			</ul>
-			
-			<ul class="nav navbar-nav navbar-right">	
-			      <li><p class="navbar-text"><span class="glyphicon glyphicon-globe" id="is-online"></span></p></li>
+			<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#menu-standalone" aria-expanded="false">
+				<span class="sr-only">Toggle navigation</span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</button>
+			<a class="navbar-brand hidden-sm hidden-md hidden-lg" href="#">Menu</a>
+		</div>
 
-					<li>
-	
-						<div class="button-group">
-					        <a type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-cog"></span> <span class="caret"></span></a>
-								<ul class="dropdown-menu" id="select-user-list">
-									<li class="btn btn-default "><a data-toggle="tab" href="#config"><langs trans="Params"></langs></a></li>
-									<li class="btn btn-default hidden"><a data-toggle="tab" href="#syncronize-page"><langs trans="Synchronize"></langs></a></li>
-									<li class="btn btn-default "><a href="javascript:syncronize()"><langs trans="Synchronize"></langs></a></li>
-									<li class="btn btn-default "><a href="javascript:disconnect()"><langs trans="Deconnect"></langs></a></li>
-								</ul>
-						
-						</div>
-					</li>
+		<div class="collapse navbar-collapse " id="menu-tasklist">
+			<ul class="nav navbar-nav" role="tablist">
+				<li class="active">
+					<a href="#home" role="tab" data-toggle="tab"><langs trans="Home"></langs></a>
+				</li>
+				<li>
+					<a href="#product-list" id="onglet2"  role="tab" data-toggle="tab"><langs trans="Product"></langs></a>
+				</li>
+				<li>
+					<a href="#thirdparty-list" id="onglet3" role="tab" data-toggle="tab"><langs trans="Thirdparties"></langs></a>
+				</li>
+				<li class="hidden">
+					<a href="#thirdparty-card" role="tab" data-toggle="tab">Customer</a>
+				</li>
+
+			</ul>
+
+			<ul class="nav navbar-nav navbar-right">
+				<li>
+					<p class="navbar-text">
+						<span class="glyphicon glyphicon-globe" id="is-online"></span>
+					</p>
+				</li>
+
+				<li>
+
+					<div class="button-group">
+						<a type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-cog"></span> <span class="caret"></span></a>
+						<ul class="dropdown-menu" id="select-user-list">
+							<li class="btn btn-default ">
+								<a data-toggle="tab" href="#config"><langs trans="Params"></langs></a>
+							</li>
+							<li class="btn btn-default hidden">
+								<a data-toggle="tab" href="#syncronize-page"><langs trans="Synchronize"></langs></a>
+							</li>
+							<li class="btn btn-default ">
+								<a href="javascript:syncronize()"><langs trans="Synchronize"></langs></a>
+							</li>
+							<li class="btn btn-default ">
+								<a href="javascript:disconnect()"><langs trans="Deconnect"></langs></a>
+							</li>
+						</ul>
+
+					</div>
+				</li>
 			</ul>
 		</div>
 	</div>
