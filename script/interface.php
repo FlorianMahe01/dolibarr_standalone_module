@@ -20,97 +20,64 @@
 			
 			break;
 		
-		case 'thirdparty':
-			
-			$id = GETPOST('id','int');
-			
-			if($id) {
-				__out(_getThirdparty($id));
-			}
-			else{
-				__out(_getListThirdparty());	
-			}
-			
-			break;
-		
 		case 'product':
+		case 'thirdparty':
+		case 'proposal':
 			$id = GETPOST('id','int');
 			
-			if($id) {
-				__out(_getProduct($id));
-			}
-			else{
-				__out(_getListProduct());	
-			}
+			if($id) __out(_getItem($get, $id));
+			else __out(_getListItem($get));
 			
 			break;
+			
 	}	
 
 	switch ($put) {
 
 			
-		case 'propal':
+		case 'proposal':
 			__out('ok');
 			
 			break;
 	}
 	
-	
-function _getListProduct() {
-global $conf;
-	$PDOdb = new TPDOdb;
-	
-	$limit = empty($conf->global->STANDALONE_SYNC_LIMIT_LAST_ELEMENT) ? 100 : $conf->global->STANDALONE_SYNC_LIMIT_LAST_ELEMENT;
-	
-	$Tab = $PDOdb->ExecuteAsArray("SELECT rowid  FROM ".MAIN_DB_PREFIX."product 
-	WHERE tosell = 1 
-	ORDER BY tms DESC
-	LIMIT ".$limit);	
-	
-	$TResult = array();
-	foreach ($Tab as $row) {
-		
-		$TResult[] = _getProduct($row->rowid);
-		
-	}
-		
-	return $TResult;
-	
-}	
-function _getProduct($id) {
-global $db;	
-	
-	$o=new Product($db);
-	
-	$o->fetch($id);
-	
-	return $o;
-	
-}			
-function _getThirdparty($id) {
-global $db;	
-	
-	$o=new Societe($db);
-	
-	$o->fetch($id);
-	
-	return $o;
-	
-}	
-	
-function _getListThirdparty() {
 
-	$limit = empty($conf->global->STANDALONE_SYNC_LIMIT_LAST_ELEMENT) ? 100 : $conf->global->STANDALONE_SYNC_LIMIT_LAST_ELEMENT;
+function _getItem($type, $id)
+{
+	global $db;
+	if ($type == 'product') $className = 'Product';
+	elseif ($type == 'thirdparty') $className = 'Societe';
+	elseif ($type == 'proposal') $className = 'Propal';
+	else exit($type.' => non géré');
+	
+	$o=new className($db);
+	$o->fetch($id);
+	
+	return $o;
+}
+
+function _getListItem($type)
+{
+	global $conf;
+	
+	if ($type == 'product') $table = 'product';
+	elseif ($type == 'thirdparty') $table = 'societe';
+	elseif ($type == 'proposal') $table = 'propal';
+	else exit($type.' => non géré');
 	
 	$PDOdb = new TPDOdb;
-	$Tab = $PDOdb->ExecuteAsArray("SELECT rowid FROM ".MAIN_DB_PREFIX."societe WHERE status = 1 ORDER BY tms LIMIT ".$limit);	
+	$limit = empty($conf->global->STANDALONE_SYNC_LIMIT_LAST_ELEMENT) ? 100 : $conf->global->STANDALONE_SYNC_LIMIT_LAST_ELEMENT;
+	
+	$Tab = $PDOdb->ExecuteAsArray('SELECT rowid  FROM '.MAIN_DB_PREFIX.$table.' 
+		WHERE tosell = 1 
+		ORDER BY tms DESC
+		LIMIT '.$limit);
 	
 	$TResult = array();
-	foreach ($Tab as $row) {
-		
-		$TResult[] = _getThirdparty($row->rowid);
-		
+	foreach ($Tab as $row) 
+	{
+		$TResult[] = _getItem($type, $row->rowid);
 	}
-		
+	
 	return $TResult;
 }

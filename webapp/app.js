@@ -45,7 +45,8 @@ function switchOnglet(onglet)
 			break;
 		
 		default:
-		
+		case 'proposals':
+			$('a[href="#propal-list"]').tab('show');
 			break;
 	}
 }
@@ -70,85 +71,72 @@ function saveConfig() {
 	
 }
 
-function syncronize() {
-	
+function syncronize() 
+{
 	$('#syncronize-page .sync-info').html('');
 	$('#navigation a[href="#syncronize-page"]').tab('show');
 	
 	$('#syncronize-page .sync-info').append('Fetching products... ');
-	_sync_product();
+	_sync('product');
 	$('#syncronize-page .sync-info').append('Done<br />');
 	
 	$('#syncronize-page .sync-info').append('Fetching thirdparties... ');
-	_sync_thirdparty();
+	_sync('thirdparty');
 	$('#syncronize-page .sync-info').append('Done<br />');
 	
+	$('#syncronize-page .sync-info').append('Fetching proposals... ');
+	_sync('proposal');
+	$('#syncronize-page .sync-info').append('Done<br />');
 }
 
-function _sync_product() {
-  var date_last_sync_product = 0;
-  if(localStorage.date_last_sync_product){  date_last_sync_product = localStorage.date_last_sync_product; }
+function _sync(type)
+{
+	switch (type) {
+		case 'product':
+			var date_last_sync = localStorage.date_last_sync_product || 0;
+			break;
+		case 'thirdparty':
+			var date_last_sync = localStorage.date_last_sync_thirdparty || 0;
+			break;
+		case 'proposal':
+			var date_last_sync = localStorage.date_last_sync_proposal || 0;
+			break;
+	}
 	
-  $.ajax({
-  	url : 	localStorage.interface_url
-  	,data : {
-  		get:'product'
-  		,jsonp: 1
-  		,date_last_sync : date_last_sync_product
-  	}
-  	,dataType:'jsonp'
-  	,async : false
-  })
-  .done(function(data) {
-
-	  	localStorage.date_last_sync_product = $.now(); 
-	  	
-	  	$.each(data, function(i, item) {
-	  		
-	  		var find = false;
-	  		for(x in TProduct){
-	  			
-	  			if(TProduct[x].id == item.id) {
-	  				TProduct[x] = item;
-	  				find = true;
-	  			
-	  			}
-	  		}
-	  		
-	  		if(!find) TProduct.push(item);
-	  		
-	  		
-	  	});
-	  	
-	  	_synchronize_local_product();
-  })
-  .fail(function() {
-  		
+	$.ajax({
+		url: localStorage.interface_url
+		,data: {
+			get:type
+			,jsonp: 1
+			,date_last_sync: date_last_sync
+		}
+		,dataType:'jsonp'
+		,async : false
+	})
+	.done(function(data) {
+		_update_date_sync(type, $.now());
+	  	// TODO faire un update db doliDb.updateAllItem(type, callback);
+	})
+	.fail(function() {
   		alert("I think youre are not connected to internet, am i right ?");
-  	
-  });
-  
-  
-  return TProduct;
-  
+	});
 }
-function _synchronize_local_product(tx) {
-	for(var x in TProduct) {
-		item = TProduct[x];
-		
-		dolibarr.indexedDB.addProduct(item);
+
+function _update_date_sync(type, date)
+{
+	switch (type) {
+		case 'product':
+			localStorage.date_last_sync_product = date;
+			break;
+		case 'thirdparty':
+			localStorage.date_last_sync_thirdparty = date;
+			break;
+		case 'proposal':
+			localStorage.date_last_sync_proposal = date;
+			break;
 	}
-	
-	
 }
-function _synchronize_local_thirdparty(tx) {
-	for(var x in TThirdParty) {
-		item = TThirdParty[x];
-		
-		dolibarr.indexedDB.addThirdparty(item);
-	}
-	
-}
+
 function takePicture() {
      navigator.camera.getPicture(function (fileURI) {
 
@@ -167,45 +155,6 @@ function takePicture() {
 	    sourceType: window.Camera.PictureSourceType.PHOTOLIBRARY,
 	    mediaType: window.Camera.MediaType.ALLMEDIA
 	});
-}
-function _sync_thirdparty() {
-  var date_last_sync_thirdparty = 0;
-  if(localStorage.date_last_sync_thirdparty){  date_last_sync_thirdparty = localStorage.date_last_sync_thirdparty; }
-
-  $.ajax({
-  	url : 	localStorage.interface_url
-  	,data : {
-  		get:'thirdparty'
-  		,jsonp: 1
-  		,date_last_sync : date_last_sync_thirdparty
-  	}
-  	,dataType:'jsonp'
-  	,async : false
-  }).done(function(data) {
-
-	  	localStorage.date_last_sync_thirdparty = $.now(); 
-	  	
-	  	$.each(data, function(i, item) {
-	  		var find = false;
-	  		for(x in TThirdParty){
-	  			
-	  			if(TThirdParty[x].id == item.id) {
-	  				TThirdParty[x] = item;
-	  				find = true;
-	  			}
-	  		}
-	  		
-	  		if(!find) TThirdParty.push(item);
-	  	});
-	 	  	
-	  	_synchronize_local_thirdparty();
-		refreshthirdpartyList();
-  });
-  
-  
-  
-  return TThirdParty;
-  
 }
 
 function refreshThirpartyList(TItem)
