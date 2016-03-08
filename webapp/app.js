@@ -43,9 +43,14 @@ function switchOnglet(onglet)
 		case 'thirdparties':
 			doliDb.getAllItem('thirdparty', refreshThirpartyList);
 			break;
+		case 'proposals':
+		console.log('toto');
+			$('a[href="#propal-list"]').tab('show');
+			doliDB.getAllItem('proposal', refreshProposalList);
+			break;
 		
 		default:
-		
+			
 			break;
 	}
 }
@@ -208,6 +213,19 @@ function _sync_thirdparty() {
   
 }
 
+function refreshProposalList(TItem)
+{
+	$('#proposal-list ul').empty();
+	for (var i in TItem)
+	{
+		var $li = $('<li class="list-group-item"><a href="javascript:showProposal('+TItem[i].id+')">'+TItem[i].ref+'</a></li>');
+	
+		$('#proposal-list ul').append($li);
+	
+		if(i>20) return false;
+	}
+}
+
 function refreshThirpartyList(TItem)
 {
 	$('#thirdparty-list ul').empty();
@@ -221,6 +239,19 @@ function refreshThirpartyList(TItem)
 	
 		if(i>20) return false;
 	}
+}
+
+function refreshProposalList(){
+	var DoliDb = new DoliDb();
+	DoliDb.open();
+	
+	var TProposal = DoliDb.getAllItem('product');
+	
+	$('#proposal-list ul').empty();
+	$.each(TProposal, function(i, item){
+		$('#proposal-list ul').append('<li class="list-group-item"><a href="javascript:showProduct('+item.id+')">'+item.ref+'</a></li>');
+		if(i>20) return false;
+	});
 }
 
 function refreshproductList() {
