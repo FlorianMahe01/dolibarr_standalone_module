@@ -1,21 +1,13 @@
-
-
-
-var dolibarr = {};
-TProduct = new Array;
-TThirdParty = new Array;
-
-
 $(document).ready(function() {
-    dolibarr.indexedDB.db = null;
-    dolibarr.indexedDB.open();
-  
- 	if(localStorage.interface_url) {  
+	
+ 	if(localStorage.interface_url) 
+ 	{  
  		$('#interface_url').val(localStorage.interface_url); 
-	 	if(localStorage.dolibarr_login) {  $('#dolibarr_login').val(localStorage.dolibarr_login); }
-	 	if(localStorage.dolibarr_password) {  $('#dolibarr_password').val(localStorage.dolibarr_password); }
+	 	if(localStorage.dolibarr_login) { $('#dolibarr_login').val(localStorage.dolibarr_login); }
+	 	if(localStorage.dolibarr_password) { $('#dolibarr_password').val(localStorage.dolibarr_password); }
  	}
- 	else {
+ 	else 
+ 	{
  		$('#navigation a[href="#config"]').tab('show');
  	}
 	
@@ -29,30 +21,33 @@ $(document).ready(function() {
       
 });
 
-function _checkOnline() {
-	
+function _checkOnline() 
+{
 	var online = navigator.onLine;
     if(online) $('#is-online').removeClass('offline').addClass('online').attr('title','You are online');
 	else $('#is-online').removeClass('online').addClass('offline').attr('title','Offline !');
 }
 
-function tpl_append(url,container) {
-		$.get(url, function (data ) {
-			$(container).prepend(data);
-			applyAllTrans();
-		});
-
+function tpl_append(url,container) 
+{
+	$.get(url, function (data) {
+		$(container).prepend(data);
+		applyAllTrans();
+	});
 }
 
-function addToListThirdparty(item) {
-	
-	var $li = $('<li class="list-group-item"><a href="javascript:dolibarr.indexedDB.getItem(\'thirdparty\', '+item.id+', showThirdparty)">'+item.name+'</a></li>');
-	
-	if(item.client == 1) $li.append('<span class="badge client">C</span>');
-	if(item.fournisseur == 1) $li.append('<span class="badge fournisseur">F</span>');
 
-	$('#thirdparty-list ul').append($li);
-
+function switchOnglet(onglet)
+{
+	switch (onglet) {
+		case 'thirdparties':
+			doliDb.getAllItem('thirdparty', refreshThirpartyList);
+			break;
+		
+		default:
+		
+			break;
+	}
 }
 
 function saveConfig() {
@@ -126,7 +121,6 @@ function _sync_product() {
 	  	});
 	  	
 	  	_synchronize_local_product();
-		refreshproductList();
   })
   .fail(function() {
   		
@@ -213,20 +207,31 @@ function _sync_thirdparty() {
   return TThirdParty;
   
 }
-function refreshthirdpartyList() {
+
+function refreshThirpartyList(TItem)
+{
 	$('#thirdparty-list ul').empty();
-	$.each(TThirdParty,function(i, item) {
-		addToListThirdparty(item);
-
+	for (var i in TItem)
+	{
+		var $li = $('<li class="list-group-item"><a href="javascript:showThirdparty('+TItem[i].id+')">'+TItem[i].name+'</a></li>');
+		if(TItem[i].client == 1) $li.append('<span class="badge client">C</span>');
+		if(TItem[i].fournisseur == 1) $li.append('<span class="badge fournisseur">F</span>');
+	
+		$('#thirdparty-list ul').append($li);
+	
 		if(i>20) return false;
-	});
-
+	}
 }
+
 function refreshproductList() {
+	var DoliDb = new DoliDb();
+	DoliDb.open();
+	
+	var TProduct = DoliDb.getAllItem('product');
 	
 	$('#product-list ul').empty();
 	$.each(TProduct,function(i, item) {
-		$('#product-list ul').append('<li class="list-group-item"><a href="javascript:dolibarr.indexedDB.getItem(\'product\', '+item.id+', showProduct)">'+item.label+'</a></li>');
+		$('#product-list ul').append('<li class="list-group-item"><a href="javascript:showProduct('+item.id+')">'+item.label+'</a></li>');
 		if(i>20) return false;
 	});
 	
@@ -235,16 +240,27 @@ function refreshproductList() {
 function setItemInHTML($container, item) {
 	
 	for(var x in item) {
-		value = item[x];console.log(x);
+		value = item[x];
+		console.log(x);
 		$container.find('[rel='+x+']').html(value);
 	}
 	
 }
-function showProduct(item) {
+function showProduct() {
+	var DoliDb = new DoliDb();
+	DoliDb.open();
+	
+	var item = DoliDb.getItem('product', id);
+	
 	showItem(item, 'product-card');
 	$('a[href="#product-list"]').tab('show');
 }
-function showThirdparty(item) {
+function showThirdparty(id) {
+	var DoliDb = new DoliDb();
+	DoliDb.open();
+	
+	var item = DoliDb.getItem('thirdparty', id);
+	
 	showItem(item, 'thirdparty-card');
 	console.log(item);
 	var $a = $('a#last-thirdparty');

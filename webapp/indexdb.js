@@ -1,3 +1,116 @@
+/* Pseudo class DB */
+var DoliDb = function() {
+
+	DoliDb.prototype.indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
+	DoliDb.prototype.IDBTransaction = window.IDBTransaction || window.webkitIDBTransaction || window.msIDBTransaction;
+	DoliDb.prototype.IDBKeyRange = window.IDBKeyRange || window.webkitIDBKeyRange || window.msIDBKeyRange;
+	
+	DoliDb.prototype.request = {};
+	DoliDb.prototype.db = {};
+	
+	DoliDb.prototype.open = function(callback) {
+		
+		if (!this.indexedDB) {
+		    window.alert("Votre navigateur ne supporte pas une version stable d'IndexedDB. Quelques fonctionnalités ne seront pas disponibles.");
+		    return;
+		}
+		
+		var version = 10;
+		this.request = this.indexedDB.open('dolibarr', version); // Attention la version ne peut pas être inférieur à la dernière version
+		
+		this.request.onupgradeneeded = function (event) { // cette fonction doit normalement mettre à jour le schéma BDD sans qu'on soit obligé de modifier le numéro de version 
+			DoliDb.prototype.db = event.currentTarget.result;
+			   
+			try { DoliDb.prototype.db.deleteObjectStore("product"); }
+			catch(e) { console.log(e); }
+			
+			try { DoliDb.prototype.db.deleteObjectStore("thirdparty"); }
+			catch(e) { console.log(e); }
+			
+			var objectStore = DoliDb.prototype.db.createObjectStore("product", { keyPath: "id", autoIncrement: true });
+			objectStore.createIndex("id", "id", { unique: true });
+			objectStore.createIndex("label", "label", { unique: false });
+			
+			var objectStore = DoliDb.prototype.db.createObjectStore("thirdparty", { keyPath: "id", autoIncrement: true });
+			objectStore.createIndex("id", "id", { unique: true });
+			objectStore.createIndex("name", "keyname", { unique: false });
+		};
+		
+		this.request.onsuccess = function(event) {
+			DoliDb.prototype.db = event.target.result;
+			console.log("success");
+		};
+		
+	    this.request.onerror = function() { 
+	    	console.log("error"); 
+	    };
+	    this.request.onblocked = function() { 
+	    	console.log("blocked"); 
+	    };
+	    
+	};
+	
+	DoliDb.prototype.close = function() {
+		this.db.close();
+	};
+	
+	DoliDb.prototype.getAllItem = function(type, callback) {
+		var TItem = new Array;
+		
+		var transaction = this.db.transaction([type], "readonly");
+		var objectStore = transaction.objectStore(type);
+		
+		// Get everything in the store;
+		var keyRange = this.IDBKeyRange.lowerBound(0);
+		var cursorRequest = objectStore.openCursor(keyRange);
+		
+		cursorRequest.onsuccess = function(event) 
+		{
+			var result = event.target.result;
+			if(result) 
+			{
+				TItem.push(result.value);
+				result.continue();
+			}
+			else
+			{
+				if (typeof callback !== 'undefined') callback(TItem);
+				return false; // de toute manière c'est de l'asynchrone, donc ça sert à rien de return TItem
+				//refreshthirdpartyList(TThirdParty);
+			}
+		};
+		
+		cursorRequest.oncomplete = function() {
+			DoliDb.close();
+		};
+		  
+		cursorRequest.onerror = DoliDb.db.onerror;
+	};
+	
+	
+	DoliDb.prototype.getItem = function (storename, id, callback) {
+		var transaction =  DoliDb.db.transaction(storename, "readonly");
+		var objectStore = transaction.objectStore(storename);
+		  
+		var request = objectStore.get(id.toString()); 
+		request.onsuccess = function() 
+		{
+			var item = request.result;
+			if (item !== 'undefined') 
+			{
+				if (callback !== 'undefined') callback(matching);
+				else return item;
+				
+			} else {
+				alert('Item not found');
+			}
+		};
+	};
+	
+};
+
+/*
+
 dolibarr.indexedDB = {};
 
 dolibarr.indexedDB.open = function() {
@@ -271,3 +384,4 @@ dolibarr.indexedDB.clear=function() {
 		};
 	
 };
+*/
