@@ -19,7 +19,13 @@
 		<script type="text/javascript" src="indexdb.js"></script>		
 		<script type="text/javascript" src="app.js"></script>
 		<script type="text/javascript" src="IndexedDBShim.js"></script>
-				
+		<script type="text/javascript">
+			$(document).ready(function() {
+				/* Point d'entrée des informations */
+				doliDb = new DoliDb();
+				doliDb.open();
+			});
+		</script>
 	</head>
 	
 <body>

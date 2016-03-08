@@ -1,8 +1,5 @@
 $(document).ready(function() {
 	
-	doliDB = new DoliDb();
-	doliDB.open();
-	
  	if(localStorage.interface_url) 
  	{  
  		$('#interface_url').val(localStorage.interface_url); 
@@ -44,7 +41,7 @@ function switchOnglet(onglet)
 {
 	switch (onglet) {
 		case 'thirdparties':
-			doliDB.getAllItem('thirdparty', refreshThirpartyList);
+			doliDb.getAllItem('thirdparty', refreshThirpartyList);
 			break;
 		
 		default:
@@ -216,7 +213,6 @@ function refreshThirpartyList(TItem)
 	$('#thirdparty-list ul').empty();
 	for (var i in TItem)
 	{
-		console.log(TItem[i]);
 		var $li = $('<li class="list-group-item"><a href="javascript:showThirdparty('+TItem[i].id+')">'+TItem[i].name+'</a></li>');
 		if(TItem[i].client == 1) $li.append('<span class="badge client">C</span>');
 		if(TItem[i].fournisseur == 1) $li.append('<span class="badge fournisseur">F</span>');
@@ -244,7 +240,8 @@ function refreshproductList() {
 function setItemInHTML($container, item) {
 	
 	for(var x in item) {
-		value = item[x];console.log(x);
+		value = item[x];
+		console.log(x);
 		$container.find('[rel='+x+']').html(value);
 	}
 	
