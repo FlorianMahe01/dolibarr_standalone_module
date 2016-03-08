@@ -286,6 +286,21 @@ function showProduct() {
 	showItem(item, 'product-card');
 	$('a[href="#product-list"]').tab('show');
 }
+
+function showProposal(id){
+	var DoliDb = new DoliDb();
+	DoliDb.open();
+	
+	var item = DoliDb.getItem('proposal', id);
+	
+	showItem(item, 'proposal-card');
+	console.log(item);
+	var $a = $('a#last-proposal');
+	$a.html(item.name);
+	$a.tab('show');
+	$a.closest('li').removeClass('hidden');
+}
+
 function showThirdparty(id) {
 	var DoliDb = new DoliDb();
 	DoliDb.open();
