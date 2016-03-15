@@ -44,9 +44,14 @@ function switchOnglet(onglet)
 			doliDb.getAllItem('thirdparty', refreshThirpartyList);
 			break;
 		
-		default:
 		case 'proposals':
+		console.log('toto');
 			$('a[href="#propal-list"]').tab('show');
+			doliDB.getAllItem('proposal', refreshProposalList);
+			break;
+		
+		default:
+			
 			break;
 	}
 }
@@ -172,6 +177,19 @@ function refreshThirpartyList(TItem)
 	}
 }
 
+function refreshProposalList(){
+	var DoliDb = new DoliDb();
+	DoliDb.open();
+	
+	var TProposal = DoliDb.getAllItem('product');
+	
+	$('#proposal-list ul').empty();
+	$.each(TProposal, function(i, item){
+		$('#proposal-list ul').append('<li class="list-group-item"><a href="javascript:showProduct('+item.id+')">'+item.ref+'</a></li>');
+		if(i>20) return false;
+	});
+}
+
 function refreshproductList() {
 	var DoliDb = new DoliDb();
 	DoliDb.open();
@@ -204,6 +222,21 @@ function showProduct() {
 	showItem(item, 'product-card');
 	$('a[href="#product-list"]').tab('show');
 }
+
+function showProposal(id){
+	var DoliDb = new DoliDb();
+	DoliDb.open();
+	
+	var item = DoliDb.getItem('proposal', id);
+	
+	showItem(item, 'proposal-card');
+	console.log(item);
+	var $a = $('a#last-proposal');
+	$a.html(item.name);
+	$a.tab('show');
+	$a.closest('li').removeClass('hidden');
+}
+
 function showThirdparty(id) {
 	var DoliDb = new DoliDb();
 	DoliDb.open();
