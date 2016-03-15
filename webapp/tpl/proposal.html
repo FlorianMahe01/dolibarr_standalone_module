@@ -1,14 +1,13 @@
 <div id="proposal-list" class="tab-pane">
 	<div class="container-fluid">
 		<div  class="row">
-
 			<div class="input-group">
-				<input type="text" id="search-proposal" class="form-control" placeholder="proposal" />
+				<input type="text" id="search-proposal" class="form-control" placeholder="Proposal" />
 				<span class="input-group-btn">
 					<button class="btn btn-default" type="button">
 						<langs trans="Go"></langs>
 					</button> </span>
-			</div><!-- /input-group -->
+			</div>
 		</div>
 
 		<div class="row">
@@ -19,15 +18,7 @@
 
 	</div>
 </div>
-<!--TODO  -->
-<script type="text/javascript">
-	$('#search-proposal').change(function() {
-		var q = $(this).val();
-		console.log(q);
-		$('#proposal-list ul').empty();
-		dolibarr.indexedDB.getItemOnKey('proposal', q, 'name', addToListThirdparty);
-	}); 
-</script>
+
 <div id="proposal-card"  class="tab-pane">
 	<button type="button" class="btn btn-primary btn-circle btn-lg btn-edit">
 		<i class="glyphicon glyphicon-pencil"></i>

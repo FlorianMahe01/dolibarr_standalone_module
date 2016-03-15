@@ -40,17 +40,19 @@ function tpl_append(url,container)
 function switchOnglet(onglet)
 {
 	switch (onglet) {
+		case 'products':
+			doliDb.getAllItem('product', refreshProductList);
+			break;
+			
 		case 'thirdparties':
 			doliDb.getAllItem('thirdparty', refreshThirpartyList);
 			break;
 		
 		case 'proposals':
 			doliDb.getAllItem('proposal', refreshProposalList);
-			$('a[href="#propal-list"]').tab('show');
 			break;
 		
 		default:
-			
 			break;
 	}
 }
@@ -166,6 +168,7 @@ function takePicture() {
 function refreshThirpartyList(TItem)
 {
 	$('#thirdparty-list ul').empty();
+	var x = 0;
 	for (var i in TItem)
 	{
 		var $li = $('<li class="list-group-item"><a href="javascript:showThirdparty('+TItem[i].id+')">'+TItem[i].name+'</a></li>');
@@ -174,34 +177,39 @@ function refreshThirpartyList(TItem)
 	
 		$('#thirdparty-list ul').append($li);
 	
-		if(i>20) return false;
+		if (x > 20) return;
+		else x++;
 	}
 }
 
-function refreshProposalList()
+function refreshProposalList(TItem)
 {
-	var TProposal = DoliDb.getAllItem('product');
-	
+	var x = 0;
 	$('#proposal-list ul').empty();
-	$.each(TProposal, function(i, item){
-		$('#proposal-list ul').append('<li class="list-group-item"><a href="javascript:showProduct('+item.id+')">'+item.ref+'</a></li>');
-		if(i>20) return false;
-	});
+	for (var i in TItem)
+	{
+		var $li = $('<li class="list-group-item"><a href="javascript:showProposal('+TItem[i].id+')">'+TItem[i].ref+'</a></li>');
+		
+		$('#proposal-list ul').append($li);
+		
+		if (x > 20) return;
+		else x++;
+	}
 }
 
-function refreshProductList() 
+function refreshProductList(TItem) 
 {
-	var DoliDb = new DoliDb();
-	DoliDb.open();
-	
-	var TProduct = DoliDb.getAllItem('product');
-	
+	var x = 0;
 	$('#product-list ul').empty();
-	$.each(TProduct,function(i, item) {
-		$('#product-list ul').append('<li class="list-group-item"><a href="javascript:showProduct('+item.id+')">'+item.label+'</a></li>');
-		if(i>20) return false;
-	});
-	
+	for (var i in TItem)
+	{
+		var $li = $('<li class="list-group-item"><a href="javascript:showProduct('+TItem[i].id+')">'+TItem[i].label+'</a></li>');
+		
+		$('#product-list ul').append($li);
+		
+		if (x > 20) return;
+		else x++;
+	}
 }
 
 function setItemInHTML($container, item) 

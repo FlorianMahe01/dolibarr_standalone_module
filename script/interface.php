@@ -4,8 +4,9 @@
 	
 	require('../config.php');
 	
-	dol_include_once("/contact/class/contact.class.php");
-	dol_include_once("/product/class/product.class.php");
+	dol_include_once('/contact/class/contact.class.php');
+	dol_include_once('/product/class/product.class.php');
+	dol_include_once('/comm/propal/class/propal.class.php');
 
 // TODO check login / pass
 // TODO sync event, propal, order, invoice in order to allow view and edit

@@ -15,7 +15,7 @@ var DoliDb = function() {
 		    return;
 		}
 		
-		var version = 11;
+		var version = 12;
 		this.request = this.indexedDB.open('dolibarr', version); // Attention la version ne peut pas être inférieur à la dernière version
 		
 		this.request.onupgradeneeded = function (event) { // cette fonction doit normalement mettre à jour le schéma BDD sans qu'on soit obligé de modifier le numéro de version 
@@ -60,6 +60,8 @@ var DoliDb = function() {
 	};
 	
 	DoliDb.prototype.getAllItem = function(type, callback) {
+		console.log('getAllItem : '+type);
+		
 		var TItem = new Array;
 		
 		var transaction = this.db.transaction([type], "readonly");
@@ -69,8 +71,7 @@ var DoliDb = function() {
 		var keyRange = this.IDBKeyRange.lowerBound(0);
 		var cursorRequest = objectStore.openCursor(keyRange);
 		
-		cursorRequest.onsuccess = function(event) 
-		{
+		cursorRequest.onsuccess = function(event) {
 			var result = event.target.result;
 			if(result) 
 			{
@@ -123,12 +124,12 @@ var DoliDb = function() {
 		var cursorRequest = objectStore.openCursor(keyRange);
 		
 		cursorRequest.onsuccess = function(event) {
-			var db = event.target.result;
+			var result = event.target.result;
 			
-			if(db)
+			if(result)
 			{
-				objectStore.delete(db.key);
-				db.continue();
+				objectStore.delete(result.key);
+				result.continue();
 			}
 			else
 			{
