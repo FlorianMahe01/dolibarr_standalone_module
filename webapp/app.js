@@ -45,9 +45,8 @@ function switchOnglet(onglet)
 			break;
 		
 		case 'proposals':
-		console.log('toto');
+			doliDb.getAllItem('proposal', refreshProposalList);
 			$('a[href="#propal-list"]').tab('show');
-			doliDB.getAllItem('proposal', refreshProposalList);
 			break;
 		
 		default:
@@ -110,17 +109,19 @@ function _sync(type)
 	
 	$.ajax({
 		url: localStorage.interface_url
+		//url: "http://localhost/dolibarr/develop/htdocs/custom/standalone/script/interface.php"
 		,data: {
 			get:type
 			,jsonp: 1
 			,date_last_sync: date_last_sync
 		}
 		,dataType:'jsonp'
+		//,dataType:'json'
 		,async : false
 	})
 	.done(function(data) {
 		_update_date_sync(type, $.now());
-	  	// TODO faire un update db doliDb.updateAllItem(type, callback);
+	  	doliDb.updateAllItem(type, data);
 	})
 	.fail(function() {
   		alert("I think youre are not connected to internet, am i right ?");
@@ -177,10 +178,8 @@ function refreshThirpartyList(TItem)
 	}
 }
 
-function refreshProposalList(){
-	var DoliDb = new DoliDb();
-	DoliDb.open();
-	
+function refreshProposalList()
+{
 	var TProposal = DoliDb.getAllItem('product');
 	
 	$('#proposal-list ul').empty();
@@ -190,7 +189,8 @@ function refreshProposalList(){
 	});
 }
 
-function refreshproductList() {
+function refreshProductList() 
+{
 	var DoliDb = new DoliDb();
 	DoliDb.open();
 	
@@ -204,16 +204,18 @@ function refreshproductList() {
 	
 }
 
-function setItemInHTML($container, item) {
-	
-	for(var x in item) {
+function setItemInHTML($container, item) 
+{
+	for(var x in item) 
+	{
 		value = item[x];
 		console.log(x);
 		$container.find('[rel='+x+']').html(value);
 	}
-	
 }
-function showProduct() {
+
+function showProduct() 
+{
 	var DoliDb = new DoliDb();
 	DoliDb.open();
 	

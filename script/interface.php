@@ -21,6 +21,13 @@
 			break;
 		
 		case 'product':
+			$id = GETPOST('id','int');
+			
+			if($id) __out(_getItem($get, $id));
+			else __out(_getListItem($get, ' WHERE tosell = 1'));
+			
+			break;
+			
 		case 'thirdparty':
 		case 'proposal':
 			$id = GETPOST('id','int');
@@ -50,13 +57,13 @@ function _getItem($type, $id)
 	elseif ($type == 'proposal') $className = 'Propal';
 	else exit($type.' => non géré');
 	
-	$o=new className($db);
+	$o=new $className($db);
 	$o->fetch($id);
 	
 	return $o;
 }
 
-function _getListItem($type)
+function _getListItem($type, $filter='')
 {
 	global $conf;
 	
@@ -68,15 +75,16 @@ function _getListItem($type)
 	$PDOdb = new TPDOdb;
 	$limit = empty($conf->global->STANDALONE_SYNC_LIMIT_LAST_ELEMENT) ? 100 : $conf->global->STANDALONE_SYNC_LIMIT_LAST_ELEMENT;
 	
-	$Tab = $PDOdb->ExecuteAsArray('SELECT rowid  FROM '.MAIN_DB_PREFIX.$table.' 
-		WHERE tosell = 1 
-		ORDER BY tms DESC
-		LIMIT '.$limit);
+	$sql = 'SELECT rowid  FROM '.MAIN_DB_PREFIX.$table;
+	if (!empty($filter)) $sql .= $filter;
+	$sql.= ' ORDER BY tms DESC LIMIT '.$limit;
+	
+	$Tab = $PDOdb->ExecuteAsArray($sql);
 	
 	$TResult = array();
 	foreach ($Tab as $row) 
 	{
-		$TResult[] = _getItem($type, $row->rowid);
+		$TResult[$row->rowid] = _getItem($type, $row->rowid);
 	}
 	
 	return $TResult;
