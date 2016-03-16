@@ -1,4 +1,4 @@
-<nav class="navbar navbar-fixed-top navbar-default" id="navigation">
+<nav class="navbar navbar-fixed-top navbar-default" id="navigation" role="navigation">
 	<div class="container-fluid">
 		<div class="navbar-header">
 			<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#menu-standalone" aria-expanded="false">
@@ -8,10 +8,15 @@
 				<span class="icon-bar"></span>
 			</button>
 			<a class="navbar-brand hidden-sm hidden-md hidden-lg" href="#">Menu</a>
+			<!-- Logo si connexion à internet -->
+			<span class="is-online glyphicon glyphicon-globe navbar-brand hidden-sm hidden-md hidden-lg"></span>
+
 		</div>
 
+				
 		<!-- Définition du menu du haut -->
-		<div class="collapse navbar-collapse " id="menu-tasklist">
+		<div class="collapse navbar-collapse" id="menu-standalone">
+			
 			<ul class="nav navbar-nav" role="tablist">
 				<!-- Définition du lien "Home" -->
 				<li class="active">
@@ -20,12 +25,12 @@
 				
 				<!-- Définition du lien "Product" -->
 				<li>
-					<a href="#product-list" id="onglet2"  role="tab" data-toggle="tab"><langs trans="Product"></langs></a>
+					<a href="#product-list" role="tab" data-toggle="tab"><langs trans="Product"></langs></a>
 				</li>
 				
 				<!-- Définition du lien "Thiersparties" -->
 				<li>
-					<a href="#thirdparty-list" onclick="javascript:switchOnglet('thirdparties');" id="onglet3" role="tab" data-toggle="tab"><langs trans="Thirdparties"></langs></a>
+					<a href="#thirdparty-list" onclick="javascript:switchOnglet('thirdparties');" role="tab" data-toggle="tab"><langs trans="Thirdparties"></langs></a>
 				</li>
 				
 				<!-- Définition lien "Dernier client consulté" -->
@@ -82,24 +87,26 @@
 				</li>
 				
 			</ul>
-
-
+			
 			<!-- Définition du menu haut droite concernant la config et la connexion à internet -->
-			<ul class="nav navbar-nav navbar-right">
-				
+			<ul class="nav navbar-right navbar-nav" role="tablist">
 				<!-- Logo si connexion à internet -->
-				<li>
+				<li class="hidden-xs">
 					<p class="navbar-text">
-						<span class="glyphicon glyphicon-globe" id="is-online"></span>
+						<span class="glyphicon glyphicon-globe is-online"></span>
 					</p>
 				</li>
-
+				
 				<!-- Définition du sous menu "Configuration" -->
 				<li>
 
 					<div class="button-group">
-						<a type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-cog"></span> <span class="caret"></span></a>
-						<ul class="dropdown-menu" id="select-user-list">
+						<a type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+							<span class="glyphicon glyphicon-cog hidden-xs"></span>
+							<span class="navbar-text hidden-sm hidden-md hidden-lg"><langs trans="Parameters"></langs></span>
+							<span class="caret"></span>
+						</a>
+						<ul class="dropdown-menu">
 							<li class="btn btn-default ">
 								<a data-toggle="tab" href="#config"><langs trans="Params"></langs></a>
 							</li>
@@ -116,8 +123,10 @@
 
 					</div>
 				</li>
+				
 			</ul>
 			
 		</div>
+		
 	</div>
 </nav>

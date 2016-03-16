@@ -1,38 +1,65 @@
 $(document).ready(function() {
-	
- 	if(localStorage.interface_url) 
- 	{  
- 		$('#interface_url').val(localStorage.interface_url); 
-	 	if(localStorage.dolibarr_login) { $('#dolibarr_login').val(localStorage.dolibarr_login); }
-	 	if(localStorage.dolibarr_password) { $('#dolibarr_password').val(localStorage.dolibarr_password); }
- 	}
- 	else 
- 	{
- 		$('#navigation a[href="#config"]').tab('show');
- 	}
-	
-    $('input[name=camit]').change(function() {
-    	alert(this.value);	
-    }) ;
-     
-   // $("#home [rel=thirdparties] span.bubble").html(dolibarr.indexedDB.count('thirdparty'));
-      
-    _checkOnline();
-});
 
+});
+			
 function _checkOnline() 
 {
 	var online = navigator.onLine;
-    if(online) $('#is-online').removeClass('offline').addClass('online').attr('title','You are online');
-	else $('#is-online').removeClass('online').addClass('offline').attr('title','Offline !');
+    if(online) $('.is-online').removeClass('offline').addClass('online').attr('title','You are online');
+	else $('.is-online').removeClass('online').addClass('offline').attr('title','Offline !');
 }
 
-function tpl_append(url,container) 
+function load_tpl()
 {
-	$.get(url, function (data) {
-		$(container).prepend(data);
-		applyAllTrans();
-	});
+	var TTpl = [
+		['tpl/nav.html', 'body']
+		,['tpl/config.html', '#container']
+		,['tpl/home.html', '#container']
+		,['tpl/product.html', '#container']
+		,['tpl/thirdparty.html', '#container']
+		,['tpl/proposal.html', '#container']
+	];
+	
+	tpl_append(TTpl);
+}
+
+function tpl_append(TTpl) 
+{
+	if (TTpl.length > 0)
+	{
+		$.get(TTpl[0][0], function (data) 
+		{
+			$(TTpl[0][1]).prepend(data);
+			applyAllTrans();
+			TTpl.splice(0, 1);
+			tpl_append(TTpl);
+		});	
+	}
+	else
+	{
+		if(localStorage.interface_url) 
+	 	{  
+	 		$('#interface_url').val(localStorage.interface_url); 
+		 	if(localStorage.dolibarr_login) { $('#dolibarr_login').val(localStorage.dolibarr_login); }
+		 	if(localStorage.dolibarr_password) { $('#dolibarr_password').val(localStorage.dolibarr_password); }
+	 	}
+	 	else 
+	 	{
+	 		$('#navigation a[href="#config"]').tab('show');
+	 	}
+		
+	    $('input[name=camit]').change(function() {
+	    	alert(this.value);	
+	    }) ;
+	    
+	    _checkOnline();
+	    
+    	/* Fermeture automatique du menu burger 
+    	$('.nav a:not(.dropdown-toggle)').on('click', function(){
+		    $('.navbar-toggle').click();
+		});
+		*/
+	}
 }
 
 function switchOnglet(onglet)
