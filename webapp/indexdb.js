@@ -105,7 +105,7 @@ var DoliDb = function() {
 			var item = request.result;
 			if (item !== 'undefined') 
 			{
-				if (callback !== 'undefined') callback(matching);
+				if (typeof callback != 'undefined') callback(item);
 				else return item;
 				
 			} else {

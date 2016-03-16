@@ -18,7 +18,6 @@ $(document).ready(function() {
    // $("#home [rel=thirdparties] span.bubble").html(dolibarr.indexedDB.count('thirdparty'));
       
     _checkOnline();
-      
 });
 
 function _checkOnline() 
@@ -35,7 +34,6 @@ function tpl_append(url,container)
 		applyAllTrans();
 	});
 }
-
 
 function switchOnglet(onglet)
 {
@@ -167,14 +165,13 @@ function takePicture() {
 
 function refreshThirpartyList(TItem)
 {
-	$('#thirdparty-list ul').empty();
 	var x = 0;
+	$('#thirdparty-list ul').empty();
 	for (var i in TItem)
 	{
-		var $li = $('<li class="list-group-item"><a href="javascript:showThirdparty('+TItem[i].id+')">'+TItem[i].name+'</a></li>');
+		var $li = $('<li class="list-group-item"><a data-toggle="tab" href="#thirdparty-card" onclick="javascript:showItem(\'thirdparty\', '+TItem[i].id+', showThirdparty)">'+TItem[i].name+'</a></li>');
 		if(TItem[i].client == 1) $li.append('<span class="badge client">C</span>');
 		if(TItem[i].fournisseur == 1) $li.append('<span class="badge fournisseur">F</span>');
-	
 		$('#thirdparty-list ul').append($li);
 	
 		if (x > 20) return;
@@ -188,8 +185,7 @@ function refreshProposalList(TItem)
 	$('#proposal-list ul').empty();
 	for (var i in TItem)
 	{
-		var $li = $('<li class="list-group-item"><a href="javascript:showProposal('+TItem[i].id+')">'+TItem[i].ref+'</a></li>');
-		
+		var $li = $('<li class="list-group-item"><a data-toggle="tab" href="#proposal-card" onclick="javascript:showItem(\'proposal\', '+TItem[i].id+', showProposal)">'+TItem[i].ref+'</a></li>');
 		$('#proposal-list ul').append($li);
 		
 		if (x > 20) return;
@@ -203,13 +199,41 @@ function refreshProductList(TItem)
 	$('#product-list ul').empty();
 	for (var i in TItem)
 	{
-		var $li = $('<li class="list-group-item"><a href="javascript:showProduct('+TItem[i].id+')">'+TItem[i].label+'</a></li>');
-		
+		var $li = $('<li class="list-group-item"><a data-toggle="tab" href="#product-card" onclick="javascript:showItem(\'product\', '+TItem[i].id+', showProduct)">'+TItem[i].label+'</a></li>');
 		$('#product-list ul').append($li);
 		
 		if (x > 20) return;
 		else x++;
 	}
+}
+
+function showItem(type, id, callback)
+{
+	if (typeof callback != 'undefined')
+	{
+		doliDb.getItem(type, id, callback);
+	}
+	else
+	{
+		console.log('Callback non défini');
+		alert('Attention l\'affichage de de cet item n\'est pas encore implémenté');
+	}
+}
+
+function showProduct(item) 
+{
+	setItemInHTML($('#product-card'), item);
+}
+
+function showThirdparty(item) 
+{
+	setItemInHTML($('#thirdparty-card'), item);
+	$('a#last-thirdparty').html(item.name).tab('show').closest('li').removeClass('hidden');
+}
+
+function showProposal(item)
+{
+	setItemInHTML($('#proposal-card'), item);
 }
 
 function setItemInHTML($container, item) 
@@ -220,47 +244,4 @@ function setItemInHTML($container, item)
 		console.log(x);
 		$container.find('[rel='+x+']').html(value);
 	}
-}
-
-function showProduct() 
-{
-	var DoliDb = new DoliDb();
-	DoliDb.open();
-	
-	var item = DoliDb.getItem('product', id);
-	
-	showItem(item, 'product-card');
-	$('a[href="#product-list"]').tab('show');
-}
-
-function showProposal(id){
-	var DoliDb = new DoliDb();
-	DoliDb.open();
-	
-	var item = DoliDb.getItem('proposal', id);
-	
-	showItem(item, 'proposal-card');
-	console.log(item);
-	var $a = $('a#last-proposal');
-	$a.html(item.name);
-	$a.tab('show');
-	$a.closest('li').removeClass('hidden');
-}
-
-function showThirdparty(id) {
-	var DoliDb = new DoliDb();
-	DoliDb.open();
-	
-	var item = DoliDb.getItem('thirdparty', id);
-	
-	showItem(item, 'thirdparty-card');
-	console.log(item);
-	var $a = $('a#last-thirdparty');
-	$a.html(item.name);
-	$a.tab('show');
-	$a.closest('li').removeClass('hidden');
-}
-
-function showItem(item, page) {
-	setItemInHTML($('#'+page), item);
 }
