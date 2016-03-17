@@ -65,13 +65,17 @@ function init()
 	// store the currently selected tab in the hash value
 	$("#menu-standalone a").on("shown.bs.tab", function(e) {
 		var id = $(e.target).attr("href").substr(1);
-		console.log(id);
+		console.log('hash = '+id);
 		window.location.hash = id;
 	});
 	
 	// on load of the page: switch to the currently selected tab
 	var hash = window.location.hash;
-	$('#menu-standalone a[href="' + hash + '"]').click();
+	if ($('a[href="' + hash + '"]:not(.last_item, .create_item):first-child').length > 0)	$('a[href="' + hash + '"]:first-child').click();
+	else {
+		window.location.hash = '#home';
+		$('a[href="#home"]:first-child').click();
+	}
 	
 	
 	// Fermeture automatique du menu burger /!\ ne pas déplacer cette définition audessus du hash.click
@@ -239,6 +243,8 @@ function refreshProductList(TItem)
 		if (x > 20) return;
 		else x++;
 	}
+	
+	addEventListenerOnItemLink();
 }
 
 function refreshThirdpartyList(TItem)
@@ -255,6 +261,8 @@ function refreshThirdpartyList(TItem)
 		if (x > 20) return;
 		else x++;
 	}
+	
+	addEventListenerOnItemLink();
 }
 
 function refreshProposalList(TItem)
@@ -269,6 +277,17 @@ function refreshProposalList(TItem)
 		if (x > 20) return;
 		else x++;
 	}
+	
+	addEventListenerOnItemLink();
+}
+
+function addEventListenerOnItemLink()
+{
+	$(".container-fluid li.list-group-item a").on("shown.bs.tab", function(e) {
+		var id = $(e.target).attr("href").substr(1);
+		console.log('hash = '+id);
+		window.location.hash = id;
+	});
 }
 
 function showItem(type, id, callback)
@@ -304,8 +323,8 @@ function setItemInHTML($container, item)
 {
 	for(var x in item) 
 	{
+		//console.log(x);
 		value = item[x];
-		console.log(x);
 		$container.find('[rel='+x+']').html(value);
 	}
 }

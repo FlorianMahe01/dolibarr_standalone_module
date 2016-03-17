@@ -57,16 +57,17 @@ li span.fournisseur {
   border-radius: 35px;
 }
 
-
 .btn-edit {
 	position :absolute;
 	right : 30px;
-	bottom : 70px;
+	bottom : 30px;
 }
+
 .online {
 	font-weight: normal;
 	color:white;
 }
+
 .offline {
 	font-weight: bold;
 	color:#cc5555 !important;
