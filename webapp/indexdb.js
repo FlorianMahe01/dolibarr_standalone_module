@@ -7,16 +7,17 @@ var DoliDb = function() {
 	
 	DoliDb.prototype.request = {};
 	DoliDb.prototype.db = {};
+	DoliDb.prototype.dbName = 'dolibarr';
 	
-	DoliDb.prototype.open = function(callback) {
+	DoliDb.prototype.open = function() {
 		
 		if (!this.indexedDB) {
 		    window.alert("Votre navigateur ne supporte pas une version stable d'IndexedDB. Quelques fonctionnalités ne seront pas disponibles.");
 		    return;
 		}
 		
-		var version = 12;
-		this.request = this.indexedDB.open('dolibarr', version); // Attention la version ne peut pas être inférieur à la dernière version
+		var version = 13;
+		this.request = this.indexedDB.open(this.dbName, version); // Attention la version ne peut pas être inférieur à la dernière version
 		
 		this.request.onupgradeneeded = function (event) { // cette fonction doit normalement mettre à jour le schéma BDD sans qu'on soit obligé de modifier le numéro de version 
 			DoliDb.prototype.db = event.currentTarget.result;
@@ -25,6 +26,9 @@ var DoliDb = function() {
 			catch(e) { console.log(e); }
 			
 			try { DoliDb.prototype.db.deleteObjectStore("thirdparty"); }
+			catch(e) { console.log(e); }
+			
+			try { DoliDb.prototype.db.deleteObjectStore("proposal"); }
 			catch(e) { console.log(e); }
 			
 			var objectStore = DoliDb.prototype.db.createObjectStore("product", { keyPath: "id", autoIncrement: true });
@@ -42,21 +46,21 @@ var DoliDb = function() {
 		
 		this.request.onsuccess = function(event) {
 			DoliDb.prototype.db = event.target.result;
-			console.log("success");
+			console.log("open db success");
 		};
 		
 	    this.request.onerror = function() { 
-	    	console.log("error"); 
+	    	console.log("open db error"); 
 	    };
 	    this.request.onblocked = function() { 
-	    	console.log("blocked"); 
+	    	console.log("open db blocked"); 
 	    };
 	    
 	};
 	
-	DoliDb.prototype.close = function() {
+	DoliDb.prototype.close = function(callback) {
 		this.db.close();
-		console.log('sdg');
+		callback();
 	};
 	
 	DoliDb.prototype.getAllItem = function(type, callback) {
@@ -86,17 +90,14 @@ var DoliDb = function() {
 			}
 		};
 		
-		cursorRequest.oncomplete = function() {
-			//DoliDb.close();
-			//DoliDb.prototype.close();
-		};
+		cursorRequest.oncomplete = function() {};
 		  
 		cursorRequest.onerror = DoliDb.prototype.db.onerror;
 	};
 	
 	
 	DoliDb.prototype.getItem = function (storename, id, callback) {
-		var transaction =  DoliDb.prototype.db.transaction(storename, "readonly");
+		var transaction =  this.db.transaction(storename, "readonly");
 		var objectStore = transaction.objectStore(storename);
 		  
 		var request = objectStore.get(id.toString()); 
@@ -116,7 +117,8 @@ var DoliDb = function() {
 	
 	
 	DoliDb.prototype.updateAllItem = function(storename, data) {
-		var transaction = DoliDb.prototype.db.transaction(storename, "readwrite");
+		
+		var transaction = this.db.transaction(storename, "readwrite");
 		var objectStore = transaction.objectStore(storename);
 		
 		// Get everything in the store;
@@ -135,7 +137,7 @@ var DoliDb = function() {
 			{
 				for (var i in data)
 				{
-					data[i] = doliDb.prepareItem(storename, data[i]);
+					data[i] = DoliDb.prototype.prepareItem(storename, data[i]);
 					objectStore.put(data[i]);
 				}
 			}
@@ -159,13 +161,20 @@ var DoliDb = function() {
 		
 		return item;
 	};
-	/*olibarr.indexedDB.addThirdparty = function(item) {
-	item.keyname = item.name.toLowerCase();
-
-	dolibarr.indexedDB.addItem('thirdparty',item,function(item) {
-		TThirdParty.push(item);
-		refreshthirdpartyList();
-	});*/
+	
+	DoliDb.prototype.clear = function() {
+		var req = this.indexedDB.deleteDatabase(this.dbName);
+		req.onsuccess = function () {
+		    console.log("Deleted database successfully");
+		    DoliDb.prototype.open();
+		};
+		req.onerror = function () {
+		    console.log("Couldn't delete database");
+		};
+		req.onblocked = function () {
+		    console.log("Couldn't delete database due to the operation being blocked");
+		};
+	};
 
 };
 

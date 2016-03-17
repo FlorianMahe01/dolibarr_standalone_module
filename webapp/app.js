@@ -62,9 +62,9 @@ function tpl_append(TTpl)
 	}
 }
 
-function switchOnglet(onglet)
+function showList(type)
 {
-	switch (onglet) {
+	switch (type) {
 		case 'products':
 			doliDb.getAllItem('product', refreshProductList);
 			break;
@@ -104,55 +104,84 @@ function saveConfig() {
 
 function syncronize() 
 {
+	syncStatement = 'started';
+	
+	var TObjToSync = [
+		{type:'product', container:'#syncronize-page .sync-info', msg_start:'Fetching products...', msg_end:'Done'}
+		,{type:'thirdparty', container:'#syncronize-page .sync-info', msg_start:'Fetching thirdparties...', msg_end:'Done'}
+		,{type:'proposal', container:'#syncronize-page .sync-info', msg_start:'Fetching proposals...', msg_end:'Done'}
+	];
+	
 	$('#syncronize-page .sync-info').html('');
 	$('#navigation a[href="#syncronize-page"]').tab('show');
 	
-	$('#syncronize-page .sync-info').append('Fetching products... ');
-	_sync('product');
-	$('#syncronize-page .sync-info').append('Done<br />');
-	
-	$('#syncronize-page .sync-info').append('Fetching thirdparties... ');
-	_sync('thirdparty');
-	$('#syncronize-page .sync-info').append('Done<br />');
-	
-	$('#syncronize-page .sync-info').append('Fetching proposals... ');
-	_sync('proposal');
-	$('#syncronize-page .sync-info').append('Done<br />');
+	$.ajax({
+	    url: localStorage.interface_url
+	    ,dataType: 'jsonp'
+	    ,timeout: 150 // delay obligatoire pour traiter le retour
+	    ,data: {
+	    	get: 'check'
+	    	,jsonp: 1
+	    }
+	    ,success: function (res) {
+	    	if (res == 'ok') sync(TObjToSync);
+	    	else alert('What else ?');
+	    }
+	    ,error: function (res) {
+		    alert("I think youre are not connected to internet, am i right ? Or maybe you have wrong interface URL.");   
+	    }
+	});
 }
 
-function _sync(type)
+
+function sync(TObjToSync)
 {
-	switch (type) {
-		case 'product':
-			var date_last_sync = localStorage.date_last_sync_product || 0;
-			break;
-		case 'thirdparty':
-			var date_last_sync = localStorage.date_last_sync_thirdparty || 0;
-			break;
-		case 'proposal':
-			var date_last_sync = localStorage.date_last_sync_proposal || 0;
-			break;
+	if (TObjToSync.length > 0)
+	{
+		switch (TObjToSync[0].type) {
+			case 'product':
+				var date_last_sync = localStorage.date_last_sync_product || 0;
+				break;
+			case 'thirdparty':
+				var date_last_sync = localStorage.date_last_sync_thirdparty || 0;
+				break;
+			case 'proposal':
+				var date_last_sync = localStorage.date_last_sync_proposal || 0;
+				break;
+		}
+		
+		$(TObjToSync[0].container).append('<blockquote><span class="text-info">'+TObjToSync[0].msg_start+'</span></blockquote>'); // show info : start fetching
+		
+		$.ajax({
+			url: localStorage.interface_url
+			//url: "http://localhost/dolibarr/develop/htdocs/custom/standalone/script/interface.php"
+			,dataType:'jsonp'
+			//,dataType:'json'
+			,data: {
+				get:TObjToSync[0].type
+				,jsonp: 1
+				,date_last_sync: date_last_sync
+			}
+			,async : false
+			,success: function(data) {
+				_update_date_sync(TObjToSync[0].type, $.now());
+			  	doliDb.updateAllItem(TObjToSync[0].type, data);
+			  	
+			  	$(TObjToSync[0].container+' blockquote:last-child').append('<small class="text-info">'+TObjToSync[0].msg_end+'</small>'); // show info : done
+			  	
+			  	TObjToSync.splice(0, 1);
+			  	sync(TObjToSync); // next sync
+			}
+			,error: function(xhr, ajaxOptions, thrownError) {
+				$(TObjToSync[0].container).append('<blockquote><span class="text-error" style="color:red">Error sync with "'+TObjToSync[0].type+'"</span></blockquote>'); // error : stop loop and show error
+			}
+		});
+	}
+	else
+	{
+		$('#syncronize-page .sync-info').append('<blockquote><p class="lead text-success">Sync terminate, Everything is good !</p></blockquote>');
 	}
 	
-	$.ajax({
-		url: localStorage.interface_url
-		//url: "http://localhost/dolibarr/develop/htdocs/custom/standalone/script/interface.php"
-		,data: {
-			get:type
-			,jsonp: 1
-			,date_last_sync: date_last_sync
-		}
-		,dataType:'jsonp'
-		//,dataType:'json'
-		,async : false
-	})
-	.done(function(data) {
-		_update_date_sync(type, $.now());
-	  	doliDb.updateAllItem(type, data);
-	})
-	.fail(function() {
-  		alert("I think youre are not connected to internet, am i right ?");
-	});
 }
 
 function _update_date_sync(type, date)
@@ -190,6 +219,20 @@ function takePicture() {
 	});
 }
 
+function refreshProductList(TItem) 
+{
+	var x = 0;
+	$('#product-list ul').empty();
+	for (var i in TItem)
+	{
+		var $li = $('<li class="list-group-item"><a data-toggle="tab" href="#product-card" onclick="javascript:showItem(\'product\', '+TItem[i].id+', showProduct)">'+TItem[i].label+'</a></li>');
+		$('#product-list ul').append($li);
+		
+		if (x > 20) return;
+		else x++;
+	}
+}
+
 function refreshThirpartyList(TItem)
 {
 	var x = 0;
@@ -214,20 +257,6 @@ function refreshProposalList(TItem)
 	{
 		var $li = $('<li class="list-group-item"><a data-toggle="tab" href="#proposal-card" onclick="javascript:showItem(\'proposal\', '+TItem[i].id+', showProposal)">'+TItem[i].ref+'</a></li>');
 		$('#proposal-list ul').append($li);
-		
-		if (x > 20) return;
-		else x++;
-	}
-}
-
-function refreshProductList(TItem) 
-{
-	var x = 0;
-	$('#product-list ul').empty();
-	for (var i in TItem)
-	{
-		var $li = $('<li class="list-group-item"><a data-toggle="tab" href="#product-card" onclick="javascript:showItem(\'product\', '+TItem[i].id+', showProduct)">'+TItem[i].label+'</a></li>');
-		$('#product-list ul').append($li);
 		
 		if (x > 20) return;
 		else x++;
