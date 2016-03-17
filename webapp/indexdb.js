@@ -58,11 +58,6 @@ var DoliDb = function() {
 	    
 	};
 	
-	DoliDb.prototype.close = function(callback) {
-		this.db.close();
-		callback();
-	};
-	
 	DoliDb.prototype.getAllItem = function(type, callback) {
 		console.log('getAllItem : '+type);
 		
@@ -162,8 +157,13 @@ var DoliDb = function() {
 		return item;
 	};
 	
-	DoliDb.prototype.clear = function() {
-		var req = this.indexedDB.deleteDatabase(this.dbName);
+	DoliDb.prototype.close = function() {
+		this.db.close();
+	};
+	
+	DoliDb.prototype.dropDatabase = function() {
+		this.close();
+		var req = DoliDb.prototype.indexedDB.deleteDatabase(this.dbName);
 		req.onsuccess = function () {
 		    console.log("Deleted database successfully");
 		    DoliDb.prototype.open();
@@ -174,6 +174,8 @@ var DoliDb = function() {
 		req.onblocked = function () {
 		    console.log("Couldn't delete database due to the operation being blocked");
 		};
+		
+		
 	};
 
 };
