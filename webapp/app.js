@@ -76,7 +76,7 @@ function init()
 	
 	// Fermeture automatique du menu burger /!\ ne pas déplacer cette définition audessus du hash.click
 	$('#menu-standalone .dropdown-menu > li > a').on('click', function(){
-	    $('.navbar-toggle').click();
+		if ($('.navbar-toggle').css('display') != 'none') $('.navbar-toggle').click();
 	});
 }
 
