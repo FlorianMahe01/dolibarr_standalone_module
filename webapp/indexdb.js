@@ -59,7 +59,7 @@ var DoliDb = function() {
 	};
 	
 	DoliDb.prototype.getAllItem = function(type, callback) {
-		console.log('getAllItem : '+type);
+		console.log('getAllItem : '+type, callback);
 		
 		var TItem = new Array;
 		

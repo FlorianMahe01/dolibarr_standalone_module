@@ -37,49 +37,47 @@ function tpl_append(TTpl)
 	}
 	else
 	{
-		if(localStorage.interface_url) 
-	 	{  
-	 		$('#interface_url').val(localStorage.interface_url); 
-		 	if(localStorage.dolibarr_login) { $('#dolibarr_login').val(localStorage.dolibarr_login); }
-		 	if(localStorage.dolibarr_password) { $('#dolibarr_password').val(localStorage.dolibarr_password); }
-	 	}
-	 	else 
-	 	{
-	 		$('#navigation a[href="#config"]').tab('show');
-	 	}
-		
-	    $('input[name=camit]').change(function() {
-	    	alert(this.value);	
-	    }) ;
-	    
-	    _checkOnline();
-	    
-    	/* Fermeture automatique du menu burger 
-    	$('.nav a:not(.dropdown-toggle)').on('click', function(){
-		    $('.navbar-toggle').click();
-		});
-		*/
+		init();
 	}
 }
 
-function showList(type)
+function init()
 {
-	switch (type) {
-		case 'products':
-			doliDb.getAllItem('product', refreshProductList);
-			break;
-			
-		case 'thirdparties':
-			doliDb.getAllItem('thirdparty', refreshThirpartyList);
-			break;
-		
-		case 'proposals':
-			doliDb.getAllItem('proposal', refreshProposalList);
-			break;
-		
-		default:
-			break;
-	}
+	if(localStorage.interface_url) 
+ 	{  
+ 		$('#interface_url').val(localStorage.interface_url); 
+	 	if(localStorage.dolibarr_login) { $('#dolibarr_login').val(localStorage.dolibarr_login); }
+	 	if(localStorage.dolibarr_password) { $('#dolibarr_password').val(localStorage.dolibarr_password); }
+ 	}
+ 	else 
+ 	{
+ 		$('#navigation a[href="#config"]').tab('show');
+ 	}
+	
+    $('input[name=camit]').change(function() {
+    	alert(this.value);	
+    }) ;
+    
+    setInterval(function() {
+    	_checkOnline();
+    }, 10000); // 10s
+	
+	// store the currently selected tab in the hash value
+	$("#menu-standalone a").on("shown.bs.tab", function(e) {
+		var id = $(e.target).attr("href").substr(1);
+		console.log(id);
+		window.location.hash = id;
+	});
+	
+	// on load of the page: switch to the currently selected tab
+	var hash = window.location.hash;
+	$('#menu-standalone a[href="' + hash + '"]').click();
+	
+	
+	// Fermeture automatique du menu burger /!\ ne pas déplacer cette définition audessus du hash.click
+	$('#menu-standalone .dropdown-menu > li > a').on('click', function(){
+	    $('.navbar-toggle').click();
+	});
 }
 
 function saveConfig() {
@@ -104,16 +102,13 @@ function saveConfig() {
 
 function syncronize() 
 {
-	syncStatement = 'started';
-	
+	$('#syncronize-page .sync-info').html('');
+		
 	var TObjToSync = [
 		{type:'product', container:'#syncronize-page .sync-info', msg_start:'Fetching products...', msg_end:'Done'}
 		,{type:'thirdparty', container:'#syncronize-page .sync-info', msg_start:'Fetching thirdparties...', msg_end:'Done'}
 		,{type:'proposal', container:'#syncronize-page .sync-info', msg_start:'Fetching proposals...', msg_end:'Done'}
 	];
-	
-	$('#syncronize-page .sync-info').html('');
-	$('#navigation a[href="#syncronize-page"]').tab('show');
 	
 	$.ajax({
 	    url: localStorage.interface_url
@@ -179,7 +174,7 @@ function sync(TObjToSync)
 	}
 	else
 	{
-		$('#syncronize-page .sync-info').append('<blockquote><p class="lead text-success">Sync terminate, Everything is good !</p></blockquote>');
+		$('#syncronize-page .sync-info').append('<blockquote><p class="text-success">Sync terminated, everything is good !</p></blockquote>');
 	}
 	
 }
@@ -219,6 +214,19 @@ function takePicture() {
 	});
 }
 
+function showList(type, callback)
+{
+	if (typeof callback != 'undefined')
+	{
+		doliDb.getAllItem(type, callback);
+	}
+	else
+	{
+		console.log('Callback non défini');
+		alert('Attention l\'affichage de cette liste n\'est pas encore implémenté');
+	}
+}
+
 function refreshProductList(TItem) 
 {
 	var x = 0;
@@ -233,7 +241,7 @@ function refreshProductList(TItem)
 	}
 }
 
-function refreshThirpartyList(TItem)
+function refreshThirdpartyList(TItem)
 {
 	var x = 0;
 	$('#thirdparty-list ul').empty();
@@ -272,7 +280,7 @@ function showItem(type, id, callback)
 	else
 	{
 		console.log('Callback non défini');
-		alert('Attention l\'affichage de de cet item n\'est pas encore implémenté');
+		alert('Attention l\'affichage de cet item n\'est pas encore implémenté');
 	}
 }
 

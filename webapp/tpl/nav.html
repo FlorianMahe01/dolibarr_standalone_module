@@ -7,7 +7,7 @@
 				<span class="icon-bar"></span>
 				<span class="icon-bar"></span>
 			</button>
-			<a class="navbar-brand hidden-sm hidden-md hidden-lg" href="#">Menu</a>
+			<a data-toggle="tab" href="#home" class="navbar-brand hidden-sm hidden-md hidden-lg">Home</a>
 			<!-- Logo si connexion à internet -->
 			<span class="is-online glyphicon glyphicon-globe navbar-brand hidden-sm hidden-md hidden-lg"></span>
 
@@ -15,39 +15,24 @@
 
 				
 		<!-- Définition du menu du haut -->
-		<div class="collapse navbar-collapse" id="menu-standalone">
+		<div id="menu-standalone" class="collapse navbar-collapse">
 			
-			<ul class="nav navbar-nav" role="tablist">
+			<ul class="nav navbar-nav text-xs-center" role="tablist">
 				<!-- Définition du lien "Home" -->
-				<li class="active">
+				<li class="active ">
 					<a href="#home" role="tab" data-toggle="tab"><langs trans="Home"></langs></a>
-				</li>
-				
-				<!-- Définition du lien "Product" -->
-				<li>
-					<a href="#product-list" role="tab" data-toggle="tab"><langs trans="Product"></langs></a>
-				</li>
-				
-				<!-- Définition du lien "Thiersparties" -->
-				<li>
-					<a href="#thirdparty-list" onclick="javascript:showList('thirdparties');" role="tab" data-toggle="tab"><langs trans="Thirdparties"></langs></a>
-				</li>
-				
-				<!-- Définition lien "Dernier client consulté" -->
-				<li class="hidden">
-					<a id="last-thirdparty" href="#thirdparty-card" role="tab" data-toggle="tab">Customer</a>
 				</li>
 				
 				<!-- Définition du sous menu "Products" -->
 				<li>
 					<div class="button-group">
-						<a type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><langs trans="Products"></langs>&nbsp;<span class="caret"></span></a>
-						<ul class="dropdown-menu">
-							<li class="btn btn-default ">
-								<a data-toggle="tab" href="#product-list" onclick="javascript:showList('products');"><langs trans="SearchProduct"></langs></a>
+						<a type="button" class="btn btn-default dropdown-toggle col-xs-12" data-toggle="dropdown"><langs trans="Products"></langs>&nbsp;<span class="caret"></span></a>
+						<ul class="dropdown-menu text-xs-center">
+							<li>
+								<a data-toggle="tab" href="#product-list" onclick="javascript:showList('product', refreshProductList);" class="col-xs-12 navbar-inverse"><langs trans="SearchProduct"></langs></a>
 							</li>
-							<li class="btn btn-default">
-								<a data-toggle="tab" href="#product-card"><langs trans="CreateProduct"></langs></a>
+							<li class="">
+								<a type="button" data-toggle="tab" href="#product-card" class="col-xs-12 navbar-inverse"><langs trans="CreateProduct"></langs></a>
 							</li>
 						</ul>
 
@@ -57,13 +42,17 @@
 				<!-- Définition du sous menu "Thirdparties" -->
 				<li>
 					<div class="button-group">
-						<a type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><langs trans="Thirdparties"></langs>&nbsp;<span class="caret"></span></a>
-						<ul class="dropdown-menu">
-							<li class="btn btn-default ">
-								<a data-toggle="tab" href="#thirdparty-list" onclick="javascript:showList('thirdparties');"><langs trans="SearchThirparty"></langs></a>
+						<a type="button" class="btn btn-default dropdown-toggle col-xs-12" data-toggle="dropdown"><langs trans="Thirdparties"></langs>&nbsp;<span class="caret"></span></a>
+						<ul class="dropdown-menu text-xs-center">
+							<!-- Définition lien "Dernier client consulté" -->
+							<li class="hidden">
+								<a id="last-thirdparty" href="#thirdparty-card" role="tab" data-toggle="tab" class="col-xs-12 navbar-inverse">Customer</a>
 							</li>
-							<li class="btn btn-default">
-								<a data-toggle="tab" href="#thirdparty-card"><langs trans="CreateThirparty"></langs></a>
+							<li>
+								<a data-toggle="tab" href="#thirdparty-list" onclick="javascript:showList('thirdparty', refreshThirdpartyList);" class="col-xs-12 navbar-inverse"><langs trans="SearchThirparty"></langs></a>
+							</li>
+							<li>
+								<a data-toggle="tab" href="#thirdparty-card" class="col-xs-12 navbar-inverse"><langs trans="CreateThirparty"></langs></a>
 							</li>
 						</ul>
 
@@ -73,14 +62,15 @@
 				<!-- Définition du sous menu "Proposals" -->
 				<li>
 					<div class="button-group">
-						<a type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><langs trans="Proposals"></langs>&nbsp;<span class="caret"></span></a>
-						<ul class="dropdown-menu">
-							<li class="btn btn-default ">
-								<a data-toggle="tab" href="#proposal-list" onclick="javascript:showList('proposals');"><langs trans="SearchPropals"></langs></a>
+						<a type="button" class="btn btn-default dropdown-toggle col-xs-12" data-toggle="dropdown"><langs trans="Proposals"></langs>&nbsp;<span class="caret"></span></a>
+						<ul class="dropdown-menu text-xs-center">
+							<li>
+								<a data-toggle="tab" href="#proposal-list" onclick="javascript:showList('proposal', refreshProposalList);" class="col-xs-12 navbar-inverse"><langs trans="SearchProposal"></langs></a>
 							</li>
-							<li class="btn btn-default">
-								<a data-toggle="tab" href="#proposal-card"><langs trans="CreatePropals"></langs></a>
+							<li>
+								<a data-toggle="tab" href="#proposal-card" class="col-xs-12 navbar-inverse"><langs trans="CreateProposal"></langs></a>
 							</li>
+							
 						</ul>
 
 					</div>
@@ -89,7 +79,7 @@
 			</ul>
 			
 			<!-- Définition du menu haut droite concernant la config et la connexion à internet -->
-			<ul class="nav navbar-right navbar-nav" role="tablist">
+			<ul class="nav navbar-right navbar-nav text-xs-center" role="tablist">
 				<!-- Logo si connexion à internet -->
 				<li class="hidden-xs">
 					<p class="navbar-text">
@@ -99,25 +89,21 @@
 				
 				<!-- Définition du sous menu "Configuration" -->
 				<li>
-
 					<div class="button-group">
-						<a type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+						<a type="button" class="btn btn-default dropdown-toggle col-xs-12" data-toggle="dropdown">
 							<span class="glyphicon glyphicon-cog hidden-xs"></span>
 							<span class="navbar-text hidden-sm hidden-md hidden-lg"><langs trans="Parameters"></langs></span>
 							<span class="caret"></span>
 						</a>
-						<ul class="dropdown-menu">
-							<li class="btn btn-default ">
-								<a data-toggle="tab" href="#config"><langs trans="Params"></langs></a>
+						<ul class="dropdown-menu text-xs-center">
+							<li>
+								<a data-toggle="tab" href="#config" class="navbar-inverse"><langs trans="Params"></langs></a>
 							</li>
-							<li class="btn btn-default hidden">
-								<a data-toggle="tab" href="#syncronize-page"><langs trans="Synchronize"></langs></a>
+							<li>
+								<a data-toggle="tab" onclick="javascript:syncronize()" href="#syncronize-page" class="navbar-inverse"><langs trans="Synchronize"></langs></a>
 							</li>
-							<li class="btn btn-default ">
-								<a href="javascript:syncronize()"><langs trans="Synchronize"></langs></a>
-							</li>
-							<li class="btn btn-default ">
-								<a href="javascript:disconnect()"><langs trans="Deconnect"></langs></a>
+							<li>
+								<a href="javascript:disconnect()" class="navbar-inverse"><langs trans="Deconnect"></langs></a>
 							</li>
 						</ul>
 
