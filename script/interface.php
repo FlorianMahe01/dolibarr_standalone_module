@@ -4,6 +4,7 @@
 	
 	require('../config.php');
 	
+	dol_include_once('/core/login/functions_dolibarr.php');
 	dol_include_once('/contact/class/contact.class.php');
 	dol_include_once('/product/class/product.class.php');
 	dol_include_once('/comm/propal/class/propal.class.php');
@@ -17,7 +18,14 @@
 
 	switch ($get) {
 		case 'check':
-			__out('ok');
+			$login = GETPOST('login', 'alpha');
+			$passwd = GETPOST('passwd', 'alpha');
+			$entity = GETPOST('entity', 'int');
+			
+			$res = check_user_password_dolibarr($login, $passwd, $entity);
+			
+			if (!empty($res)) __out('ok');
+			else __out('ko');
 			
 			break;
 		

@@ -137,16 +137,27 @@ function saveConfig() {
 		,data : {
 			get:'check'
 			,jsonp: 1
+			,login:localStorage.dolibarr_login
+			,passwd:localStorage.dolibarr_password
+			,entity:1
 		}
 	  	,dataType:'jsonp'
-	  	,timeout: 150
-	  	,success: function() {
-			showMessage('Confirmation', 'Configuration saved !', 'success');
+	  	,timeout: 1250 // Le test côté PHP pour vérifier que le login/mdp/entity correspond bien à un utilisateur prend 1sec, pour entrer la fonction d'erreur je suis obligé de définir un timeout (cas où l'url de l'interface est fausse)
+	  	,success: function(res) {
+	  		//trait(res);
+	  		console.log(res);
+			if (res == 'ok') showMessage('Confirmation', 'Configuration saved and connection is right !', 'success');
+			else showMessage('Connection error', 'Configuration saved... But can\'t connect to Dolibarr', 'warning');
 	  	}
 	  	,error: function() {
 	  		showMessage('Warning', 'Configuration saved... But i think it\'s wrong.', 'warning');
 	  	}
 	});
+}
+function trait(res)
+{
+	if (res == 'ok') showMessage('Confirmation', 'Configuration saved and connection is right !', 'success');
+			else showMessage('Connection error', 'Configuration saved... But can\'t connect to Dolibarr', 'warning');
 }
 
 function synchronize() 
@@ -162,14 +173,17 @@ function synchronize()
 	$.ajax({
 	    url: localStorage.interface_url
 	    ,dataType: 'jsonp'
-	    ,timeout: 150 // delay obligatoire pour traiter le retour
+	    ,timeout: 1250 // Le test côté PHP pour vérifier que le login/mdp/entity correspond bien à un utilisateur prend 1sec, pour entrer la fonction d'erreur je suis obligé de définir un timeout (cas où l'url de l'interface est fausse)
 	    ,data: {
-	    	get: 'check'
+	    	get:'check'
 	    	,jsonp: 1
+			,login:localStorage.dolibarr_login
+			,passwd:localStorage.dolibarr_password
+			,entity:1
 	    }
 	    ,success: function (res) {
 	    	if (res == 'ok') sync(TObjToSync);
-	    	else showMessage('Error', 'Something is wrong, try again later', 'warning');
+	    	else showMessage('Connection error', 'Something is wrong, can\'t connect to Dolibarr', 'warning');
 	    }
 	    ,error: function (res) {
 		    showMessage('Error', 'I think youre are not connected to internet, am i right ? Or maybe you have wrong interface URL.', 'warning');
@@ -198,15 +212,12 @@ function sync(TObjToSync)
 		
 		$.ajax({
 			url: localStorage.interface_url
-			//url: "http://localhost/dolibarr/develop/htdocs/custom/standalone/script/interface.php"
 			,dataType:'jsonp'
-			//,dataType:'json'
 			,data: {
 				get:TObjToSync[0].type
 				,jsonp: 1
 				,date_last_sync: date_last_sync
 			}
-			,async : false
 			,success: function(data) {
 				_update_date_sync(TObjToSync[0].type, $.now());
 			  	doliDb.updateAllItem(TObjToSync[0].type, data);
@@ -217,7 +228,9 @@ function sync(TObjToSync)
 			  	sync(TObjToSync); // next sync
 			}
 			,error: function(xhr, ajaxOptions, thrownError) {
-				$(TObjToSync[0].container).append('<blockquote><span class="text-error" style="color:red">Error sync with "'+TObjToSync[0].type+'"</span></blockquote>'); // error : stop loop and show error
+				// TODO téchniquement on tombera jamais dans le error car pas de timeout défini, sauf qu'on peux pas le définir sinon on risque d'interrompre la récupération des données
+				showMessage('Synchronization error', 'Sorry, we meet an error pending synchronization', 'danger');
+				$(TObjToSync[0].container).append('<blockquote><span class="text-error" style="color:red">Error sync with "'+TObjToSync[0].type+'"</span></blockquote>');
 			}
 		});
 	}
