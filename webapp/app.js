@@ -326,6 +326,11 @@ function refreshProposalList(TItem)
 	addEventListenerOnItemLink();
 }
 
+function refreshOrderList(TItem)
+{
+	// ...
+}
+
 function addEventListenerOnItemLink()
 {
 	$("li.list-group-item a").on("shown.bs.tab", function(e) {

@@ -5,7 +5,6 @@ var DoliDb = function() {
 	DoliDb.prototype.IDBTransaction = window.IDBTransaction || window.webkitIDBTransaction || window.msIDBTransaction;
 	DoliDb.prototype.IDBKeyRange = window.IDBKeyRange || window.webkitIDBKeyRange || window.msIDBKeyRange;
 	
-	DoliDb.prototype.request = {};
 	DoliDb.prototype.db = {};
 	DoliDb.prototype.dbName = 'dolibarr';
 	
@@ -17,9 +16,9 @@ var DoliDb = function() {
 		}
 		
 		var version = 13;
-		this.request = this.indexedDB.open(this.dbName, version); // Attention la version ne peut pas être inférieur à la dernière version
+		var request = this.indexedDB.open(this.dbName, version); // Attention la version ne peut pas être inférieur à la dernière version
 		
-		this.request.onupgradeneeded = function (event) { // cette fonction doit normalement mettre à jour le schéma BDD sans qu'on soit obligé de modifier le numéro de version 
+		request.onupgradeneeded = function (event) { // cette fonction doit normalement mettre à jour le schéma BDD sans qu'on soit obligé de modifier le numéro de version 
 			DoliDb.prototype.db = event.currentTarget.result;
 			   
 			try { DoliDb.prototype.db.deleteObjectStore("product"); }
@@ -44,15 +43,15 @@ var DoliDb = function() {
 			objectStore.createIndex("ref", "ref", { unique: true });
 		};
 		
-		this.request.onsuccess = function(event) {
+		request.onsuccess = function(event) {
 			DoliDb.prototype.db = event.target.result;
 			console.log("open db success");
 		};
 		
-	    this.request.onerror = function() { 
+	    request.onerror = function() { 
 	    	console.log("open db error"); 
 	    };
-	    this.request.onblocked = function() { 
+	    request.onblocked = function() { 
 	    	console.log("open db blocked"); 
 	    };
 	    
@@ -163,15 +162,16 @@ var DoliDb = function() {
 	
 	DoliDb.prototype.dropDatabase = function() {
 		this.close();
-		var req = DoliDb.prototype.indexedDB.deleteDatabase(this.dbName);
-		req.onsuccess = function () {
+		
+		var request = this.indexedDB.deleteDatabase(this.dbName);
+		request.onsuccess = function () {
 		    console.log("Deleted database successfully");
 		    DoliDb.prototype.open();
 		};
-		req.onerror = function () {
+		request.onerror = function () {
 		    console.log("Couldn't delete database");
 		};
-		req.onblocked = function () {
+		request.onblocked = function () {
 		    console.log("Couldn't delete database due to the operation being blocked");
 		};
 		
