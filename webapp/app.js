@@ -5,8 +5,17 @@ $(document).ready(function() {
 function _checkOnline() 
 {
 	var online = navigator.onLine;
-    if(online) $('.is-online').removeClass('offline').addClass('online').attr('title','You are online');
-	else $('.is-online').removeClass('online').addClass('offline').attr('title','Offline !');
+    if(online) 
+    { 
+    	$('.is-online').removeClass('offline').addClass('online').attr('title','You are online');
+    	$('a[href="#synchronize-page"]').removeClass('disabled'); 
+	}
+	else
+	{
+		$('.is-online').removeClass('online').addClass('offline').attr('title','Offline !');
+		$('a[href="#synchronize-page"]').addClass('disabled'); 
+		
+	}
 }
 
 function load_tpl()
@@ -58,7 +67,7 @@ function init()
     	alert(this.value);	
     });
     
-    setInterval(function() {
+    window.setInterval(function() {
     	_checkOnline();
     }, 10000); // 10s
 	
@@ -75,7 +84,7 @@ function init()
 	
 	// on load of the page: switch to the currently selected tab
 	var hash = window.location.hash;
-	if (hash != '#syncronize-page' && $('a[href="' + hash + '"]:not(.last_item, .create_item):first-child').length > 0) $('a[href="' + hash + '"]:first-child').click();
+	if (hash != '#synchronize-page' && $('a[href="' + hash + '"]:not(.last_item, .create_item):first-child').length > 0) $('a[href="' + hash + '"]:first-child').click();
 	else {
 		window.location.hash = '#home';
 		$('a[href="#home"]:first-child').click();
@@ -162,12 +171,12 @@ function trait(res)
 
 function synchronize() 
 {
-	$('#syncronize-page .sync-info').html('');
+	$('#synchronize-page .sync-info').html('');
 		
 	var TObjToSync = [
-		{type:'product', container:'#syncronize-page .sync-info', msg_start:'Fetching products...', msg_end:'Done'}
-		,{type:'thirdparty', container:'#syncronize-page .sync-info', msg_start:'Fetching thirdparties...', msg_end:'Done'}
-		,{type:'proposal', container:'#syncronize-page .sync-info', msg_start:'Fetching proposals...', msg_end:'Done'}
+		{type:'product', container:'#synchronize-page .sync-info', msg_start:'Fetching products...', msg_end:'Done'}
+		,{type:'thirdparty', container:'#synchronize-page .sync-info', msg_start:'Fetching thirdparties...', msg_end:'Done'}
+		,{type:'proposal', container:'#synchronize-page .sync-info', msg_start:'Fetching proposals...', msg_end:'Done'}
 	];
 	
 	$.ajax({
@@ -236,7 +245,7 @@ function sync(TObjToSync)
 	}
 	else
 	{
-		$('#syncronize-page .sync-info').append('<blockquote><p class="text-success">Sync terminated, everything is good !</p></blockquote>');
+		$('#synchronize-page .sync-info').append('<blockquote><p class="text-success">Sync terminated, everything is good !</p></blockquote>');
 	}
 	
 }
