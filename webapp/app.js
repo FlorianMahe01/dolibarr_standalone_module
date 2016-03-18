@@ -89,7 +89,7 @@ function init()
 
 }
 
-function showMessage(title, message, type)
+function showMessage(title, message, type, callback)
 {
 	var TType = {
 		'default': BootstrapDialog.TYPE_DEFAULT 
@@ -100,11 +100,29 @@ function showMessage(title, message, type)
 		,'danger': BootstrapDialog.TYPE_DANGER
 	};
 	
-	BootstrapDialog.show({
-        title: title
+	var options = {
+		title: title
         ,message: message
 		,type: TType[type]
-    });
+	};
+	
+	if (typeof callback == 'undefined') BootstrapDialog.show(options);
+	else {
+		options.callback = callback;
+		options.btnCancelClass = 'btn-default pull-left';
+		options.btnOKClass = 'btn-danger';
+		BootstrapDialog.confirm(options);
+	}
+}
+
+function clearDatabase() 
+{
+	showMessage('Clear database', 'Are you sure to want clear database?', 'danger', confirmClearDatabase);
+}
+
+function confirmClearDatabase(response)
+{
+	if (response === true) doliDb.dropDatabase();
 }
 
 function saveConfig() {
