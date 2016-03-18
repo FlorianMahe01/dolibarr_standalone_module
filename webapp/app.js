@@ -56,22 +56,26 @@ function init()
 	
     $('input[name=camit]').change(function() {
     	alert(this.value);	
-    }) ;
+    });
     
     setInterval(function() {
     	_checkOnline();
     }, 10000); // 10s
 	
 	// store the currently selected tab in the hash value
-	$("#menu-standalone a").on("shown.bs.tab", function(e) {
-		var id = $(e.target).attr("href").substr(1);
-		console.log('hash = '+id);
-		window.location.hash = id;
+	$("#menu-standalone a, .navbar-header a, .configuration a").on("shown.bs.tab", function(e) {
+		var hash = $(e.target).attr("href").substr(1);
+		console.log('hash = '+hash);
+		window.location.hash = hash;
+		if ($(e.target).attr("id") == 'home_link') // Si on click sur le lien "Accueil" en haut à gauche, les liens dans le menu reste actifs
+		{
+			$('#menu-standalone > ul li.active').removeClass('active');
+		}
 	});
 	
 	// on load of the page: switch to the currently selected tab
 	var hash = window.location.hash;
-	if ($('a[href="' + hash + '"]:not(.last_item, .create_item):first-child').length > 0)	$('a[href="' + hash + '"]:first-child').click();
+	if (hash != '#syncronize-page' && $('a[href="' + hash + '"]:not(.last_item, .create_item):first-child').length > 0) $('a[href="' + hash + '"]:first-child').click();
 	else {
 		window.location.hash = '#home';
 		$('a[href="#home"]:first-child').click();
@@ -82,6 +86,25 @@ function init()
 	$('#menu-standalone .dropdown-menu > li > a').on('click', function(){
 		if ($('.navbar-toggle').css('display') != 'none') $('.navbar-toggle').click();
 	});
+
+}
+
+function showMessage(title, message, type)
+{
+	var TType = {
+		'default': BootstrapDialog.TYPE_DEFAULT 
+		,'info': BootstrapDialog.TYPE_INFO
+		,'primary': BootstrapDialog.TYPE_PRIMARY 
+		,'success': BootstrapDialog.TYPE_SUCCESS 
+		,'warning': BootstrapDialog.TYPE_WARNING 
+		,'danger': BootstrapDialog.TYPE_DANGER
+	};
+	
+	BootstrapDialog.show({
+        title: title
+        ,message: message
+		,type: TType[type]
+    });
 }
 
 function saveConfig() {
@@ -91,20 +114,24 @@ function saveConfig() {
 	localStorage.dolibarr_password = $('#dolibarr_password').val();	
 	
 	$.ajax({
-			url:localStorage.interface_url
-			
-			,data : {
-  				get:'check'
-  				,jsonp: 1
-  			}
-  	,dataType:'jsonp'
-  	,async : true
-	}).done(function() { alert('Configuration saved !'); }).fail(function() { alert('Configuration saved... But i think it\'s wrong.'); });
-	
-	
+		url:localStorage.interface_url
+		
+		,data : {
+			get:'check'
+			,jsonp: 1
+		}
+	  	,dataType:'jsonp'
+	  	,timeout: 150
+	  	,success: function() {
+			showMessage('Confirmation', 'Configuration saved !', 'success');
+	  	}
+	  	,error: function() {
+	  		showMessage('Warning', 'Configuration saved... But i think it\'s wrong.', 'warning');
+	  	}
+	});
 }
 
-function syncronize() 
+function synchronize() 
 {
 	$('#syncronize-page .sync-info').html('');
 		
@@ -124,10 +151,10 @@ function syncronize()
 	    }
 	    ,success: function (res) {
 	    	if (res == 'ok') sync(TObjToSync);
-	    	else alert('What else ?');
+	    	else showMessage('Error', 'Something is wrong, try again later', 'warning');
 	    }
 	    ,error: function (res) {
-		    alert("I think youre are not connected to internet, am i right ? Or maybe you have wrong interface URL.");   
+		    showMessage('Error', 'I think youre are not connected to internet, am i right ? Or maybe you have wrong interface URL.', 'warning');
 	    }
 	});
 }
@@ -203,7 +230,7 @@ function takePicture() {
 
 	    window.resolveLocalFileSystemURI(fileURI, 
 	        function( fileEntry){
-	            alert("got image file entry: " + fileEntry.fullPath);
+	        	showMessage('Information', 'Got image file entry:' + fileEntry.fullPath, 'info');
 	        },
 	        function(){//error
 	        }
@@ -226,8 +253,8 @@ function showList(type, callback)
 	}
 	else
 	{
+		showMessage('Information', 'The list display is not implemented yet', 'info');
 		console.log('Callback non défini');
-		alert('Attention l\'affichage de cette liste n\'est pas encore implémenté');
 	}
 }
 
@@ -283,10 +310,11 @@ function refreshProposalList(TItem)
 
 function addEventListenerOnItemLink()
 {
-	$(".container-fluid li.list-group-item a").on("shown.bs.tab", function(e) {
-		var id = $(e.target).attr("href").substr(1);
-		console.log('hash = '+id);
-		window.location.hash = id;
+	$("li.list-group-item a").on("shown.bs.tab", function(e) {
+		var hash = $(e.target).attr("href").substr(1);
+		console.log('hash = '+hash);
+		window.location.hash = hash;
+		$('#menu-standalone > ul li.active').removeClass('active');
 	});
 }
 
@@ -299,7 +327,7 @@ function showItem(type, id, callback)
 	else
 	{
 		console.log('Callback non défini');
-		alert('Attention l\'affichage de cet item n\'est pas encore implémenté');
+		showMessage('Information', 'The item display is not implemented yet', 'info');
 	}
 }
 
@@ -311,7 +339,7 @@ function showProduct(item)
 function showThirdparty(item) 
 {
 	setItemInHTML($('#thirdparty-card'), item);
-	$('a#last-thirdparty').html(item.name).tab('show').closest('li').removeClass('hidden');
+	$('a#last-thirdparty').html(item.name).closest('li').removeClass('hidden');
 }
 
 function showProposal(item)
