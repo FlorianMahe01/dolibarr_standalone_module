@@ -24,7 +24,7 @@
 		var q = $(this).val();
 		console.log(q);
 		$('#thirdparty-list ul').empty();
-		dolibarr.indexedDB.getItemOnKey('thirdparty', q, 'name', addToListThirdparty);
+		doliDb.getItemOnKey('thirdparty', q, 'name', refreshThirdpartyList);
 	}); 
 </script>
 <div id="thirdparty-card"  class="tab-pane">
