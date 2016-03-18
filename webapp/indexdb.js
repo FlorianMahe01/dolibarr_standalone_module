@@ -12,8 +12,8 @@ var DoliDb = function() {
 	DoliDb.prototype.open = function() {
 		
 		if (!this.indexedDB) {
-		    window.alert("Votre navigateur ne supporte pas une version stable d'IndexedDB. Quelques fonctionnalités ne seront pas disponibles.");
-		    return;
+			showMessage('Warning', 'Votre navigateur ne supporte pas une version stable d\'IndexedDB', 'warning');
+			return;
 		}
 		
 		var version = 13;
@@ -105,7 +105,7 @@ var DoliDb = function() {
 				else return item;
 				
 			} else {
-				alert('Item not found');
+				showMessage('Warning', 'Item not found', 'warning');
 			}
 		};
 	};
