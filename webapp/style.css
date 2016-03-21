@@ -57,7 +57,7 @@ li span.fournisseur {
   border-radius: 35px;
 }
 
-.btn-edit {
+.link_edit {
 	position :absolute;
 	right : 30px;
 	bottom : 30px;

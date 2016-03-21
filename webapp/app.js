@@ -72,7 +72,7 @@ function init()
     }, 10000); // 10s
 	
 	// store the currently selected tab in the hash value
-	$("#menu-standalone a, .navbar-header a, .configuration a").on("shown.bs.tab", function(e) {
+	$("#menu-standalone a, .navbar-header a, .configuration a, a.move_tab").on("shown.bs.tab", function(e) {
 		var hash = $(e.target).attr("href").substr(1);
 		console.log('hash = '+hash);
 		window.location.hash = hash;
@@ -83,9 +83,14 @@ function init()
 	});
 	
 	// on load of the page: switch to the currently selected tab
+	
 	var hash = window.location.hash;
-	if (hash != '#synchronize-page' && $('a[href="' + hash + '"]:not(.last_item, .create_item):first-child').length > 0) $('a[href="' + hash + '"]:first-child').click();
-	else {
+	if (hash != '#synchronize-page' && hash.indexOf('-card') === -1 && hash.indexOf('-edit') === -1 && $('a[href="' + hash + '"]:not(.last_item, .create_item):first-child').length > 0) 
+	{
+		$('a[href="' + hash + '"]:first-child').click();
+	}
+	else 
+	{
 		window.location.hash = '#home';
 		$('a[href="#home"]:first-child').click();
 	}
@@ -409,6 +414,7 @@ function showBill(item)
 
 function setItemInHTML($container, item) 
 {
+	$container.children('input[name=id]').val(item.id);
 	for(var x in item) 
 	{
 		//console.log(x);
@@ -457,4 +463,41 @@ function refreshAssociateBillList($container, TBill)
 		if (x > 10) return;
 		else x++;
 	}
+}
+
+function editProduct(item)
+{
+	var $container = $('#product-card-edit');
+	$container.children('input[name=id]').val(item.id);
+	
+	for(var x in item) 
+	{
+		$container.find('[name='+x+']').val(item[x]);
+	}
+}
+
+function updateItem($container, type)
+{
+	var id = $container.children('input[name=id]').val();
+	var TInput = $container.find('form').find('input, textarea'); // TODO liste à faire évoluer si on ajouter des select ou autres
+	var TValue = {};
+	
+	for (var i=0; i<TInput.length; i++)
+	{
+		TValue[TInput[i].name] = TInput[i].value;
+	}
+	
+	switch (type) {
+		case 'product':
+			var callback = showProduct;
+			break;
+		case 'thirdparty':
+			var callback = showThirdparty;
+			break;
+		case 'proposal':
+			var callback = showProposal;
+			break;
+	}
+	
+	doliDb.updateItem(type, id, TValue, callback);
 }

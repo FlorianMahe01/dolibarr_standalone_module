@@ -110,8 +110,6 @@ var DoliDb = function() {
 					if (typeof callback != 'undefined') callback(item);
 					else return item;
 				}
-					
-				
 			} else {
 				showMessage('Warning', 'Item not found', 'warning');
 			}
@@ -205,11 +203,36 @@ var DoliDb = function() {
 				return false; // de toute manière c'est de l'asynchrone, donc ça sert à rien de return TItem
 			}
 		};
-		
-		
-		
-		
 			 
+	};
+
+	DoliDb.prototype.updateItem = function(storename, id, TValue, callback) {
+		
+		var transaction = this.db.transaction(storename, "readwrite");
+		var objectStore = transaction.objectStore(storename);
+		  
+		var request = objectStore.get(id.toString()); 
+		request.onsuccess = function(event) 
+		{
+			var item = event.target.result;
+			if (item !== 'undefined') 
+			{
+				$.extend(true, item, TValue);
+				item = DoliDb.prototype.prepareItem(storename, item);
+				item.update_by_indexedDB = true;
+				
+				objectStore.put(item);
+				
+				showMessage('Update', 'The current record has been updated', 'success');
+				if (typeof callback != 'undefined') callback(item);
+				else return item;
+			} 
+			else 
+			{
+				showMessage('Warning', 'Item not found', 'warning');
+			}
+		};
+		
 	};
 
 	DoliDb.prototype.updateAllItem = function(storename, data) {
