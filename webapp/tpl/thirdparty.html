@@ -3,7 +3,7 @@
 		<div  class="row">
 
 			<div class="input-group">
-				<input type="text" id="search-thirdparty" class="form-control" placeholder="Thirdparty" />
+				<input type="text" id="search-thirdparty" class="form-control" placeholder="Thirdparty" onchange="doliDb.getItemOnKey('thirdparty', this.value, ['name', 'id'], refreshThirdpartyList);" />
 				<span class="input-group-btn">
 					<button class="btn btn-default" type="button">
 						<langs trans="Go"></langs>
@@ -19,14 +19,7 @@
 
 	</div>
 </div>
-<script type="text/javascript">
-	$('#search-thirdparty').change(function() {
-		var q = $(this).val();
-		console.log(q);
-		$('#thirdparty-list ul').empty();
-		doliDb.getItemOnKey('thirdparty', q, 'name', refreshThirdpartyList);
-	}); 
-</script>
+
 <div id="thirdparty-card"  class="tab-pane">
 	<button type="button" class="btn btn-primary btn-circle btn-lg btn-edit">
 		<i class="glyphicon glyphicon-pencil"></i>

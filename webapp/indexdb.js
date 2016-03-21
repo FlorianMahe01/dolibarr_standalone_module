@@ -108,31 +108,46 @@ var DoliDb = function() {
 		};
 	};
 	
-	// TODO faire en sort que le parametre key soit un tableau pour chercher sur plusieurs attribut possible
-	DoliDb.prototype.getItemOnKey = function(storename, value, key, callback) {
+	DoliDb.prototype.getItemOnKey = function(storename, keyword, TKey, callback) {
 		var TItem = new Array;
 		
 		var transaction =  this.db.transaction(storename, "readonly");
 		var objectStore = transaction.objectStore(storename);
 		
-		// TODO améliorer la recherche pour obtenir un genre de %machaine, il semblerait que ce ne soit pas natif, voir pour faire une itération sur tous les items puis un check en js pure
-		var cursorRequest = objectStore.index(key);
-		value = value.toLowerCase();
-		var boundKeyRange = IDBKeyRange.bound(value,value+"\uffff"); // @INFO ceci permet d'obtenir une recherche de ce type : machaine%
-		
-		cursorRequest.openCursor(boundKeyRange).onsuccess = function(event) {
-			var result = event.target.result;
-			if (result) 
-			{
-				TItem.push(result.value);
-				result.continue();
-			}
-			else
+		var cursorRequest = objectStore.openCursor();
+		cursorRequest.onsuccess = function(event) {
+		    var cursor = event.target.result;
+		    if (cursor) 
+		    {
+		    	for (var i in TKey)
+		    	{
+		    		if (typeof cursor.value[TKey[i]] != 'undefined')
+		    		{
+		    			if (cursor.value[TKey[i]].indexOf(keyword) !== -1) // search as "%keyword%"
+		    			{
+			    			TItem.push(cursor.value);
+			    			break;	
+		    			}
+		    		}
+		    		else
+		    		{
+		    			console.log('ERROR attribute ['+TKey[i]+'] not exists in object store ['+storename+']', cursor.value);
+		    		}
+		    	}
+		    	
+		        cursor.continue();          
+		    }
+		    else
 			{
 				if (typeof callback !== 'undefined') callback(TItem);
 				return false; // de toute manière c'est de l'asynchrone, donc ça sert à rien de return TItem
 			}
-		}; 	 
+		};
+		
+		
+		
+		
+			 
 	};
 
 	DoliDb.prototype.updateAllItem = function(storename, data) {

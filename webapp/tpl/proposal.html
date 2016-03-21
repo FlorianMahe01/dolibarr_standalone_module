@@ -2,7 +2,7 @@
 	<div class="container-fluid">
 		<div  class="row">
 			<div class="input-group">
-				<input type="text" id="search-proposal" class="form-control" placeholder="Proposal" />
+				<input type="text" id="search-proposal" class="form-control" placeholder="Proposal" onchange="doliDb.getItemOnKey('proposal', this.value, ['ref', 'id'], refreshProposalList);" />
 				<span class="input-group-btn">
 					<button class="btn btn-default" type="button">
 						<langs trans="Go"></langs>
