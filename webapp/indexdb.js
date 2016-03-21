@@ -49,10 +49,12 @@ var DoliDb = function() {
 		};
 		
 	    request.onerror = function() { 
-	    	console.log("open db error"); 
+	    	console.log("open db error");
+	    	showMessage('Error', 'Can\'t open database, an error has occured', 'danger'); 
 	    };
 	    request.onblocked = function() { 
-	    	console.log("open db blocked"); 
+	    	console.log("open db blocked");
+	    	showMessage('Error', 'Database locked', 'danger');
 	    };
 	    
 	};
@@ -266,13 +268,16 @@ var DoliDb = function() {
 		var request = this.indexedDB.deleteDatabase(this.dbName);
 		request.onsuccess = function () {
 		    console.log("Deleted database successfully");
+		    showMessage('Confirmation', 'Deleted database successfully', 'success');
 		    DoliDb.prototype.open();
 		};
 		request.onerror = function () {
 		    console.log("Couldn't delete database");
+		    showMessage('Error', 'Can\'t delete database, an error has occured', 'danger');
 		};
 		request.onblocked = function () {
 		    console.log("Couldn't delete database due to the operation being blocked");
+		    showMessage('Error', 'Can\'t delete database, it is locked', 'danger');
 		};
 		
 		
