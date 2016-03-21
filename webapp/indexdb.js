@@ -89,8 +89,8 @@ var DoliDb = function() {
 	};
 	
 	
-	DoliDb.prototype.getItem = function (storename, id, callback) {
-		var transaction =  this.db.transaction(storename, "readonly");
+	DoliDb.prototype.getItem = function(storename, id, callback) {
+		var transaction = this.db.transaction(storename, "readonly");
 		var objectStore = transaction.objectStore(storename);
 		  
 		var request = objectStore.get(id.toString()); 
@@ -99,8 +99,16 @@ var DoliDb = function() {
 			var item = request.result;
 			if (item !== 'undefined') 
 			{
-				if (typeof callback != 'undefined') callback(item);
-				else return item;
+				if (storename == 'thirdparty')
+				{
+					DoliDb.prototype.getChildren(storename, item, callback);
+				}
+				else
+				{
+					if (typeof callback != 'undefined') callback(item);
+					else return item;
+				}
+					
 				
 			} else {
 				showMessage('Warning', 'Item not found', 'warning');
@@ -108,7 +116,59 @@ var DoliDb = function() {
 		};
 	};
 	
+	DoliDb.prototype.getChildren = function (storename, parent, callback, TChild) {
+		switch (storename) {
+			case 'thirdparty':
+				if (typeof TChild == 'undefined')
+				{
+					var TChild = [
+						{storename: 'proposal', key_test: 'socid', array_to_push: 'TProposal'}
+						//,{storename: 'order', key_test: 'fk_soc', array_to_push: 'TOrder'}
+						//,{storename: 'bill', key_test: 'fk_soc', array_to_push: 'TBill'}
+					];
+				}
+				break;
+		}
+		
+		if (TChild.length > 0) this.setChild(storename, parent, TChild, callback);
+		else callback(parent);
+	};
+	
+	DoliDb.prototype.setChild = function(storename, parent, TChild, callback) {
+		parent[TChild[0].array_to_push] = new Array;
+
+		var transaction = this.db.transaction([TChild[0].storename], "readonly");
+		var objectStore = transaction.objectStore(TChild[0].storename);
+		
+		// Get everything in the store;
+		var keyRange = this.IDBKeyRange.lowerBound(0);
+		var cursorRequest = objectStore.openCursor(keyRange);
+		
+		cursorRequest.onsuccess = function(event) {
+			var cursor = event.target.result;
+			if(cursor) 
+			{
+				if (typeof cursor.value[TChild[0].key_test] != 'undefined')
+				{
+					if (cursor.value[TChild[0].key_test] == parent.id) parent[TChild[0].array_to_push].push(cursor.value);
+				}
+				else
+				{
+					console.log('ERROR attribute key_test ['+TChild[0].key_test+'] not exists in object store ['+TChild[0].storename+']', cursor.value);
+				}
+				
+				cursor.continue();
+			}
+			else
+			{
+				TChild.splice(0, 1);
+				DoliDb.prototype.getChildren(storename, parent, callback, TChild);
+			}
+		};
+	};
+	
 	DoliDb.prototype.getItemOnKey = function(storename, keyword, TKey, callback) {
+		keyword = keyword.toLowerCase();
 		var TItem = new Array;
 		
 		var transaction =  this.db.transaction(storename, "readonly");
@@ -123,7 +183,7 @@ var DoliDb = function() {
 		    	{
 		    		if (typeof cursor.value[TKey[i]] != 'undefined')
 		    		{
-		    			if (cursor.value[TKey[i]].indexOf(keyword) !== -1) // search as "%keyword%"
+		    			if (cursor.value[TKey[i]].toLowerCase().indexOf(keyword) !== -1) // search as "%keyword%"
 		    			{
 			    			TItem.push(cursor.value);
 			    			break;	

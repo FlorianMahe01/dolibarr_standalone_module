@@ -355,11 +355,11 @@ function refreshOrderList(TItem)
 
 function addEventListenerOnItemLink()
 {
-	$("li.list-group-item a").on("shown.bs.tab", function(e) {
+	$('li.list-group-item a, .doc_associate > ul > li > ul a').unbind('shown.bs.tab').bind('shown.bs.tab', function(e) {
 		var hash = $(e.target).attr("href").substr(1);
 		console.log('hash = '+hash);
 		window.location.hash = hash;
-		$('#menu-standalone > ul li.active').removeClass('active');
+		$('#menu-standalone > ul li.active, .doc_associate > ul li').removeClass('active');
 	});
 }
 
@@ -384,12 +384,27 @@ function showProduct(item)
 function showThirdparty(item) 
 {
 	setItemInHTML($('#thirdparty-card'), item);
+	refreshAssociateProposalList($('#thirdparty-card .doc_associate_proposals'), item.TProposal);
+	refreshAssociateOrderList($('#thirdparty-card .doc_associate_orders'), item.TOrder);
+	refreshAssociateBillList($('#thirdparty-card .doc_associate_bills'), item.TBill);
+	
+	addEventListenerOnItemLink();
 	$('a#last-thirdparty').html(item.name).closest('li').removeClass('hidden');
 }
 
 function showProposal(item)
 {
 	setItemInHTML($('#proposal-card'), item);
+}
+
+function showOrder(item)
+{
+	setItemInHTML($('#order-card'), item);
+}
+
+function showBill(item)
+{
+	setItemInHTML($('#bill-card'), item);
 }
 
 function setItemInHTML($container, item) 
@@ -399,5 +414,47 @@ function setItemInHTML($container, item)
 		//console.log(x);
 		value = item[x];
 		$container.find('[rel='+x+']').html(value);
+	}
+}
+
+function refreshAssociateProposalList($container, TPropal)
+{
+	var x = 0; 
+	$container.empty();
+	for (var i in TPropal)
+	{
+		var $li = $('<li><a data-toggle="tab" href="#proposal-card" onclick="javascript:showItem(\'proposal\', '+TPropal[i].id+', showProposal)">'+TPropal[i].ref+'</a></li>');
+		$container.append($li);
+		
+		if (x > 10) return;
+		else x++;
+	}
+}
+
+function refreshAssociateOrderList($container, TOrder)
+{
+	var x = 0; 
+	$container.empty();
+	for (var i in TOrder)
+	{
+		var $li = $('<li><a data-toggle="tab" href="#proposal-card" onclick="javascript:showItem(\'order\', '+TOrder[i].id+', showOrder)">'+TOrder[i].ref+'</a></li>');
+		$container.append($li);
+		
+		if (x > 10) return;
+		else x++;
+	}
+}
+
+function refreshAssociateBillList($container, TBill)
+{
+	var x = 0; 
+	$container.empty();
+	for (var i in TBill)
+	{
+		var $li = $('<li><a data-toggle="tab" href="#proposal-card" onclick="javascript:showItem(\'bill\', '+TBill[i].id+', showBill)">'+TBill[i].ref+'</a></li>');
+		$container.append($li);
+		
+		if (x > 10) return;
+		else x++;
 	}
 }

@@ -34,10 +34,33 @@
 			</div>
 
 		</div>
-		<div class="row alternate">
-			<a class="btn btn-default col-xs-12 col-sm-4" href="#propal-list">Propals</a>
-			<a class="btn btn-default col-xs-12 col-sm-4" href="#order-list">Orders</a>
-			<a class="btn btn-default col-xs-12 col-sm-4" href="#bill-list">Bills</a>
+		
+		<div class="doc_associate">
+			<ul class="nav navbar-nav text-xs-center alternate list-group" role="tablist">
+				<!-- Liste des propositions commerciales associés au client -->
+				<li class="dropdown clearfix btn-default">
+					<a data-toggle="dropdown" href="#" class="dropdown-toggle col-xs-12 btn"><langs trans="Proposals"></langs>&nbsp;<span class="caret"></span></a>
+					<ul class="dropdown-menu text-xs-center doc_associate_proposals">
+						
+					</ul>
+				</li>
+				
+				<!-- Liste des commandes associés au client -->
+				<li class="dropdown clearfix btn-default">
+					<a data-toggle="dropdown" href="#" class="dropdown-toggle col-xs-12 btn" ><langs trans="Orders"></langs>&nbsp;<span class="caret"></span></a>
+					<ul class="dropdown-menu text-xs-center doc_associate_orders">
+						
+					</ul>
+				</li>
+				
+				<!-- Liste des factures associés au client -->
+				<li class="dropdown clearfix btn-default">
+					<a data-toggle="dropdown" href="#" class="dropdown-toggle col-xs-12 btn" ><langs trans="Bills"></langs>&nbsp;<span class="caret"></span></a>
+					<ul class="dropdown-menu text-xs-center doc_associate_bills">
+						
+					</ul>
+				</li>
+			</ul>
 		</div>
 
 	</div>
