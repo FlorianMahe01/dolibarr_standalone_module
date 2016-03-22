@@ -158,7 +158,6 @@ function saveConfig() {
 	  	,dataType:'jsonp'
 	  	,timeout: 1250 // Le test côté PHP pour vérifier que le login/mdp/entity correspond bien à un utilisateur prend 1sec, pour entrer la fonction d'erreur je suis obligé de définir un timeout (cas où l'url de l'interface est fausse)
 	  	,success: function(res) {
-	  		//trait(res);
 	  		console.log(res);
 			if (res == 'ok') showMessage('Confirmation', 'Configuration saved and connection is right !', 'success');
 			else showMessage('Connection error', 'Configuration saved... But can\'t connect to Dolibarr', 'warning');
@@ -168,45 +167,49 @@ function saveConfig() {
 	  	}
 	});
 }
-function trait(res)
-{
-	if (res == 'ok') showMessage('Confirmation', 'Configuration saved and connection is right !', 'success');
-			else showMessage('Connection error', 'Configuration saved... But can\'t connect to Dolibarr', 'warning');
-}
 
-function synchronize() 
+function synchronize(set_one_finish)
 {
-	$('#synchronize-page .sync-info').html('');
+	if (set_one_finish !== true)
+	{
+		// Envoi des données local qui ont étaient modifiés 
+		$('#synchronize-page .sync-info').html('');
 		
-	var TObjToSync = [
-		{type:'product', container:'#synchronize-page .sync-info', msg_start:'Fetching products...', msg_end:'Done'}
-		,{type:'thirdparty', container:'#synchronize-page .sync-info', msg_start:'Fetching thirdparties...', msg_end:'Done'}
-		,{type:'proposal', container:'#synchronize-page .sync-info', msg_start:'Fetching proposals...', msg_end:'Done'}
-	];
-	
-	$.ajax({
-	    url: localStorage.interface_url
-	    ,dataType: 'jsonp'
-	    ,timeout: 1250 // Le test côté PHP pour vérifier que le login/mdp/entity correspond bien à un utilisateur prend 1sec, pour entrer la fonction d'erreur je suis obligé de définir un timeout (cas où l'url de l'interface est fausse)
-	    ,data: {
-	    	get:'check'
-	    	,jsonp: 1
-			,login:localStorage.dolibarr_login
-			,passwd:localStorage.dolibarr_password
-			,entity:1
-	    }
-	    ,success: function (res) {
-	    	if (res == 'ok') sync(TObjToSync);
-	    	else showMessage('Connection error', 'Something is wrong, can\'t connect to Dolibarr', 'warning');
-	    }
-	    ,error: function (res) {
-		    showMessage('Error', 'I think youre are not connected to internet, am i right ? Or maybe you have wrong interface URL.', 'warning');
-	    }
-	});
+		var TDataToSend = [
+			{type:'product', container:'#synchronize-page .sync-info', msg_start:'Sending products...', msg_end:'Done'}
+			,{type:'thirdparty', container:'#synchronize-page .sync-info', msg_start:'Sending thirdparties...', msg_end:'Done'}
+			,{type:'proposal', container:'#synchronize-page .sync-info', msg_start:'Sending proposals...', msg_end:'Done'}
+		];
+		
+		// le callback synchronize sera appelé avec un paramètre à true pour passer dans le "else" (récupération des données)
+		sendData(TDataToSend);
+	}
+	else
+	{
+		// Récupération des données depuis Dolibarr
+		var TObjToSync = [
+			{type:'product', container:'#synchronize-page .sync-info', msg_start:'Fetching products...', msg_end:'Done'}
+			,{type:'thirdparty', container:'#synchronize-page .sync-info', msg_start:'Fetching thirdparties...', msg_end:'Done'}
+			,{type:'proposal', container:'#synchronize-page .sync-info', msg_start:'Fetching proposals...', msg_end:'Done'}
+		];
+		
+		getData(TObjToSync);
+	}
 }
 
+function sendData(TDataToSend)
+{
+	if (TDataToSend.length > 0)
+	{
+		doliDb.sendAllUpdatedInLocal(TDataToSend);
+	}
+	else
+	{
+		synchronize(true);
+	}
+}
 
-function sync(TObjToSync)
+function getData(TObjToSync)
 {
 	if (TObjToSync.length > 0)
 	{
@@ -231,6 +234,9 @@ function sync(TObjToSync)
 				get:TObjToSync[0].type
 				,jsonp: 1
 				,date_last_sync: date_last_sync
+				,login:localStorage.dolibarr_login
+				,passwd:localStorage.dolibarr_password
+				,entity:1
 			}
 			,success: function(data) {
 				_update_date_sync(TObjToSync[0].type, $.now());
@@ -239,7 +245,7 @@ function sync(TObjToSync)
 			  	$(TObjToSync[0].container+' blockquote:last-child').append('<small class="text-info">'+TObjToSync[0].msg_end+'</small>'); // show info : done
 			  	
 			  	TObjToSync.splice(0, 1);
-			  	sync(TObjToSync); // next sync
+			  	getData(TObjToSync); // next sync
 			}
 			,error: function(xhr, ajaxOptions, thrownError) {
 				// TODO téchniquement on tombera jamais dans le error car pas de timeout défini, sauf qu'on peux pas le définir sinon on risque d'interrompre la récupération des données

@@ -9,23 +9,29 @@
 	dol_include_once('/product/class/product.class.php');
 	dol_include_once('/comm/propal/class/propal.class.php');
 
-// TODO check login / pass
 // TODO sync event, propal, order, invoice in order to allow view and edit
 
 	$get = GETPOST('get');
 	$put = GETPOST('put');
 
+	$login = GETPOST('login', 'alpha');
+	$passwd = GETPOST('passwd', 'alpha');
+	$entity = GETPOST('entity', 'int');
+	
+	// Pour des raisons de sécurité il est nécessaire de vérifier la connexion à chaque demande. A modifier côté JS pour envoyer constament le login/mdp
+	$is_user = _check($login, $passwd, $entity);
+	if ($is_user == 'ko')
+	{
+		__out($langs->trans('access_denied'));
+		exit;
+	} 
+	else {
+		$user->fetch('', $login, '', 1, $entity);
+	}
 
 	switch ($get) {
 		case 'check':
-			$login = GETPOST('login', 'alpha');
-			$passwd = GETPOST('passwd', 'alpha');
-			$entity = GETPOST('entity', 'int');
-			
-			$res = check_user_password_dolibarr($login, $passwd, $entity);
-			
-			if (!empty($res)) __out('ok');
-			else __out('ko');
+			__out($is_user);
 			
 			break;
 		
@@ -49,7 +55,19 @@
 	}	
 
 	switch ($put) {
-
+		case 'product':
+			$TProduct = GETPOST('TItem');
+			$TProduct = json_decode($TProduct);
+			
+			$TError = _updateDolibarr($user, $TProduct, 'Product');
+			__out($TError);
+			
+			break;
+			
+		case 'thirdparty':
+			__out('ok');
+			
+			break;
 			
 		case 'proposal':
 			__out('ok');
@@ -57,6 +75,13 @@
 			break;
 	}
 	
+function _check($login, $passwd, $entity)
+{
+	$res = check_user_password_dolibarr($login, $passwd, $entity);
+	
+	if (!empty($res)) return 'ok';
+	else return 'ko';
+}
 
 function _getItem($type, $id)
 {
@@ -97,4 +122,40 @@ function _getListItem($type, $filter='')
 	}
 	
 	return $TResult;
+}
+
+function _updateDolibarr(&$user, &$TObject, $classname)
+{
+	global $langs,$db;
+	$TError = array();
+	
+	foreach ($TObject as $objStd)
+	{
+		$objDolibarr = new $classname($db);
+		foreach ($objStd as $attr => $value)
+		{
+			if (is_object($objDolibarr->{$attr})) continue;
+			elseif (is_array($objDolibarr->{$attr})) continue;
+			else $objDolibarr->{$attr} = $value;
+		}
+		
+		switch ($classname) {
+			case 'Product':
+			case 'Societe':
+				$res = $objDolibarr->update($objStd->id, $user);
+				break;
+			case 'Propal':
+				// cas spéciale, pas de function update et il va falloir sauvegarder les lignes
+			default:
+				
+				break;
+		}
+		
+		if ($res < 0)
+		{
+			$TError[] = $langs->trans('');
+		}
+	}
+	
+	return $TError;
 }
