@@ -482,6 +482,17 @@ function editProduct(item)
 	}
 }
 
+function editThirdparty(item)
+{
+	var $container = $('#thirdparty-card-edit');
+	$container.children('input[name=id]').val(item.id);
+	
+	for(var x in item) 
+	{
+		$container.find('[name='+x+']').val(item[x]);
+	}
+}
+
 function updateItem($container, type)
 {
 	var id = $container.children('input[name=id]').val();

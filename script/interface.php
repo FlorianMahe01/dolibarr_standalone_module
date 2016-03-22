@@ -65,7 +65,11 @@
 			break;
 			
 		case 'thirdparty':
-			__out('ok');
+			$TSociete = GETPOST('TItem');
+			$TSociete = json_decode($TSociete);
+			
+			$TError = _updateDolibarr($user, $TSociete, 'Societe');
+			__out($TError);
 			
 			break;
 			
@@ -132,6 +136,9 @@ function _updateDolibarr(&$user, &$TObject, $classname)
 	foreach ($TObject as $objStd)
 	{
 		$objDolibarr = new $classname($db);
+		// TODO Pour un gain de performance ça serait intéressant de ne pas faire de fetch, mais actuellement nécessaire pour éviter un retour d'erreur non géré pour le moment
+		$objDolibarr->fetch($objStd->id);
+		
 		foreach ($objStd as $attr => $value)
 		{
 			if (is_object($objDolibarr->{$attr})) continue;
