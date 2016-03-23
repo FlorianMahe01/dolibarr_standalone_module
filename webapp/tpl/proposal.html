@@ -42,6 +42,7 @@
 
 <div id="proposal-card-create" class="tab-pane">
 	<input type="hidden" name="id" value="" />
+	<input type="hidden" name="fk_soc" value="" />
 	
 	<div class="container-fluid">
 
@@ -124,7 +125,38 @@
 						
 					</select>
 				</div>
+				
+				<label for="listeProduits" class="col-sm-2 control-label"><langs trans="ProposalLines"></langs></label>
+				<div class="col-sm-10">
+					<textarea></textarea>
+				</div>
+				
+				
+				<label for="selectionProduit" class="col-sm-2 control-label"><langs trans="ProposalSelectProduct"></langs></label>
+				<div id="product-list" class="tab-pane">
+					<div class="container-fluid">
+						<div  class="row">
+							<div class="input-group">
+								<input type="text" id="search-product" class="form-control" placeholder="Product" onchange="doliDb.getItemOnKey('product', this.value, ['label', 'id'], refreshProductList);" />
+								<span class="input-group-btn">
+									<button class="btn btn-default" type="button">
+										<langs trans="Go"></langs>
+									</button> </span>
+							</div>
+						</div>
+				
+						<div class="row">
+							<ul class="list-group">
+				
+							</ul>
+						</div>
+				
+					</div>
+				</div>
 
+				
+				
+				
 
 				<!-- Permet d'éviter le chevauchement du dernier input sous les boutons d'actions en bas de l'écran -->
 				<div>&nbsp;</div>
@@ -138,7 +170,7 @@
 	
 	<div class="row navbar-fixed-bottom">
 		<a data-toggle="tab" href="#thirdparty-card" class="btn btn-default col-xs-6 move_tab"><langs trans="Cancel"></langs></a>
-		<a data-toggle="tab" href="#thirdparty-card" onclick="updateItem($('#thirdparty-card-edit'), 'thirdparty');" class="btn btn-success col-xs-6 move_tab"><langs trans="Update"></langs></a>
+		<a data-toggle="tab" href="#thirdparty-card" onclick="createProposal($('#proposal-card-create'), 'proposal');" class="btn btn-success col-xs-6 move_tab"><langs trans="Create"></langs></a>
 	</div>
 	
 </div>

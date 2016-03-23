@@ -311,8 +311,11 @@ function showList(type, callback)
 	}
 }
 
+
 function refreshProductList(TItem) 
 {
+	console.log('titi');
+	console.log(TItem);
 	var x = 0;
 	$('#product-list ul').empty();
 	for (var i in TItem)
@@ -495,9 +498,27 @@ function editThirdparty(item)
 	}
 }
 
-function createPropal(item){
-	var $container = $('#proposal-card-create');
+function createItem($container, type){
+	var id = $containe.children('input[name=id]').val();
+	var TInput = $container.find('form').find('input, text');
+	var TValue = {};
 	
+	for (var i=0; i<TInput.length; i++){
+		TValue[TInput[i].name] = TInput[i].value;
+	}
+	
+	switch (type){
+		case 'product':
+			var callback = showProduct;
+			break;
+		case 'thirdparty':
+			var callback = showThirdParty;
+			break;
+		case 'proposal':
+			var callback = showProposal;
+			break;
+	}
+	doliDb.createItem(type, id, TValue, callback);
 }
 
 function updateItem($container, type)

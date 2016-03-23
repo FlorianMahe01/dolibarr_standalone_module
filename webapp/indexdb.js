@@ -208,7 +208,23 @@ var DoliDb = function() {
 		};
 			 
 	};
-
+	
+	
+	/*
+	 * A rechercher comment créer store + objet indexedDb
+	 */
+	/*
+	DoliDb.prototype.createItem = function(storename, id, TValue, callback){
+		
+		var transaction = this.db.transaction(storename, "readwrite");
+		var objectStore = transaction.objectStore(storename);
+		
+		var request = 
+		
+		
+	}
+	*/
+	
 	DoliDb.prototype.updateItem = function(storename, id, TValue, callback) {
 		
 		var transaction = this.db.transaction(storename, "readwrite");
