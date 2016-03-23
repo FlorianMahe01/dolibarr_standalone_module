@@ -79,15 +79,85 @@
 
 		<form class="form-horizontal">
 			<div class="form-group">
+				
+				<!-- Nom -->
 				<label for="name" class="col-sm-2 control-label"><langs trans="ThirdpartyName"></langs></label>
 				<div class="col-sm-10">
 					<input type="text" class="form-control" name="name" placeholder="" />
 				</div>
 				
+				<!-- Adresse -->
 				<label for="address" class="col-sm-2 control-label"><langs trans="ThirdpartyAddress"></langs></label>
 				<div class="col-sm-10">
 					<textarea class="form-control" rows="5" name="address"></textarea>
 				</div>
+				
+				<!-- Code Postal-->
+				<label for="cp" class="col-sm-2 control-label"><langs trans="ThirdpartyCodePostal"></langs></label>
+				<div class="col-sm-10" >
+					<input type="text" class="form-control" name="cp"/>
+				</div>
+				
+				<!-- Pays -->
+				<label for="country" class="col-sm-2 control-label"><langs trans="ThirdpartyCountry"></langs></label>
+				<div class="col-sm-10" >
+					<input type="text" class="form-control" name="cp"/>
+				</div>
+				
+				
+				<!-- Mail-->
+				<label for="mail" class="col-sm-2 control-label"><langs trans="ThirdpartyMail"></langs></label>
+				<div class="col-sm-10" >
+					<input type="text" class="form-control" name="mail"/>
+				</div>
+				
+				<!-- Phone-->
+				<label for="phone" class="col-sm-2 control-label"><langs trans="ThirdpartyMail"></langs></label>
+				<div class="col-sm-10" >
+					<input type="text" class="form-control" name="mail"/>
+				</div>
+				
+				<!-- Prospect/Client -->
+				<label for="prospect" class="col-sm-2 control-label"><langs trans="ThirdpartyProspect"></langs></label>
+				<div class="col-sm-10">
+					<select class="form-control" name="prospect">
+						<option value="-1">
+							
+						</option>
+						<option value="2">
+							Prospect
+						</option>
+						<option value="3">
+							Prospect / Client
+						</option>
+						<option value="1">
+							Client
+						</option>
+						<option value="0">
+							Ni client, ni prospect
+						</option>
+						
+					</select>
+				</div>
+				
+				<!-- Fournisseur -->
+				<label for="fournisseur" class="col-sm-2 control-label"><langs trans="ThirdpartyFournisseur"></langs></label>
+				<div class="col-sm-10">
+					<select class="form-control" name="fournisseur">
+						<option>
+							
+						</option>
+						<option>
+							oui
+						</option>
+						<option>
+							non
+						</option>
+						
+					</select>
+				</div>
+				
+				
 				
 				
 				<!-- Permet d'éviter le chevauchement du dernier input sous les boutons d'actions en bas de l'écran -->

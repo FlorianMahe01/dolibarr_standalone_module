@@ -38,3 +38,127 @@
 		</button>
 	</a>
 </div>
+
+
+<div id="proposal-card-edit" class="tab-pane">
+	<input type="hidden" name="id" value="" />
+	
+	<div class="container-fluid">
+
+		<form class="form-horizontal">
+			<div class="form-group">
+				
+				<!-- ref -->
+				<label for="ref" class="col-sm-2 control-label"><langs trans="ProposalRef"></langs></label>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" name="ref" placeholder="" />
+				</div>
+				
+				<!-- ref Client -->
+				<label for="refClient" class="col-sm-2 control-label"><langs trans="ProposalRefClient"></langs></label>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" name="ref" placeholder="" />
+				</div>
+				
+				<!-- Client -->
+				<!-- remplir dynamiquement avec la liste des clients. -->
+				<label for="refClient" class="col-sm-2 control-label"><langs trans="ProposalClient"></langs></label>
+				<div class="col-sm-10">
+					<select class="form-control" name="client">
+						<option>
+							
+						</option>
+						<option>
+							ATM-consulting
+						</option>
+						
+					</select>
+				</div>
+				
+				<!-- Date -->
+				<label for="refClient" class="col-sm-2 control-label"><langs trans="ProposalDate"></langs></label>
+				<div class="col-sm-10">
+					<input class="form-control" type="date"/>
+				</div>
+
+				<!-- Durée de validité -->
+				<label for="refClient" class="col-sm-2 control-label"><langs trans="ProposalValidite"></langs></label>
+				<div class="col-sm-10">
+					<input class="form-control" type="text">jours</input>
+				</div>
+				
+				<!-- Conditions de reglement -->
+				<label for="refClient" class="col-sm-2 control-label"><langs trans="ProposalReglement"></langs></label>
+				<div class="col-sm-10">
+					<select class="form-control" name="client">
+						<option value="1">
+							A reception
+						</option>
+						<option value="2">
+							30 jours
+						</option>
+						<option value="3">
+							30 jours fin de mois
+						</option>
+						<option value="4">
+							60 jours
+						</option>
+						<option value="5">
+							60 jours fin de mois
+						</option>
+						<option value="6">
+							A commande
+						</option>
+						<option value="7">
+							A livraison
+						</option>
+						<option value="8">
+							50/50
+						</option>
+						
+					</select>
+				</div>
+				
+				<!-- Mode de reglement -->
+				<label for="refClient" class="col-sm-2 control-label"><langs trans="ProposalReglement"></langs></label>
+				<div class="col-sm-10">
+					<select class="form-control" name="client">
+						<option value="0">
+							
+						</option>
+						<option value="6">
+							Carte bancaire
+						</option>
+						<option value="7">
+							Chèque
+						</option>
+						<option value="4">
+							Espèce
+						</option>
+						<option value="3">
+							Prélèvement
+						</option>
+						<option value="2">
+							Virement
+						</option>
+						
+					</select>
+				</div>
+
+
+				<!-- Permet d'éviter le chevauchement du dernier input sous les boutons d'actions en bas de l'écran -->
+				<div>&nbsp;</div>
+				<div>&nbsp;</div>
+				<div>&nbsp;</div>
+			</div>
+			
+		</form>
+		
+	</div>
+	
+	<div class="row navbar-fixed-bottom">
+		<a data-toggle="tab" href="#thirdparty-card" class="btn btn-default col-xs-6 move_tab"><langs trans="Cancel"></langs></a>
+		<a data-toggle="tab" href="#thirdparty-card" onclick="updateItem($('#thirdparty-card-edit'), 'thirdparty');" class="btn btn-success col-xs-6 move_tab"><langs trans="Update"></langs></a>
+	</div>
+	
+</div>
