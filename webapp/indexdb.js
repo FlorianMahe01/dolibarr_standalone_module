@@ -260,7 +260,46 @@ var DoliDb = function() {
 			else
 			{
 				$(TDataToSend[0].container).append('<blockquote><span class="text-info">'+TDataToSend[0].msg_start+'</span></blockquote>'); // show info : start fetching
+				var data = {
+					put: storename
+					,jsonp: 1
+					,TItem: JSON.stringify(TItem)
+					,login:localStorage.dolibarr_login
+					,passwd:localStorage.dolibarr_password
+					,entity:1
+				};
 				
+				var $container = $('#form_to_send_data');
+				
+				$container.attr('action', localStorage.interface_url);
+				$container.children('input[name=put]').val(storename);
+				$container.children('input[name=login]').val(localStorage.dolibarr_login);
+				$container.children('input[name=passwd]').val(localStorage.dolibarr_password);
+				$container.children('input[name=entity]').val(1);
+				$container.children('textarea[name=TItem]').val(JSON.stringify(TItem));
+				
+				$container.submit();
+				console.log(TItem);
+				
+				//TODO voir pour récupérer le retour PHP 
+				var success = true;
+				
+				if (success)
+				{
+					$(TDataToSend[0].container+' blockquote:last-child').append('<small class="text-info">'+TDataToSend[0].msg_end+' ('+TItem.length+')</small>'); // show info : done
+					  	
+				  	TDataToSend.splice(0, 1);
+				  	setTimeout(function() { 
+				  		sendData(TDataToSend); // next sync
+			  		},1500);
+				}
+				else
+				{
+					showMessage('Synchronization error', 'Sorry, we meet an error pending synchronization', 'danger');
+					$(TDataToSend[0].container).append('<blockquote><span class="text-error" style="color:red">Error sync with "'+TDataToSend[0].type+'"</span></blockquote>');
+				}
+				
+				/*
 				$.ajax({
 					url: localStorage.interface_url
 					,dataType:'jsonp'
@@ -284,7 +323,7 @@ var DoliDb = function() {
 						showMessage('Synchronization error', 'Sorry, we meet an error pending synchronization', 'danger');
 						$(TDataToSend[0].container).append('<blockquote><span class="text-error" style="color:red">Error sync with "'+TDataToSend[0].type+'"</span></blockquote>');
 					}
-				});
+				});*/
 
 			}
 		};

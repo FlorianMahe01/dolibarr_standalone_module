@@ -27,6 +27,7 @@ function load_tpl()
 		,['tpl/product.html', '#container']
 		,['tpl/thirdparty.html', '#container']
 		,['tpl/proposal.html', '#container']
+		,['tpl/formtosenddata.html', 'body']
 	];
 	
 	tpl_append(TTpl);
@@ -100,6 +101,7 @@ function init()
 	$('#menu-standalone .dropdown-menu > li > a').on('click', function(){
 		if ($('.navbar-toggle').css('display') != 'none') $('.navbar-toggle').click();
 	});
+
 
 }
 
