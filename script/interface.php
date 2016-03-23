@@ -1,4 +1,8 @@
 <?php
+	if (! defined('NOCSRFCHECK'))    define('NOCSRFCHECK','1');
+	if (! defined('NOTOKENRENEWAL')) define('NOTOKENRENEWAL','1');
+	if (! defined('NOREQUIREMENU'))  define('NOREQUIREMENU','1');
+	if (! defined('NOREQUIREHTML'))  define('NOREQUIREHTML','1');
 	
 	DEFINE('INC_FROM_CRON_SCRIPT', true);
 	
