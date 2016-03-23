@@ -493,6 +493,11 @@ function editThirdparty(item)
 	}
 }
 
+function createPropal(item){
+	var $container = $('#proposal-card-create');
+	
+}
+
 function updateItem($container, type)
 {
 	var id = $container.children('input[name=id]').val();
