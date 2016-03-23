@@ -314,8 +314,6 @@ function showList(type, callback)
 
 function refreshProductList(TItem) 
 {
-	console.log('titi');
-	console.log(TItem);
 	var x = 0;
 	$('#product-list ul').empty();
 	for (var i in TItem)
@@ -498,6 +496,16 @@ function editThirdparty(item)
 	}
 }
 
+function editProposal(item){
+
+	var $container = $('#proposal-card-edit');
+	$container.children('input[name=id]').val(item.id);
+	
+	for(var x in item){
+		$container.find('[name='+x+']').val(item[x]);
+	}
+}
+
 function createItem($container, type){
 	var id = $containe.children('input[name=id]').val();
 	var TInput = $container.find('form').find('input, text');
@@ -545,4 +553,13 @@ function updateItem($container, type)
 	}
 	
 	doliDb.updateItem(type, id, TValue, callback);
+}
+
+function addLine(){
+	/*
+	 *TODO au clic sur un <li> de la propal, on ajoute la ligne comme proposal_line.
+	 * On crée un tableau propal_lignes auquel on ajoute la ligne
+	 * On ajoute ensuite chaque ligne au <ul> sur la fiche d'édition de propale  
+	*/	
+	
 }
