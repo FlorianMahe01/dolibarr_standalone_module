@@ -15,7 +15,7 @@ var DoliDb = function() {
 			return;
 		}
 		
-		var version = 13;
+		var version = 14;
 		var request = this.indexedDB.open(this.dbName, version); // Attention la version ne peut pas être inférieur à la dernière version
 		
 		request.onupgradeneeded = function (event) { // cette fonction doit normalement mettre à jour le schéma BDD sans qu'on soit obligé de modifier le numéro de version 
@@ -38,11 +38,28 @@ var DoliDb = function() {
 			var objectStore = DoliDb.prototype.db.createObjectStore("thirdparty", { keyPath: "id", autoIncrement: true });
 			objectStore.createIndex("id", "id", { unique: true });
 			objectStore.createIndex("name", "keyname", { unique: false });
+			objectStore.createIndex("create_by_indexedDB", "create_by_indexedDB", { unique: false });
+			objectStore.createIndex("update_by_indexedDB", "update_by_indexedDB", { unique: false });
+			
+			var objectStore = DoliDb.prototype.db.createObjectStore("actioncomm", { keyPath: "id", autoIncrement: true });
+			objectStore.createIndex("id", "id", { unique: true });
+			objectStore.createIndex("socid", "socid", { unique: false });
+			objectStore.createIndex("fk_project", "fk_project", { unique: false });
+			objectStore.createIndex("contactid", "contactid", { unique: false });
+			objectStore.createIndex("create_by_indexedDB", "create_by_indexedDB", { unique: false });
 			objectStore.createIndex("update_by_indexedDB", "update_by_indexedDB", { unique: false });
 			
 			var objectStore = DoliDb.prototype.db.createObjectStore("proposal", { keyPath: "id", autoIncrement: true });
 			objectStore.createIndex("id", "id", { unique: true });
 			objectStore.createIndex("ref", "ref", { unique: true });
+			objectStore.createIndex("socid", "socid", { unique: false });
+			objectStore.createIndex("create_by_indexedDB", "create_by_indexedDB", { unique: false });
+			objectStore.createIndex("update_by_indexedDB", "update_by_indexedDB", { unique: false });
+			
+			var objectStore = DoliDb.prototype.db.createObjectStore("proposal_line", { keyPath: "id", autoIncrement: true });
+			objectStore.createIndex("id", "id", { unique: true });
+			objectStore.createIndex("fk_propal", "fk_propal", { unique: false });
+			objectStore.createIndex("create_by_indexedDB", "create_by_indexedDB", { unique: false });
 			objectStore.createIndex("update_by_indexedDB", "update_by_indexedDB", { unique: false });
 		};
 		
@@ -104,7 +121,7 @@ var DoliDb = function() {
 			var item = request.result;
 			if (item !== 'undefined') 
 			{
-				if (storename == 'thirdparty')
+				if (storename == 'thirdparty' || storename == 'proposal')
 				{
 					DoliDb.prototype.getChildren(storename, item, callback);
 				}
@@ -120,46 +137,46 @@ var DoliDb = function() {
 	};
 	
 	DoliDb.prototype.getChildren = function (storename, parent, callback, TChild) {
-		switch (storename) {
-			case 'thirdparty':
-				if (typeof TChild == 'undefined')
-				{
+		if (typeof TChild == 'undefined')
+		{
+			switch (storename) {
+				case 'thirdparty':
 					var TChild = [
 						{storename: 'proposal', key_test: 'socid', array_to_push: 'TProposal'}
 						//,{storename: 'order', key_test: 'fk_soc', array_to_push: 'TOrder'}
 						//,{storename: 'bill', key_test: 'fk_soc', array_to_push: 'TBill'}
 					];
-				}
-				break;
-		}
-		
+					
+					break;
+				case 'proposal':
+					var TChild = [
+						{storename: 'proposal_line', key_test: 'fk_propal', array_to_push: 'TLine'}
+					];
+					
+					break;
+			}
+	}
+	
 		if (TChild.length > 0) this.setChild(storename, parent, TChild, callback);
 		else callback(parent);
 	};
 	
 	DoliDb.prototype.setChild = function(storename, parent, TChild, callback) {
+		
 		parent[TChild[0].array_to_push] = new Array;
 
 		var transaction = this.db.transaction([TChild[0].storename], "readonly");
 		var objectStore = transaction.objectStore(TChild[0].storename);
+		var index = objectStore.index(TChild[0].key_test);
 		
-		// Get everything in the store;
-		var keyRange = this.IDBKeyRange.lowerBound(0);
-		var cursorRequest = objectStore.openCursor(keyRange);
+		var cursorRequest = index.openCursor(this.IDBKeyRange.only(parent.id));
+		
 		
 		cursorRequest.onsuccess = function(event) {
 			var cursor = event.target.result;
 			if(cursor) 
 			{
-				if (typeof cursor.value[TChild[0].key_test] != 'undefined')
-				{
-					if (cursor.value[TChild[0].key_test] == parent.id) parent[TChild[0].array_to_push].push(cursor.value);
-				}
-				else
-				{
-					console.log('ERROR attribute key_test ['+TChild[0].key_test+'] not exists in object store ['+TChild[0].storename+']', cursor.value);
-				}
-				
+				parent[TChild[0].array_to_push].push(cursor.value);
 				cursor.continue();
 			}
 			else
@@ -367,7 +384,24 @@ var DoliDb = function() {
 				for (var i in data)
 				{
 					data[i] = DoliDb.prototype.prepareItem(storename, data[i]);
-					objectStore.put(data[i]);
+					
+					var put_request = objectStore.put(data[i]);
+					put_request.onsuccess = function(event) {
+						var id = event.target.result;
+						var transaction = DoliDb.prototype.db.transaction(storename, "readwrite");
+						var objectStore = transaction.objectStore(storename);
+						
+						var request = objectStore.get(id.toString()); 
+						request.onsuccess = function() 
+						{
+							var item = request.result;
+							if (item) item = DoliDb.prototype.postItem(storename, item);
+							
+							//objectStore.put(item);
+						};
+						
+					};
+					
 				}
 			}
 		};
@@ -384,10 +418,49 @@ var DoliDb = function() {
 				item.keyname = item.name.toLowerCase();
 				break;
 			case 'proposal':
+				
 				break;
 		}
 		
 		return item;
+	};
+	
+	DoliDb.prototype.postItem = function(storename, item) {
+		switch (storename) {
+			case 'proposal':
+				this.addLines('proposal_line', 'fk_propal', item.id, item.lines);
+				break;
+			default:
+				break;
+		}
+		
+		return item;
+	};
+	
+	DoliDb.prototype.addLines = function(storename, indexKey, indexValue, TLine) {
+		var transaction = this.db.transaction(storename, "readwrite");
+		var objectStore = transaction.objectStore(storename);
+		var index = objectStore.index(indexKey);
+		
+		// Get all records who updated in local
+		var cursorRequest = index.openCursor(this.IDBKeyRange.only(indexValue));
+		
+		cursorRequest.onsuccess = function(event) {
+			var cursor = event.target.result;
+			
+			if(cursor)
+			{
+				objectStore.delete(cursor.key);
+				cursor.continue();
+			}
+			else
+			{
+				for (var i=0; i<TLine.length; i++)
+				{
+					objectStore.put(TLine[i]);
+				}
+			}
+		};
 	};
 	
 	DoliDb.prototype.close = function() {
