@@ -2,7 +2,7 @@
 	<div class="container-fluid">
 		<div  class="row">
 			<div class="input-group">
-				<input type="text" id="search-product" class="form-control" placeholder="Product" onchange="doliDb.getItemOnKey('product', this.value, ['label', 'id'], refreshProductList);" />
+				<input type="text" id="search-product" class="form-control" placeholder="Product" onchange="doliDb.getItemOnKey('product', this.value, ['label', 'id'], refreshProductList, '#product-list');" />
 				<span class="input-group-btn">
 					<button class="btn btn-default" type="button">
 						<langs trans="Go"></langs>
@@ -11,7 +11,7 @@
 		</div>
 
 		<div class="row">
-			<ul class="list-group">
+			<ul class="list-group list_product">
 
 			</ul>
 		</div>

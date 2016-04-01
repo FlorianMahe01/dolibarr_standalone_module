@@ -15,7 +15,7 @@ var DoliDb = function() {
 			return;
 		}
 		
-		var version = 14;
+		var version = 16;
 		var request = this.indexedDB.open(this.dbName, version); // Attention la version ne peut pas être inférieur à la dernière version
 		
 		request.onupgradeneeded = function (event) { // cette fonction doit normalement mettre à jour le schéma BDD sans qu'on soit obligé de modifier le numéro de version 
@@ -32,17 +32,20 @@ var DoliDb = function() {
 			
 			var objectStore = DoliDb.prototype.db.createObjectStore("product", { keyPath: "id", autoIncrement: true });
 			objectStore.createIndex("id", "id", { unique: true });
+			objectStore.createIndex("id_dolibarr", "id_dolibarr", { unique: false });
 			objectStore.createIndex("label", "label", { unique: false });
 			objectStore.createIndex("update_by_indexedDB", "update_by_indexedDB", { unique: false }); // INDEX OBLIGATOIRE POUR TOUS LES OBJETS
 			
 			var objectStore = DoliDb.prototype.db.createObjectStore("thirdparty", { keyPath: "id", autoIncrement: true });
 			objectStore.createIndex("id", "id", { unique: true });
+			objectStore.createIndex("id_dolibarr", "id_dolibarr", { unique: false });
 			objectStore.createIndex("name", "keyname", { unique: false });
 			objectStore.createIndex("create_by_indexedDB", "create_by_indexedDB", { unique: false });
 			objectStore.createIndex("update_by_indexedDB", "update_by_indexedDB", { unique: false });
 			
 			var objectStore = DoliDb.prototype.db.createObjectStore("actioncomm", { keyPath: "id", autoIncrement: true });
 			objectStore.createIndex("id", "id", { unique: true });
+			objectStore.createIndex("id_dolibarr", "id_dolibarr", { unique: false });
 			objectStore.createIndex("socid", "socid", { unique: false });
 			objectStore.createIndex("fk_project", "fk_project", { unique: false });
 			objectStore.createIndex("contactid", "contactid", { unique: false });
@@ -51,6 +54,7 @@ var DoliDb = function() {
 			
 			var objectStore = DoliDb.prototype.db.createObjectStore("proposal", { keyPath: "id", autoIncrement: true });
 			objectStore.createIndex("id", "id", { unique: true });
+			objectStore.createIndex("id_dolibarr", "id_dolibarr", { unique: false });
 			objectStore.createIndex("ref", "ref", { unique: true });
 			objectStore.createIndex("socid", "socid", { unique: false });
 			objectStore.createIndex("create_by_indexedDB", "create_by_indexedDB", { unique: false });
@@ -58,6 +62,7 @@ var DoliDb = function() {
 			
 			var objectStore = DoliDb.prototype.db.createObjectStore("proposal_line", { keyPath: "id", autoIncrement: true });
 			objectStore.createIndex("id", "id", { unique: true });
+			objectStore.createIndex("id_dolibarr", "id_dolibarr", { unique: false });
 			objectStore.createIndex("fk_propal", "fk_propal", { unique: false });
 			objectStore.createIndex("create_by_indexedDB", "create_by_indexedDB", { unique: false });
 			objectStore.createIndex("update_by_indexedDB", "update_by_indexedDB", { unique: false });
@@ -79,7 +84,7 @@ var DoliDb = function() {
 	    
 	};
 	
-	DoliDb.prototype.getAllItem = function(type, callback) {
+	DoliDb.prototype.getAllItem = function(type, callback, arg1) {
 		console.log('getAllItem : '+type, callback);
 		
 		var TItem = new Array;
@@ -100,7 +105,7 @@ var DoliDb = function() {
 			}
 			else
 			{
-				if (typeof callback !== 'undefined') callback(TItem);
+				if (typeof callback !== 'undefined') callback(TItem, arg1);
 				return false; // de toute manière c'est de l'asynchrone, donc ça sert à rien de return TItem
 			}
 		};
@@ -114,8 +119,8 @@ var DoliDb = function() {
 	DoliDb.prototype.getItem = function(storename, id, callback) {
 		var transaction = this.db.transaction(storename, "readonly");
 		var objectStore = transaction.objectStore(storename);
-		  
-		var request = objectStore.get(id.toString()); 
+
+		var request = objectStore.get(id); 
 		request.onsuccess = function() 
 		{
 			var item = request.result;
@@ -169,7 +174,7 @@ var DoliDb = function() {
 		var objectStore = transaction.objectStore(TChild[0].storename);
 		var index = objectStore.index(TChild[0].key_test);
 		
-		var cursorRequest = index.openCursor(this.IDBKeyRange.only(parent.id));
+		var cursorRequest = index.openCursor(this.IDBKeyRange.only(parent.id_dolibarr));
 		
 		
 		cursorRequest.onsuccess = function(event) {
@@ -187,7 +192,7 @@ var DoliDb = function() {
 		};
 	};
 	
-	DoliDb.prototype.getItemOnKey = function(storename, keyword, TKey, callback) {
+	DoliDb.prototype.getItemOnKey = function(storename, keyword, TKey, callback, arg1) {
 		keyword = keyword.toLowerCase();
 		var TItem = new Array;
 		
@@ -219,7 +224,7 @@ var DoliDb = function() {
 		    }
 		    else
 			{
-				if (typeof callback !== 'undefined') callback(TItem);
+				if (typeof callback !== 'undefined') callback(TItem, arg1);
 				return false; // de toute manière c'est de l'asynchrone, donc ça sert à rien de return TItem
 			}
 		};
@@ -227,20 +232,36 @@ var DoliDb = function() {
 	};
 	
 	
-	/*
-	 * A rechercher comment créer store + objet indexedDb
-	 */
-	/*
-	DoliDb.prototype.createItem = function(storename, id, TValue, callback){
+	DoliDb.prototype.createProposal = function(id_object, fk_soc) {
 		
-		var transaction = this.db.transaction(storename, "readwrite");
-		var objectStore = transaction.objectStore(storename);
+		if (typeof fk_soc == 'undefined' || !fk_soc) showMessage('Warning', 'Can\'t create a proposal without thirdparty id', 'warning');
 		
-		var request = 
+		var obj = {
+			create_by_indexedDB: 1
+			//,id: highest_id+1
+			,ref: '(PROV'+($.now)+')'
+			,socid: fk_soc
+		};
 		
+		var transaction = this.db.transaction('proposal', "readwrite");
+		var objectStore = transaction.objectStore('proposal');
 		
-	}
-	*/
+		/* 
+		 * TODO corriger l'ajout
+		 
+		var put_request = objectStore.put(obj);
+		put_request.onsuccess = function(event) {
+			var id = event.target.result;
+			console.log('id generated = ', id);
+			showItem('proposal', id, showProposal);
+		};
+		
+		put_request.onerror = function(event) {
+			console.log(event);
+			showMessage('Error', event.target.error.name+' : '+event.target.error.message, 'danger');
+		};
+		*/
+	};
 	
 	DoliDb.prototype.updateItem = function(storename, id, TValue, callback) {
 		
@@ -411,6 +432,8 @@ var DoliDb = function() {
 	};
 	
 	DoliDb.prototype.prepareItem = function(storename, item) {
+		item.id_dolibarr = item.id;
+		delete(item.id);
 		switch (storename) {
 			case 'product':
 				break;

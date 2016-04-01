@@ -22,6 +22,7 @@
 
 <div id="thirdparty-card"  class="tab-pane">
 	<input type="hidden" name="id" value="" />
+	<input type="hidden" name="id_dolibarr" value="" />
 	<input type="hidden" name="type" value="thirdparty" />
 	
 	<div class="container-fluid">
@@ -36,7 +37,7 @@
 		</div>
 		
 		<div class="">
-			<a data-toggle="tab" href="#proposal-card-create" type="button" class="btn btn-default move_tab" onclick="refreshProductList()">CreateProposal</a>
+			<a data-toggle="tab" href="#proposal-card-edit" type="button" class="btn btn-default move_tab" onclick="doliDb.createProposal($('#thirdparty-card').children('input[name=id]'), $('#thirdparty-card').children('input[name=id_dolibarr]'))">CreateProposal</a>
 			
 		</div>
 		

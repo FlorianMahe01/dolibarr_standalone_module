@@ -298,11 +298,11 @@ function takePicture() {
 	});
 }
 
-function showList(type, callback)
+function showList(type, callback, container)
 {
 	if (typeof callback != 'undefined')
 	{
-		doliDb.getAllItem(type, callback);
+		doliDb.getAllItem(type, callback, container);
 	}
 	else
 	{
@@ -312,14 +312,23 @@ function showList(type, callback)
 }
 
 
-function refreshProductList(TItem) 
+function refreshProductList(TItem, container, from) 
 {
 	var x = 0;
-	$('#product-list ul').empty();
+	container = $(container).find('.list_product');
+	container.empty();
 	for (var i in TItem)
 	{
-		var $li = $('<li class="list-group-item"><a data-toggle="tab" href="#product-card" onclick="javascript:showItem(\'product\', '+TItem[i].id+', showProduct)">'+TItem[i].label+'</a></li>');
-		$('#product-list ul').append($li);
+		switch (from){
+			case 'proposal':
+				var $li = $('<li class="list-group-item"><a data-toggle="tab" href="#product-card" onclick="javascript:addItem(\'product\', '+TItem[i].id+')">'+TItem[i].label+'</a></li>');
+				break;
+			default:
+				var $li = $('<li class="list-group-item"><a data-toggle="tab" href="#product-card" onclick="javascript:showItem(\'product\', '+TItem[i].id+', showProduct)">'+TItem[i].label+'</a></li>');
+				break;
+		}
+
+		$(container).append($li);
 		
 		if (x > 20) return;
 		else x++;
@@ -424,9 +433,9 @@ function showBill(item)
 function setItemInHTML($container, item) 
 {
 	$container.children('input[name=id]').val(item.id);
+	$container.children('input[name=id_dolibarr]').val(item.id_dolibarr);
 	for(var x in item) 
 	{
-		//console.log(x);
 		value = item[x];
 		$container.find('[rel='+x+']').html(value);
 	}
@@ -438,7 +447,7 @@ function refreshAssociateProposalList($container, TPropal)
 	$container.empty();
 	for (var i in TPropal)
 	{
-		var $li = $('<li><a data-toggle="tab" href="#proposal-card" onclick="javascript:showItem(\'proposal\', '+TPropal[i].id+', showProposal)">'+TPropal[i].ref+'</a></li>');
+		var $li = $('<li><a data-toggle="tab" href="#proposal-card" onclick="javascript:showItem(\'proposal\', '+TPropal[i].id_dolibarr+', showProposal)">'+TPropal[i].ref+'</a></li>');
 		$container.append($li);
 		
 		if (x > 10) return;
@@ -452,7 +461,7 @@ function refreshAssociateOrderList($container, TOrder)
 	$container.empty();
 	for (var i in TOrder)
 	{
-		var $li = $('<li><a data-toggle="tab" href="#proposal-card" onclick="javascript:showItem(\'order\', '+TOrder[i].id+', showOrder)">'+TOrder[i].ref+'</a></li>');
+		var $li = $('<li><a data-toggle="tab" href="#proposal-card" onclick="javascript:showItem(\'order\', '+TOrder[i].id_dolibarr+', showOrder)">'+TOrder[i].ref+'</a></li>');
 		$container.append($li);
 		
 		if (x > 10) return;
@@ -466,7 +475,7 @@ function refreshAssociateBillList($container, TBill)
 	$container.empty();
 	for (var i in TBill)
 	{
-		var $li = $('<li><a data-toggle="tab" href="#proposal-card" onclick="javascript:showItem(\'bill\', '+TBill[i].id+', showBill)">'+TBill[i].ref+'</a></li>');
+		var $li = $('<li><a data-toggle="tab" href="#proposal-card" onclick="javascript:showItem(\'bill\', '+TBill[i].id_dolibarr+', showBill)">'+TBill[i].ref+'</a></li>');
 		$container.append($li);
 		
 		if (x > 10) return;
@@ -477,7 +486,7 @@ function refreshAssociateBillList($container, TBill)
 function editProduct(item)
 {
 	var $container = $('#product-card-edit');
-	$container.children('input[name=id]').val(item.id);
+	$container.children('input[name=id]').val(item.id_dolibarr);
 	
 	for(var x in item) 
 	{
@@ -488,7 +497,7 @@ function editProduct(item)
 function editThirdparty(item)
 {
 	var $container = $('#thirdparty-card-edit');
-	$container.children('input[name=id]').val(item.id);
+	$container.children('input[name=id]').val(item.id_dolibarr);
 	
 	for(var x in item) 
 	{
@@ -499,7 +508,7 @@ function editThirdparty(item)
 function editProposal(item){
 
 	var $container = $('#proposal-card-edit');
-	$container.children('input[name=id]').val(item.id);
+	$container.children('input[name=id]').val(item.id_dolibarr);
 	
 	for(var x in item){
 		$container.find('[name='+x+']').val(item[x]);
@@ -554,6 +563,8 @@ function updateItem($container, type)
 	
 	doliDb.updateItem(type, id, TValue, callback);
 }
+
+
 
 function addLine(){
 	/*
