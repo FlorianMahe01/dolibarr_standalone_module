@@ -85,8 +85,6 @@ var DoliDb = function() {
 	};
 	
 	DoliDb.prototype.getAllItem = function(type, callback, arg1) {
-		console.log('getAllItem : '+type, callback);
-		
 		var TItem = new Array;
 		
 		var transaction = this.db.transaction([type], "readonly");
@@ -120,11 +118,12 @@ var DoliDb = function() {
 		var transaction = this.db.transaction(storename, "readonly");
 		var objectStore = transaction.objectStore(storename);
 
-		var request = objectStore.get(id); 
-		request.onsuccess = function() 
+		id = parseInt(id);
+		var request = objectStore.get(id);
+		request.onsuccess = function(event) 
 		{
-			var item = request.result;
-			if (item !== 'undefined') 
+			var item = event.target.result;
+			if (item) 
 			{
 				if (storename == 'thirdparty' || storename == 'proposal')
 				{
@@ -139,6 +138,7 @@ var DoliDb = function() {
 				showMessage('Warning', 'Item not found', 'warning');
 			}
 		};
+		
 	};
 	
 	DoliDb.prototype.getChildren = function (storename, parent, TChild, callback, args) {
@@ -273,18 +273,18 @@ var DoliDb = function() {
 	};
 	
 	DoliDb.prototype.updateItem = function(storename, id, TValue, callback) {
-		
 		var transaction = this.db.transaction(storename, "readwrite");
 		var objectStore = transaction.objectStore(storename);
-		  
-		var request = objectStore.get(id.toString()); 
+		
+		id = parseInt(id);
+		var request = objectStore.get(id); 
 		request.onsuccess = function(event) 
 		{
 			var item = event.target.result;
-			if (item !== 'undefined') 
+			if (item) 
 			{
 				$.extend(true, item, TValue);
-				item = DoliDb.prototype.prepareItem(storename, item);
+				item = DoliDb.prototype.prepareItem(storename, item, 'update');
 				item.update_by_indexedDB = 1; // ne pas utiliser la valeur true, indexedDb gère mal la recherche par boolean
 				
 				objectStore.put(item);
@@ -301,17 +301,17 @@ var DoliDb = function() {
 		
 	};
 	
+	// TODO à refondre : voir fonction sendData() dans app.js
 	DoliDb.prototype.sendAllUpdatedInLocal = function(TDataToSend) {
 		var storename = TDataToSend[0].type;
 		var TItem = new Array;
 		
-		var transaction = this.db.transaction(storename, "readwrite");
+		var transaction = this.db.transaction(storename, "readonly");
 		var objectStore = transaction.objectStore(storename);
 		var index = objectStore.index('update_by_indexedDB');
 		
-		// Get all records who updated in local
+		// Get all records who updated in local (update_by_indexedDB == 1)
 		var cursorRequest = index.openCursor(this.IDBKeyRange.only(1));
-		
 		cursorRequest.onsuccess = function(event) {
 			var cursor = event.target.result;
 			
@@ -342,7 +342,6 @@ var DoliDb = function() {
 				$container.children('textarea[name=TItem]').val(JSON.stringify(TItem));
 				
 				$container.submit();
-				console.log(TItem);
 				
 				//TODO voir pour récupérer le retour PHP 
 				var success = true;
@@ -362,32 +361,6 @@ var DoliDb = function() {
 					$(TDataToSend[0].container).append('<blockquote><span class="text-error" style="color:red">Error sync with "'+TDataToSend[0].type+'"</span></blockquote>');
 				}
 				
-				/*
-				$.ajax({
-					url: localStorage.interface_url
-					,dataType:'jsonp'
-					,data: {
-						put: storename
-						,jsonp: 1
-						,TItem: JSON.stringify(TItem)
-						,login:localStorage.dolibarr_login
-						,passwd:localStorage.dolibarr_password
-						,entity:1
-					}
-					,success: function(data) {
-					  	$(TDataToSend[0].container+' blockquote:last-child').append('<small class="text-info">'+TDataToSend[0].msg_end+' ('+TItem.length+')</small>'); // show info : done
-					  	
-					  	TDataToSend.splice(0, 1);
-					  	sendData(TDataToSend); // next sync
-					}
-					,error: function(xhr, ajaxOptions, thrownError) {
-						// TODO téchniquement on tombera jamais dans le error car pas de timeout défini, sauf qu'on peux pas le définir sinon on risque d'interrompre l'envoi des données
-						// @INFO finalement pour tomber dans le "error", il semblerait qu'un "return Void" côté PHP permet d'afficher ces messages
-						showMessage('Synchronization error', 'Sorry, we meet an error pending synchronization', 'danger');
-						$(TDataToSend[0].container).append('<blockquote><span class="text-error" style="color:red">Error sync with "'+TDataToSend[0].type+'"</span></blockquote>');
-					}
-				});*/
-
 			}
 		};
 	};
@@ -413,7 +386,7 @@ var DoliDb = function() {
 			{
 				for (var i in data)
 				{
-					data[i] = DoliDb.prototype.prepareItem(storename, data[i]);
+					data[i] = DoliDb.prototype.prepareItem(storename, data[i], 'add');
 					
 					var add_request = objectStore.add(data[i]);
 					add_request.onsuccess = function(event) {
@@ -440,9 +413,13 @@ var DoliDb = function() {
 		cursorRequest.onerror = DoliDb.prototype.indexedDB.onerror;
 	};
 	
-	DoliDb.prototype.prepareItem = function(storename, item) {
-		item.id_dolibarr = item.id;
-		delete(item.id);
+	DoliDb.prototype.prepareItem = function(storename, item, action) {
+		if (action == 'add')
+		{
+			item.id_dolibarr = item.id;
+			delete(item.id);
+		}
+		
 		switch (storename) {
 			case 'product':
 				break;

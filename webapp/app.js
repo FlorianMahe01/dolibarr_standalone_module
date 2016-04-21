@@ -143,6 +143,7 @@ function confirmClearDatabase(response)
 
 function saveConfig() {
 	
+	localStorage.domain = $('#domain').val();
 	localStorage.interface_url = $('#interface_url').val();	
 	localStorage.dolibarr_login = $('#dolibarr_login').val();	
 	localStorage.dolibarr_password = $('#dolibarr_password').val();	
@@ -203,6 +204,10 @@ function sendData(TDataToSend)
 {
 	if (TDataToSend.length > 0)
 	{
+		/*
+		 * TODO ugly => on devrais avoir un appel du genre doliDb->getAllItemByIndex(storename, index, callback)
+		 * exemple : doliDb->getAllItemByIndex('product', 'update_by_indexedDB', sendToDomain)
+		 */
 		doliDb.sendAllUpdatedInLocal(TDataToSend);
 	}
 	else
@@ -449,7 +454,7 @@ function refreshAssociateProposalList($container, TPropal)
 	$container.empty();
 	for (var i in TPropal)
 	{
-		var $li = $('<li><a data-toggle="tab" href="#proposal-card" onclick="javascript:showItem(\'proposal\', '+TPropal[i].id_dolibarr+', showProposal)">'+TPropal[i].ref+'</a></li>');
+		var $li = $('<li><a data-toggle="tab" href="#proposal-card" onclick="javascript:showItem(\'proposal\', '+TPropal[i].id+', showProposal)">'+TPropal[i].ref+'</a></li>');
 		$container.append($li);
 		
 		if (x > 10) return;
@@ -463,7 +468,7 @@ function refreshAssociateOrderList($container, TOrder)
 	$container.empty();
 	for (var i in TOrder)
 	{
-		var $li = $('<li><a data-toggle="tab" href="#proposal-card" onclick="javascript:showItem(\'order\', '+TOrder[i].id_dolibarr+', showOrder)">'+TOrder[i].ref+'</a></li>');
+		var $li = $('<li><a data-toggle="tab" href="#proposal-card" onclick="javascript:showItem(\'order\', '+TOrder[i].id+', showOrder)">'+TOrder[i].ref+'</a></li>');
 		$container.append($li);
 		
 		if (x > 10) return;
@@ -477,7 +482,7 @@ function refreshAssociateBillList($container, TBill)
 	$container.empty();
 	for (var i in TBill)
 	{
-		var $li = $('<li><a data-toggle="tab" href="#proposal-card" onclick="javascript:showItem(\'bill\', '+TBill[i].id_dolibarr+', showBill)">'+TBill[i].ref+'</a></li>');
+		var $li = $('<li><a data-toggle="tab" href="#proposal-card" onclick="javascript:showItem(\'bill\', '+TBill[i].id+', showBill)">'+TBill[i].ref+'</a></li>');
 		$container.append($li);
 		
 		if (x > 10) return;
@@ -576,3 +581,38 @@ function addLine(){
 	*/	
 	
 }
+
+
+/**
+ * Fonction de communication crossdomain
+ */
+function ReceiveMessage(evt) 
+{
+    var message;
+    
+    //localStorage.domain
+    if (evt.origin != localStorage.domain) {
+    	console.log('Crossdomain denied');
+    	showMessage('Accès non restreint', 'Nom de domain non autorisé, vérifiez votre configuration.', 'warning');
+    }
+    else {
+        console.log('Requete de : ', evt.origin);
+        console.log('Date returned : ', evt.data);
+        console.log(evt);
+    }
+   	
+    //evt.source.postMessage("thanks, got it ;)", event.origin);
+}
+
+if (window.addEventListener) 
+{
+	//alert("standards-compliant");
+	// For standards-compliant web browsers (ie9+)
+	window.addEventListener("message", ReceiveMessage, false);
+}
+else 
+{
+	//alert("not standards-compliant (ie8)");
+	window.attachEvent("onmessage", ReceiveMessage);
+}
+

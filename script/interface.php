@@ -63,8 +63,8 @@
 			$TProduct = GETPOST('TItem');
 			$TProduct = json_decode($TProduct);
 			
-			$TError = _updateDolibarr($user, $TProduct, 'Product');
-			__out($TError);
+			$response = _updateDolibarr($user, $TProduct, 'Product');
+			__out($response);
 			
 			break;
 			
@@ -72,14 +72,17 @@
 			$TSociete = GETPOST('TItem');
 			$TSociete = json_decode($TSociete);
 			
-			$TError = _updateDolibarr($user, $TSociete, 'Societe');
-			__out($TError);
+			$response = _updateDolibarr($user, $TSociete, 'Societe');
+			__out($response);
 			
 			break;
 			
 		case 'proposal':
-			__out('ok');
+			$TProposal = GETPOST('TItem');
+			$TProposal = json_decode($TProposal);
 			
+			$response = updateDolibarr($user, $TProposal, 'Proposal');
+			__out($response);
 			break;
 	}
 	
@@ -142,6 +145,7 @@ function _updateDolibarr(&$user, &$TObject, $classname)
 		$objDolibarr = new $classname($db);
 		// TODO Pour un gain de performance ça serait intéressant de ne pas faire de fetch, mais actuellement nécessaire pour éviter un retour d'erreur non géré pour le moment
 		$objDolibarr->fetch($objStd->id);
+		$objDolibarr->array_options = array(); // TODO pas encore géré
 		
 		foreach ($objStd as $attr => $value)
 		{
@@ -162,10 +166,20 @@ function _updateDolibarr(&$user, &$TObject, $classname)
 				break;
 		}
 		
+		$data = json_encode(array('classname == '.$classname));
+		$str = '<script type="text/javascript">
+					var data = '.$data.';
+					window.parent.postMessage(data, "*");
+				</script>';
+		return $str;
+		
+		/* TODO retour d'erreur non géré encore
 		if ($res < 0)
 		{
 			$TError[] = $langs->trans('');
 		}
+		 * 
+		 */
 	}
 	
 	return $TError;
