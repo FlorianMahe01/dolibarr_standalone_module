@@ -386,11 +386,11 @@ function addEventListenerOnItemLink()
 	});
 }
 
-function showItem(type, id, callback)
+function showItem(type, id, callback, args)
 {
 	if (typeof callback != 'undefined')
 	{
-		doliDb.getItem(type, id, callback);
+		doliDb.getItem(type, id, callback, args);
 	}
 	else
 	{
@@ -415,9 +415,11 @@ function showThirdparty(item)
 	$('a#last-thirdparty').html(item.name).closest('li').removeClass('hidden');
 }
 
-function showProposal(item)
+function showProposal(item, args)
 {
-	setItemInHTML($('#proposal-card'), item);
+	var container = $('#proposal-card');
+	if (typeof args != 'undefined' && typeof args.container != 'undefined') container = args.container;
+	setItemInHTML(container, item);
 }
 
 function showOrder(item)

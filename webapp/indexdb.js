@@ -116,7 +116,7 @@ var DoliDb = function() {
 	};
 	
 	
-	DoliDb.prototype.getItem = function(storename, id, callback) {
+	DoliDb.prototype.getItem = function(storename, id, callback, args) {
 		var transaction = this.db.transaction(storename, "readonly");
 		var objectStore = transaction.objectStore(storename);
 
@@ -128,11 +128,11 @@ var DoliDb = function() {
 			{
 				if (storename == 'thirdparty' || storename == 'proposal')
 				{
-					DoliDb.prototype.getChildren(storename, item, callback);
+					DoliDb.prototype.getChildren(storename, item, false, callback, args);
 				}
 				else
 				{
-					if (typeof callback != 'undefined') callback(item);
+					if (typeof callback != 'undefined') callback(item, args);
 					else return item;
 				}
 			} else {
@@ -141,8 +141,8 @@ var DoliDb = function() {
 		};
 	};
 	
-	DoliDb.prototype.getChildren = function (storename, parent, callback, TChild) {
-		if (typeof TChild == 'undefined')
+	DoliDb.prototype.getChildren = function (storename, parent, TChild, callback, args) {
+		if (TChild === false)
 		{
 			switch (storename) {
 				case 'thirdparty':
@@ -162,11 +162,11 @@ var DoliDb = function() {
 			}
 	}
 	
-		if (TChild.length > 0) this.setChild(storename, parent, TChild, callback);
-		else callback(parent);
+		if (TChild.length > 0) this.setChild(storename, parent, TChild, callback, args);
+		else callback(parent, args);
 	};
 	
-	DoliDb.prototype.setChild = function(storename, parent, TChild, callback) {
+	DoliDb.prototype.setChild = function(storename, parent, TChild, callback, args) {
 		
 		parent[TChild[0].array_to_push] = new Array;
 
@@ -187,7 +187,7 @@ var DoliDb = function() {
 			else
 			{
 				TChild.splice(0, 1);
-				DoliDb.prototype.getChildren(storename, parent, callback, TChild);
+				DoliDb.prototype.getChildren(storename, parent, TChild, callback, args);
 			}
 		};
 	};
@@ -208,7 +208,7 @@ var DoliDb = function() {
 		    	{
 		    		if (typeof cursor.value[TKey[i]] != 'undefined')
 		    		{
-		    			if (cursor.value[TKey[i]].toLowerCase().indexOf(keyword) !== -1) // search as "%keyword%"
+		    			if (cursor.value[TKey[i]].toString().toLowerCase().indexOf(keyword) !== -1) // search as "%keyword%"
 		    			{
 			    			TItem.push(cursor.value);
 			    			break;	
@@ -216,7 +216,7 @@ var DoliDb = function() {
 		    		}
 		    		else
 		    		{
-		    			console.log('ERROR attribute ['+TKey[i]+'] not exists in object store ['+storename+']', cursor.value);
+		    			console.log('WARNING attribute ['+TKey[i]+'] not exists in object store ['+storename+']', cursor.value);
 		    		}
 		    	}
 		    	
@@ -262,7 +262,7 @@ var DoliDb = function() {
 		add_request.onsuccess = function(event) {
 			var id = event.target.result;
 			console.log('id generated = ', id);
-			showItem('proposal', id, showProposal);
+			showItem('proposal', id, showProposal, {container: $('#proposal-card-edit')});
 		};
 		
 		add_request.onerror = function(event) {
