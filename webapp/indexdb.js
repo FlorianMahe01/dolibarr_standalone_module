@@ -234,33 +234,42 @@ var DoliDb = function() {
 	
 	DoliDb.prototype.createProposal = function(id_object, fk_soc) {
 		
-		if (typeof fk_soc == 'undefined' || !fk_soc) showMessage('Warning', 'Can\'t create a proposal without thirdparty id', 'warning');
+		if (typeof fk_soc == 'undefined' || !fk_soc) { 
+			showMessage('Warning', 'Can\'t create a proposal without thirdparty id', 'warning');
+			return;
+		}
 		
 		var obj = {
-			create_by_indexedDB: 1
-			//,id: highest_id+1
-			,ref: '(PROV'+($.now)+')'
+			ref: '(PROV'+($.now())+')'
 			,socid: fk_soc
+			,id_dolibarr:0
+			,name:''
+			,create_by_indexedDB:1
+			,update_by_indexedDB:0
 		};
 		
 		var transaction = this.db.transaction('proposal', "readwrite");
+		transaction.oncomplete = function(event) {
+			console.log('Transaction completed: database modification finished.', event);
+		};
+		transaction.onerror = function(event) {
+			console.log('Transaction not opened due to error. Duplicate items not allowed.', event);
+		};
+		
 		var objectStore = transaction.objectStore('proposal');
 		
-		/* 
-		 * TODO corriger l'ajout
-		 
-		var put_request = objectStore.put(obj);
-		put_request.onsuccess = function(event) {
+		var add_request = objectStore.add(obj);
+		add_request.onsuccess = function(event) {
 			var id = event.target.result;
 			console.log('id generated = ', id);
 			showItem('proposal', id, showProposal);
 		};
 		
-		put_request.onerror = function(event) {
+		add_request.onerror = function(event) {
 			console.log(event);
 			showMessage('Error', event.target.error.name+' : '+event.target.error.message, 'danger');
 		};
-		*/
+		
 	};
 	
 	DoliDb.prototype.updateItem = function(storename, id, TValue, callback) {
@@ -406,8 +415,8 @@ var DoliDb = function() {
 				{
 					data[i] = DoliDb.prototype.prepareItem(storename, data[i]);
 					
-					var put_request = objectStore.put(data[i]);
-					put_request.onsuccess = function(event) {
+					var add_request = objectStore.add(data[i]);
+					add_request.onsuccess = function(event) {
 						var id = event.target.result;
 						var transaction = DoliDb.prototype.db.transaction(storename, "readwrite");
 						var objectStore = transaction.objectStore(storename);
@@ -417,7 +426,7 @@ var DoliDb = function() {
 						{
 							var item = request.result;
 							if (item) item = DoliDb.prototype.postItem(storename, item);
-							
+							// TODO le postItem est là pour ajouter des infos ou les modifier si nécessaire, à voir plus tard si on en a besoin
 							//objectStore.put(item);
 						};
 						
