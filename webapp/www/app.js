@@ -55,7 +55,8 @@ function init()
 {
 	if(localStorage.interface_url) 
  	{  
- 		$('#interface_url').val(localStorage.interface_url); 
+ 		if(localStorage.domain) $('#domain').val(localStorage.domain);
+ 		if(localStorage.interface_url) $('#interface_url').val(localStorage.interface_url); 
 	 	if(localStorage.dolibarr_login) { $('#dolibarr_login').val(localStorage.dolibarr_login); }
 	 	if(localStorage.dolibarr_password) { $('#dolibarr_password').val(localStorage.dolibarr_password); }
  	}
