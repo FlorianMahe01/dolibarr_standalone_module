@@ -1,0 +1,112 @@
+<nav class="navbar navbar-fixed-top navbar-default" id="navigation" role="navigation">
+	<div class="container-fluid">
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#menu-standalone" aria-expanded="false">
+				<span class="sr-only">Toggle navigation</span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</button>
+			<a id="home_link" data-toggle="tab" href="#home" class="navbar-brand hidden-sm hidden-md hidden-lg">Home</a>
+			<!-- Logo si connexion à internet -->
+			<span class="is-online glyphicon glyphicon-globe navbar-brand hidden-sm hidden-md hidden-lg"></span>
+
+		</div>
+
+				
+		<!-- Définition du menu du haut -->
+		<div id="menu-standalone" class="collapse navbar-collapse">
+			
+			<ul class="nav navbar-nav text-xs-center" role="tablist">
+				<!-- Définition du lien "Home" -->
+				<li>
+					<a href="#home" role="tab" data-toggle="tab"><langs trans="Home"></langs></a>
+				</li>
+				
+				<!-- Définition du sous menu "Products" -->
+				<li class="dropdown">
+					<a data-toggle="dropdown" href="#" class="dropdown-toggle col-xs-12" ><langs trans="Products"></langs>&nbsp;<span class="caret"></span></a>
+					<ul class="dropdown-menu text-xs-center">
+						<li class="hidden">
+							<a id="last-product" href="#product-card" role="tab" data-toggle="tab" class="col-xs-12 navbar-inverse last_item">Product</a>
+						</li>
+						<li>
+							<a data-toggle="tab" href="#product-list" onclick="javascript:showList('product', refreshProductList, '#product-list');" class="col-xs-12 navbar-inverse"><langs trans="SearchProduct"></langs></a>
+						</li>
+					</ul>
+				</li>
+				
+				<!-- Définition du sous menu "Thirdparties" -->
+				<li class="dropdown">
+					<a data-toggle="dropdown" href="#" class="dropdown-toggle col-xs-12"><langs trans="Thirdparties"></langs>&nbsp;<span class="caret"></span></a>
+					<ul class="dropdown-menu text-xs-center">
+						<!-- Définition lien "Dernier client consulté" -->
+						<li class="hidden">
+							<a id="last-thirdparty" href="#thirdparty-card" role="tab" data-toggle="tab" class="col-xs-12 navbar-inverse last_item">Customer</a>
+						</li>
+						<li>
+							<a data-toggle="tab" href="#thirdparty-list" onclick="javascript:showList('thirdparty', refreshThirdpartyList);" class="col-xs-12 navbar-inverse"><langs trans="SearchThirparty"></langs></a>
+						</li>
+						<li>
+							<a data-toggle="tab" href="#thirdparty-card" class="col-xs-12 navbar-inverse create_item"><langs trans="CreateThirparty"></langs></a>
+						</li>
+					</ul>
+				</li>
+				
+				<!-- Définition du sous menu "Proposals" -->
+				
+				<!--
+				<li class="dropdown">
+					<a data-toggle="dropdown" href="#" class="dropdown-toggle col-xs-12"><langs trans="Proposals"></langs>&nbsp;<span class="caret"></span></a>
+					<ul class="dropdown-menu text-xs-center">
+						<li class="hidden">
+							<a id="last-proposal" data-toggle="tab" href="#proposal-card" role="tab" class="col-xs-12 navbar-inverse last_item">Proposal</a>
+						</li>
+						<li>
+							<a data-toggle="tab" href="#proposal-list" onclick="javascript:showList('proposal', refreshProposalList);" class="col-xs-12 navbar-inverse"><langs trans="SearchProposal"></langs></a>
+						</li>
+						<li>
+							<a data-toggle="tab" href="#proposal-card" class="col-xs-12 navbar-inverse create_item"><langs trans="CreateProposal"></langs></a>
+						</li>
+						
+					</ul>
+				</li>
+				-->
+				
+				
+				<!-- Définition du sous menu "Configuration" -->
+				<li class="dropdown navbar-right">
+					<a data-toggle="dropdown" href="#"  class="dropdown-toggle col-xs-12">
+						<span class="glyphicon glyphicon-cog hidden-xs"></span>
+						<span class="navbar-text hidden-sm hidden-md hidden-lg"><langs trans="Parameters"></langs></span>
+						<span class="caret"></span>
+					</a>
+					<ul class="dropdown-menu text-xs-center">
+						<li>
+							<a data-toggle="tab" href="#config" class="col-xs-12 navbar-inverse"><langs trans="Params"></langs></a>
+						</li>
+						<li>
+							<a data-toggle="tab" onclick="javascript:synchronize()" href="#synchronize-page" class="btn col-xs-12 navbar-inverse"><langs trans="Synchronize"></langs></a>
+						</li>
+						<li>
+							<a href="javascript:disconnect()" class="col-xs-12 navbar-inverse"><langs trans="Disconnect"></langs></a>
+						</li>
+					</ul>
+				</li>
+				
+				<!-- Logo si connexion à internet -->
+				<li class="hidden-xs navbar-right">
+					<p class="navbar-text">
+						<span class="glyphicon glyphicon-globe is-online"></span>
+					</p>
+				</li>
+				
+				
+				
+				
+				
+			</ul>
+		</div>
+		
+	</div>
+</nav>

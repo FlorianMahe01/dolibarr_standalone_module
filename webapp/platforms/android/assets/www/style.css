@@ -1,0 +1,138 @@
+#menu-standalone {
+	max-height:inherit;
+}
+.list-group>:nth-child(odd),.alternate>:nth-child(odd) { 
+	background: #5f6e7d; 
+}
+.alternate>:nth-child(odd):hover { 
+	background: #3d4c5b; 
+}
+.list-group a {
+	color:#fff;
+}
+ul li.active a {
+	color:#000;
+}
+.list-group .running {
+	background: #dff0d8; 
+}
+
+.list-group .running div.container-fluid,.list-group .running a {
+	color:#000;
+}
+
+body {
+	padding-top:70px;
+}
+li span.client {
+	background-color: #006600;
+}
+li span.fournisseur {
+	background-color: #006666;
+}
+.btn-circle {
+  width: 30px;
+  height: 30px;
+  text-align: center;
+  padding: 6px 0;
+  font-size: 12px;
+  line-height: 1.428571429;
+  border-radius: 15px;
+}
+
+.btn-circle.btn-lg {
+  width: 50px;
+  height: 50px;
+  padding: 10px 16px;
+  font-size: 18px;
+  line-height: 1.33;
+  border-radius: 25px;
+}
+.btn-circle.btn-xl {
+  width: 70px;
+  height: 70px;
+  padding: 10px 16px;
+  font-size: 24px;
+  line-height: 1.33;
+  border-radius: 35px;
+}
+
+.link_edit {
+	position :absolute;
+	right : 30px;
+	bottom : 30px;
+}
+
+.online {
+	font-weight: normal;
+	color:white;
+}
+
+.offline {
+	font-weight: bold;
+	color:#cc5555 !important;
+}
+
+.dropdown-menu > li > a {
+	height:55px !important;
+	line-height:48px !important;
+}
+
+.text-xs-left { text-align: left; }
+.text-xs-right { text-align: right; }
+.text-xs-center { text-align: center; }
+.text-xs-justify { text-align: justify; }
+
+@media (min-width: @screen-sm-min) {
+    .text-sm-left { text-align: left; }
+    .text-sm-right { text-align: right; }
+    .text-sm-center { text-align: center; }
+    .text-sm-justify { text-align: justify; }
+}
+
+@media (min-width: @screen-md-min) {
+    .text-md-left { text-align: left; }
+    .text-md-right { text-align: right; }
+    .text-md-center { text-align: center; }
+    .text-md-justify { text-align: justify; }
+}
+
+@media (min-width: @screen-lg-min) {
+    .text-lg-left { text-align: left; }
+    .text-lg-right { text-align: right; }
+    .text-lg-center { text-align: center; }
+    .text-lg-justify { text-align: justify; }
+}
+
+.modal-content {
+	border-radius:6px;
+}
+
+.bootstrap-dialog .modal-header {
+	border-top-left-radius:4px;
+	border-top-right-radius:4px;
+}
+
+.bootstrap-dialog.type-danger .modal-header {
+	background-color:#d9534f;
+}
+
+.bootstrap-dialog.type-warning .modal-header {
+	background-color:#f0ad4e;
+}
+
+.bootstrap-dialog.type-success .modal-header {
+	background-color:#5cb85c;
+}
+
+.bootstrap-dialog.type-primary .modal-header {
+	background-color:#337ab7;
+}
+
+.bootstrap-dialog.type-info .modal-header {
+	background-color:#5bc0de;
+}
+
+.bootstrap-dialog.type-default .modal-header {
+	background-color:#fff;
+}

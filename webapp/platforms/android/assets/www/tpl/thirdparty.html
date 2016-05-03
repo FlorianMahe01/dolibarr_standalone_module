@@ -1,0 +1,185 @@
+<div id="thirdparty-list" class="tab-pane">
+	<div class="container-fluid">
+		<div  class="row">
+
+			<div class="input-group">
+				<input type="text" id="search-thirdparty" class="form-control" placeholder="Thirdparty" onchange="doliDb.getItemOnKey('thirdparty', this.value, ['name', 'id'], refreshThirdpartyList);" />
+				<span class="input-group-btn">
+					<button class="btn btn-default" type="button">
+						<langs trans="Go"></langs>
+					</button> </span>
+			</div><!-- /input-group -->
+		</div>
+
+		<div class="row">
+			<ul class="list-group">
+
+			</ul>
+		</div>
+
+	</div>
+</div>
+
+<div id="thirdparty-card"  class="tab-pane">
+	<input type="hidden" name="id" value="" />
+	<input type="hidden" name="id_dolibarr" value="" />
+	<input type="hidden" name="type" value="thirdparty" />
+	
+	<div class="container-fluid">
+		<div  class="row">
+			<h1 rel="name"></h1>
+			<div rel="address"></div>
+			<div>
+				<span rel="zip"></span>
+				&nbsp;&nbsp;<span rel="town"></span>
+			</div>
+
+		</div>
+		
+		<div class="">
+			<a data-toggle="tab" href="#proposal-card-edit" type="button" class="btn btn-default move_tab" onclick="doliDb.createProposal($('#thirdparty-card').children('input[name=id]').val(), $('#thirdparty-card').children('input[name=id_dolibarr]').val());">CreateProposal</a>
+			
+		</div>
+		
+		<div class="doc_associate">
+			
+			<ul class="nav navbar-nav text-xs-center alternate list-group" role="tablist">
+				<!-- Liste des propositions commerciales associés au client -->
+				<li class="dropdown clearfix btn-default">
+					<a data-toggle="dropdown" href="#" class="dropdown-toggle col-xs-12 btn"><langs trans="Proposals"></langs>&nbsp;<span class="caret"></span></a>
+					<ul class="dropdown-menu text-xs-center doc_associate_proposals">
+						
+					</ul>
+				</li>
+				
+				<!-- Liste des commandes associés au client -->
+				<li class="dropdown clearfix btn-default">
+					<a data-toggle="dropdown" href="#" class="dropdown-toggle col-xs-12 btn" ><langs trans="Orders"></langs>&nbsp;<span class="caret"></span></a>
+					<ul class="dropdown-menu text-xs-center doc_associate_orders">
+						
+					</ul>
+				</li>
+				
+				<!-- Liste des factures associés au client -->
+				<li class="dropdown clearfix btn-default">
+					<a data-toggle="dropdown" href="#" class="dropdown-toggle col-xs-12 btn" ><langs trans="Bills"></langs>&nbsp;<span class="caret"></span></a>
+					<ul class="dropdown-menu text-xs-center doc_associate_bills">
+						
+					</ul>
+				</li>
+			</ul>
+		</div>
+
+	</div>
+	
+	<a data-toggle="tab" href="#thirdparty-card-edit" class="link_edit move_tab">
+		<button type="button" class="btn btn-primary btn-circle btn-lg btn-edit" onclick="showItem('thirdparty', $('#thirdparty-card input[name=id]').val(), editThirdparty);">
+			<i class="glyphicon glyphicon-pencil"></i>
+		</button>
+	</a>
+</div>
+
+<div id="thirdparty-card-edit" class="tab-pane">
+	<input type="hidden" name="id" value="" />
+	
+	<div class="container-fluid">
+
+		<form class="form-horizontal">
+			<div class="form-group">
+				
+				<!-- Nom -->
+				<label for="name" class="col-sm-2 control-label"><langs trans="ThirdpartyName"></langs></label>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" name="name" placeholder="" />
+				</div>
+				
+				<!-- Town -->
+				<label for="town" class="col-sm-2 control-label"><langs trans="ThirdpartyAddress"></langs></label>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" name="town"/>
+				</div>
+				
+				<!-- Adresse -->
+				<label for="address" class="col-sm-2 control-label"><langs trans="ThirdpartyAddress"></langs></label>
+				<div class="col-sm-10">
+					<textarea class="form-control" rows="5" name="address"></textarea>
+				</div>
+				
+				<!-- Code Postal-->
+				<label for="cp" class="col-sm-2 control-label"><langs trans="ThirdpartyCodePostal"></langs></label>
+				<div class="col-sm-10" >
+					<input type="text" class="form-control" name="zip"/>
+				</div>
+				
+				
+				<!-- Mail-->
+				<label for="mail" class="col-sm-2 control-label"><langs trans="ThirdpartyMail"></langs></label>
+				<div class="col-sm-10" >
+					<input type="text" class="form-control" name="email"/>
+				</div>
+				
+				<!-- Phone-->
+				<label for="phone" class="col-sm-2 control-label"><langs trans="ThirdpartyMail"></langs></label>
+				<div class="col-sm-10" >
+					<input type="text" class="form-control" name="phone"/>
+				</div>
+				
+				<!-- Prospect/Client -->
+				<label for="prospect" class="col-sm-2 control-label"><langs trans="ThirdpartyProspect"></langs></label>
+				<div class="col-sm-10">
+					<select class="form-control" name="prospect">
+						<option value="-1">
+							
+						</option>
+						<option value="2">
+							Prospect
+						</option>
+						<option value="3">
+							Prospect / Client
+						</option>
+						<option value="1">
+							Client
+						</option>
+						<option value="0">
+							Ni client, ni prospect
+						</option>
+						
+					</select>
+				</div>
+				
+				<!-- Fournisseur -->
+				<label for="fournisseur" class="col-sm-2 control-label"><langs trans="ThirdpartyFournisseur"></langs></label>
+				<div class="col-sm-10">
+					<select class="form-control" name="fournisseur">
+						<option>
+							
+						</option>
+						<option>
+							oui
+						</option>
+						<option>
+							non
+						</option>
+						
+					</select>
+				</div>
+				
+				
+				
+				
+				<!-- Permet d'éviter le chevauchement du dernier input sous les boutons d'actions en bas de l'écran -->
+				<div>&nbsp;</div>
+				<div>&nbsp;</div>
+				<div>&nbsp;</div>
+			</div>
+			
+		</form>
+		
+	</div>
+	
+	<div class="row navbar-fixed-bottom">
+		<a data-toggle="tab" href="#thirdparty-card" class="btn btn-default col-xs-6 move_tab"><langs trans="Cancel"></langs></a>
+		<a data-toggle="tab" href="#thirdparty-card" onclick="updateItem($('#thirdparty-card-edit'), 'thirdparty');" class="btn btn-success col-xs-6 move_tab"><langs trans="Update"></langs></a>
+	</div>
+	
+</div>
