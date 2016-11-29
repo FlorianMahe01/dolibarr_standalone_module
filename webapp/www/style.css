@@ -104,35 +104,3 @@ li span.fournisseur {
     .text-lg-justify { text-align: justify; }
 }
 
-.modal-content {
-	border-radius:6px;
-}
-
-.bootstrap-dialog .modal-header {
-	border-top-left-radius:4px;
-	border-top-right-radius:4px;
-}
-
-.bootstrap-dialog.type-danger .modal-header {
-	background-color:#d9534f;
-}
-
-.bootstrap-dialog.type-warning .modal-header {
-	background-color:#f0ad4e;
-}
-
-.bootstrap-dialog.type-success .modal-header {
-	background-color:#5cb85c;
-}
-
-.bootstrap-dialog.type-primary .modal-header {
-	background-color:#337ab7;
-}
-
-.bootstrap-dialog.type-info .modal-header {
-	background-color:#5bc0de;
-}
-
-.bootstrap-dialog.type-default .modal-header {
-	background-color:#fff;
-}

@@ -55,7 +55,8 @@ function init()
 {
 	if(localStorage.interface_url) 
  	{  
- 		$('#interface_url').val(localStorage.interface_url); 
+ 		if(localStorage.domain) $('#domain').val(localStorage.domain);
+ 		if(localStorage.interface_url) $('#interface_url').val(localStorage.interface_url); 
 	 	if(localStorage.dolibarr_login) { $('#dolibarr_login').val(localStorage.dolibarr_login); }
 	 	if(localStorage.dolibarr_password) { $('#dolibarr_password').val(localStorage.dolibarr_password); }
  	}
@@ -159,7 +160,7 @@ function saveConfig() {
 			,entity:1
 		}
 	  	,dataType:'jsonp'
-	  	,timeout: 1250 // Le test côté PHP pour vérifier que le login/mdp/entity correspond bien à un utilisateur prend 1sec, pour entrer la fonction d'erreur je suis obligé de définir un timeout (cas où l'url de l'interface est fausse)
+	  	,timeout: 10000 // Le test côté PHP pour vérifier que le login/mdp/entity correspond bien à un utilisateur prend 1sec, pour entrer la fonction d'erreur je suis obligé de définir un timeout (cas où l'url de l'interface est fausse)
 	  	,success: function(res) {
 	  		console.log(res);
 			if (res == 'ok') showMessage('Confirmation', 'Configuration saved and connection is right !', 'success');
