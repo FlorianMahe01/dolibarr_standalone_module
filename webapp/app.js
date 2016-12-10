@@ -46,7 +46,7 @@ function tpl_append(url,container) {
 
 function addToListThirdparty(item) {
 	
-	$li = $('<li class="list-group-item"><a href="javascript:dolibarr.indexedDB.getItem(\'thirdparty\', '+item.id+', showThirdparty)">'+item.name+'</a></li>');
+	var $li = $('<li class="list-group-item"><a href="javascript:dolibarr.indexedDB.getItem(\'thirdparty\', '+item.id+', showThirdparty)">'+item.name+'</a></li>');
 	
 	if(item.client == 1) $li.append('<span class="badge client">C</span>');
 	if(item.fournisseur == 1) $li.append('<span class="badge fournisseur">F</span>');
@@ -139,7 +139,7 @@ function _sync_product() {
   
 }
 function _synchronize_local_product(tx) {
-	for(x in TProduct) {
+	for(var x in TProduct) {
 		item = TProduct[x];
 		
 		dolibarr.indexedDB.addProduct(item);
@@ -148,7 +148,7 @@ function _synchronize_local_product(tx) {
 	
 }
 function _synchronize_local_thirdparty(tx) {
-	for(x in TThirdParty) {
+	for(var x in TThirdParty) {
 		item = TThirdParty[x];
 		
 		dolibarr.indexedDB.addThirdparty(item);
@@ -234,8 +234,8 @@ function refreshproductList() {
 
 function setItemInHTML($container, item) {
 	
-	for(x in item) {
-		value = item[x];
+	for(var x in item) {
+		value = item[x];console.log(x);
 		$container.find('[rel='+x+']').html(value);
 	}
 	
@@ -247,7 +247,7 @@ function showProduct(item) {
 function showThirdparty(item) {
 	showItem(item, 'thirdparty-card');
 	console.log(item);
-	$a = $('a[href="#thirdparty-card"]');
+	var $a = $('a#last-thirdparty');
 	$a.html(item.name);
 	$a.tab('show');
 	$a.closest('li').removeClass('hidden');

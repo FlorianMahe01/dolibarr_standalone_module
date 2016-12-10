@@ -174,7 +174,7 @@ dolibarr.indexedDB.getItem = function (storename, id, callbackfct) {
 	  var db = dolibarr.indexedDB.db;
 	  var trans = db.transaction(storename, "readwrite");
 	  var store = trans.objectStore(storename);
-	 
+	  
 	  var request = store.get(id.toString()); 
 	  request.onsuccess = function() {
 		  var matching = request.result;
