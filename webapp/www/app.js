@@ -27,6 +27,7 @@ function load_tpl()
 		,['tpl/product.html', '#container']
 		,['tpl/thirdparty.html', '#container']
 		,['tpl/proposal.html', '#container']
+                ,['tpl/propal_product.html', '#container']
 		,['tpl/formtosenddata.html', 'body']
 	];
 	
@@ -579,11 +580,33 @@ function addLine(){
 	 *TODO au clic sur un <li> de la propal, on ajoute la ligne comme proposal_line.
 	 * On crée un tableau propal_lignes auquel on ajoute la ligne
 	 * On ajoute ensuite chaque ligne au <ul> sur la fiche d'édition de propale  
-	*/	
-	
+	*/
+    var line;
+    
 }
 
+function addbouton(){
+    el=document.getElementById('product-list-propal').firstElementChild.firstElementChild.firstElementChild.firstElementChild.firstElementChild;
+    spanbt=document.createElement('span');
+    spanbt.setAttribute('class','AddListBtn'); 
+    bt=document.createElement('button');
+    bt.setAttribute('class','btn btn-default');
+    bt.setAttribute('type','button');
+    btspan=document.createElement('span');
+    btspan.setAttribute('class','glyphicon glyphicon-plus-sign');
+    btspan.setAttribute('aria-hidden','true');
+    bt.appendChild(btspan);
+    spanbt.appendChild(bt);
+    el.appendChild(spanbt);
+    /*<span class="input-group-btn">
+	<button class="btn btn-default" type="button">
+						<span class="glyphicon glyphicon-align-left" aria-hidden="true"></span>
+					</button> </span>*/
 
+}
+function testconsole(){
+    console.log("apres addbutton");
+}
 /**
  * Fonction de communication crossdomain
  */
