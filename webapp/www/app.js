@@ -27,7 +27,8 @@ function load_tpl()
 		,['tpl/product.html', '#container']
 		,['tpl/thirdparty.html', '#container']
 		,['tpl/proposal.html', '#container']
-                ,['tpl/propal_product.html', '#container']
+    ,['tpl/propal_product.html', '#container']
+    ,['tpl/prospect.html', '#container']
 		,['tpl/formtosenddata.html', 'body']
 	];
 	
