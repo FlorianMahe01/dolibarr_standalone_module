@@ -247,7 +247,6 @@ var DoliDb = function() {
 			,create_by_indexedDB:1
 			,update_by_indexedDB:0
 		};
-		
 		var transaction = this.db.transaction('proposal', "readwrite");
 		transaction.oncomplete = function(event) {
 			console.log('Transaction completed: database modification finished.', event);
@@ -263,6 +262,46 @@ var DoliDb = function() {
 			var id = event.target.result;
 			console.log('id generated = ', id);
 			showItem('proposal', id, showProposal, {container: $('#proposal-card-edit')});
+		};
+		
+		add_request.onerror = function(event) {
+			console.log(event);
+			showMessage('Error', event.target.error.name+' : '+event.target.error.message, 'danger');
+		};
+		
+	};
+        
+        DoliDb.prototype.createProspect = function(id_object, fk_soc) {
+		
+		if (typeof fk_soc == 'undefined' || !fk_soc) { 
+			showMessage('Warning', 'Can\'t create a proposal without thirdparty id', 'warning');
+			return;
+		}
+		
+		var obj = {
+			ref: '(PROS'+($.now())+')'
+			,socid: fk_soc
+			,id_dolibarr:0
+			,name:''
+			,create_by_indexedDB:1
+			,update_by_indexedDB:0
+		};
+
+		var transaction = this.db.transaction('prospect', "readwrite");
+		transaction.oncomplete = function(event) {
+			console.log('Transaction completed: database modification finished.', event);
+		};
+		transaction.onerror = function(event) {
+			console.log('Transaction not opened due to error. Duplicate items not allowed.', event);
+		};
+		
+		var objectStore = transaction.objectStore('prospect');
+		
+		var add_request = objectStore.add(obj);
+		add_request.onsuccess = function(event) {
+			var id = event.target.result;
+			console.log('id generated = ', id);
+			showItem('prospect', id, showProspect, {container: $('#prospect-card-edit')});
 		};
 		
 		add_request.onerror = function(event) {
@@ -300,6 +339,16 @@ var DoliDb = function() {
 		};
 		
 	};
+        
+        DoliDb.prototype.addItem = function(storename,item, callbackfct) {
+                var transaction = this.db.transaction(storename, "readwrite");
+                var objectStore = transaction.objectStore(storename);                
+                item = DoliDb.prototype.prepareItem(storename, item, 'add');
+                item.update_by_indexedDB = 1; 
+                showMessage('Add', "Item is inserted", 'success');
+                if (typeof callback != 'undefined') callback(item);
+                else return item;
+        };
 	
 	// TODO à refondre : voir fonction sendData() dans app.js
 	DoliDb.prototype.sendAllUpdatedInLocal = function(TDataToSend) {
