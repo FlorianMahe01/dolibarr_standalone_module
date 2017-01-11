@@ -43,7 +43,7 @@
 			<a data-toggle="tab" href="#proposal-card-add" type="button" class="btn btn-default move_tab col-xs-3 btn" onclick="doliDb.createProposal($('#thirdparty-card').children('input[name=id]').val(), $('#thirdparty-card').children('input[name=id_dolibarr]').val());">Proposal</a>
                         <a data-toggle="tab" href="#order-card-edit" type="button" class="btn btn-default move_tab col-xs-3 btn" onclick="doliDb.createOrder($('#thirdparty-card').children('input[name=id]').val(), $('#thirdparty-card').children('input[name=id_dolibarr]').val());">Order</a>
                         <a data-toggle="tab" href="#bill-card-edit" type="button" class="btn btn-default move_tab col-xs-3 btn" onclick="doliDb.createBill($('#thirdparty-card').children('input[name=id]').val(), $('#thirdparty-card').children('input[name=id_dolibarr]').val());">Bill</a>
-                        <a data-toggle="tab" href="#prospect-card-add" type="button" class="btn btn-default move_tab col-xs-3 btn" onclick="doliDb.createProspect($('#thirdparty-card').children('input[name=id]').val(), $('#thirdparty-card').children('input[name=id_dolibarr]').val());">Prospect</a>
+                        <a data-toggle="tab" href="#contact-card-add" type="button" class="btn btn-default move_tab col-xs-3 btn" onclick="doliDb.createContact($('#thirdparty-card').children('input[name=id]').val(), $('#thirdparty-card').children('input[name=id_dolibarr]').val());">Contact</a>
 		</div>
 		
                 <div>
@@ -79,8 +79,8 @@
                                 
                                 <!-- Liste des contacts associés au client -->
 				<li class="dropdown clearfix btn-default">
-					<a data-toggle="dropdown" href="#" class="dropdown-toggle col-xs-12 btn" ><langs trans="Prospects"></langs>&nbsp;<span class="caret"></span></a>
-					<ul class="dropdown-menu text-xs-center doc_associate_prospects">
+					<a data-toggle="dropdown" href="#" class="dropdown-toggle col-xs-12 btn" ><langs trans="Contacts"></langs>&nbsp;<span class="caret"></span></a>
+					<ul class="dropdown-menu text-xs-center doc_associate_contacts">
 						
 					</ul>
 				</li>
@@ -141,9 +141,9 @@
 				</div>
 				
 				<!-- Prospect/Client -->
-				<label for="prospect" class="col-sm-2 control-label"><langs trans="Prospects"></langs></label>
+				<label for="contact" class="col-sm-2 control-label"><langs trans="Contacts"></langs></label>
 				<div class="col-sm-10">
-					<select class="form-control" name="prospect">
+					<select class="form-control" name="contact">
 						<option value="-1">
 							
 						</option>
