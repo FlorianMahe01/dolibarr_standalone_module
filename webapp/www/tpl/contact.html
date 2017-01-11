@@ -1,9 +1,9 @@
-<div id="prospect-list" class="tab-pane">
+<div id="contact-list" class="tab-pane">
 	<div class="container-fluid">
 		<div  class="row">
 
 			<div class="input-group">
-				<input type="text" id="search-prospect" class="form-control" placeholder="prospect" onchange="doliDb.getItemOnKey('prospect', this.value, ['name', 'id'], refreshprospectList);" />
+				<input type="text" id="search-contact" class="form-control" placeholder="contact" onchange="doliDb.getItemOnKey('contact', this.value, ['name', 'id'], refreshcontactList);" />
 			</div><!-- /input-group -->
 		</div>
 
@@ -16,15 +16,17 @@
 	</div>
 </div>
 
-<div id="prospect-card"  class="tab-pane">
+<div id="contact-card"  class="tab-pane">
 	<input type="hidden" name="id" value="" />
 	<input type="hidden" name="id_dolibarr" value="" />
-	<input type="hidden" name="type" value="prospect" />
+	<input type="hidden" name="type" value="contact" />
 	
 	<div class="container-fluid">
 		<div  class="row">
                     <h1 rel="name"></h1> <h2 rel ="firstname"> </h2>
-                        <div rel="phone"></div>
+                        <div rel="Home phone"></div>
+                        <div rel="Professonnal phone"></div>
+                        <div rel="Mobile phone"></div>
 			<div rel="address"></div>
 			<div>
 				<span rel="zip"></span>
@@ -33,14 +35,14 @@
 		</div>
 	</div>
 	
-	<a data-toggle="tab" href="#prospect-card-edit" class="link_edit move_tab">
-		<button type="button" class="btn btn-primary btn-circle btn-lg btn-edit" onclick="showItem('prospect', $('#prospect-card input[name=id]').val(), editProspect);">
+	<a data-toggle="tab" href="#contact-card-edit" class="link_edit move_tab">
+		<button type="button" class="btn btn-primary btn-circle btn-lg btn-edit" onclick="showItem('contact', $('#contact-card input[name=id]').val(), editContact);">
 			<i class="glyphicon glyphicon-pencil"></i>
 		</button>
 	</a>
 </div>
 
-<div id="prospect-card-edit" class="tab-pane">
+<div id="contact-card-edit" class="tab-pane">
 	<input type="hidden" name="id" value="" />
 	
 	<div class="container-fluid">
@@ -85,7 +87,19 @@
 				</div>
 				
 				<!-- Phone-->
-				<label for="phone" class="col-sm-2 control-label"><langs trans="Phone"></langs></label>
+				<label for="phone" class="col-sm-2 control-label"><langs trans="Home phone"></langs></label>
+				<div class="col-sm-10" >
+					<input type="text" class="form-control" name="phone"/>
+				</div>
+                                
+                                <!-- Phone-->
+				<label for="phone" class="col-sm-2 control-label"><langs trans="Professonal phone"></langs></label>
+				<div class="col-sm-10" >
+					<input type="text" class="form-control" name="phone"/>
+				</div>
+                                
+                                <!-- Phone-->
+				<label for="phone" class="col-sm-2 control-label"><langs trans="Mobile phone"></langs></label>
 				<div class="col-sm-10" >
 					<input type="text" class="form-control" name="phone"/>
 				</div>
@@ -101,13 +115,13 @@
 	</div>
 	
 	<div class="row navbar-fixed-bottom">
-		<a data-toggle="tab" href="#prospect-card" class="btn btn-default col-xs-6 move_tab"><langs trans="Cancel"></langs></a>
-		<a data-toggle="tab" href="#prospect-card" onclick="updateItem($('#prospect-card-edit'), 'prospect');" class="btn btn-success col-xs-6 move_tab"><langs trans="Update"></langs></a>
+		<a data-toggle="tab" href="#contact-card" class="btn btn-default col-xs-6 move_tab"><langs trans="Cancel"></langs></a>
+		<a data-toggle="tab" href="#contact-card" onclick="updateItem($('#contact-card-edit'), 'contact');" class="btn btn-success col-xs-6 move_tab"><langs trans="Update"></langs></a>
 	</div>	
 </div>
 
 
-<div id="prospect-card-add" class="tab-pane">
+<div id="contact-card-add" class="tab-pane">
 	<input type="hidden" name="id" value="" />
 	
 	<div class="container-fluid">
@@ -151,8 +165,20 @@
 					<input type="text" class="form-control" name="email"/>
 				</div>
 				
-				<!-- Phone-->
-				<label for="phone" class="col-sm-2 control-label"><langs trans="Phone"></langs></label>
+								<!-- Phone-->
+				<label for="phone" class="col-sm-2 control-label"><langs trans="Home phone"></langs></label>
+				<div class="col-sm-10" >
+					<input type="text" class="form-control" name="phone"/>
+				</div>
+                                
+                                <!-- Phone-->
+				<label for="phone" class="col-sm-2 control-label"><langs trans="Professonal phone"></langs></label>
+				<div class="col-sm-10" >
+					<input type="text" class="form-control" name="phone"/>
+				</div>
+                                
+                                <!-- Phone-->
+				<label for="phone" class="col-sm-2 control-label"><langs trans="Mobile phone"></langs></label>
 				<div class="col-sm-10" >
 					<input type="text" class="form-control" name="phone"/>
 				</div>
@@ -168,7 +194,7 @@
 	</div>
 	
 	<div class="row navbar-fixed-bottom">
-		<a data-toggle="tab" href="#prospect-card" class="btn btn-default col-xs-6 move_tab"><langs trans="Cancel"></langs></a>
-		<a data-toggle="tab" href="#prospect-card" onclick="updateItem($('#prospect-card-add'), 'prospect');" class="btn btn-success col-xs-6 move_tab"><langs trans="Add prospect"></langs></a>
+		<a data-toggle="tab" href="#contact-card" class="btn btn-default col-xs-6 move_tab"><langs trans="Cancel"></langs></a>
+		<a data-toggle="tab" href="#contact-card" onclick="updateItem($('#contact-card-add'), 'contact');" class="btn btn-success col-xs-6 move_tab"><langs trans="Add contact"></langs></a>
 	</div>
 </div>

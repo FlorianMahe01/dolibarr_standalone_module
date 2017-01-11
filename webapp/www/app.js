@@ -28,7 +28,7 @@ function load_tpl()
 		,['tpl/thirdparty.html', '#container']
 		,['tpl/proposal.html', '#container']
     ,['tpl/propal_product.html', '#container']
-    ,['tpl/prospect.html', '#container']
+    ,['tpl/contact.html', '#container']
 		,['tpl/formtosenddata.html', 'body']
 	];
 	
@@ -430,9 +430,9 @@ function showProposal(item, args)
 	setItemInHTML(container, item);
 }
 
-function showProspect(item, args)
+function showContact(item, args)
 {
-	var container = $('#prospect-card');
+	var container = $('#contact-card');
 	if (typeof args != 'undefined' && typeof args.container != 'undefined') container = args.container;
 	setItemInHTML(container, item);
 }
@@ -576,8 +576,8 @@ function updateItem($container, type)
 		case 'proposal':
 			var callback = showProposal;
 			break;
-                case 'prospect' :
-                        var callback = showProspect;
+                case 'contact' :
+                        var callback = showContact;
 			break;
 	}
 	
@@ -605,8 +605,8 @@ function addItem($container, type)
 		case 'proposal':
 			var callback = showProposal;
 			break;
-                case 'prospect' :
-                        var callback = showProspect;
+                case 'contact' :
+                        var callback = showContact;
 			break;
 	}
 	
