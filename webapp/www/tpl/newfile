@@ -1,0 +1,13 @@
+el=document.getElementById('product-list-propal').firstElementChild.firstElementChild.nextElementSibling.firstElementChild/*.firstElementChild*/;
+    spanbt=document.createElement('span');
+    spanbt.setAttribute('class','AddListBtn');
+    spanbt.setAttribute('style','float:right;')
+    bt=document.createElement('button');
+    bt.setAttribute('class','btn-circle btn btn-warning');
+    bt.setAttribute('type','button');
+    btspan=document.createElement('span');
+    btspan.setAttribute('class','glyphicon glyphicon-plus-sign');
+    btspan.setAttribute('aria-hidden','true');
+    bt.appendChild(btspan);
+    spanbt.appendChild(bt);
+    el.appendChild(spanbt);
