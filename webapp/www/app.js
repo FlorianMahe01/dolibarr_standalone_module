@@ -1,6 +1,3 @@
-$(document).ready(function() {
-
-});
 			
 function _checkOnline() 
 {
@@ -323,8 +320,8 @@ function showList(type, callback, container)
 function refreshProductList(TItem, container, from) 
 {
 	var x = 0;
-	container = $(container).find('.list_product');
-	container.empty();
+	ulcontainer = $(container).find('.list_product');
+	ulcontainer.empty();
 	for (var i in TItem)
 	{
 		switch (from){
@@ -336,11 +333,14 @@ function refreshProductList(TItem, container, from)
 				break;
 		}
 
-		$(container).append($li);
+		$(ulcontainer).append($li);
 		
 		if (x > 20) return;
 		else x++;
 	}
+        if (container == '#product-list-propal') {
+            addBoutons();
+        }
 	
 	addEventListenerOnItemLink();
 }
@@ -625,15 +625,25 @@ function addLine(){
     
 }
 
-function addbouton(){
-    $('ul.list-group.list_product').children('.list-group-item').append('<span class="AddListBtn" style="float:right;"><button class="btn-circle btn btn-warning" type="button" onclick="modifySelect(this)" value=0><span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span></button></span>');    
+function addBoutons(){
+    /*
+     * insert dans la liste des produits pour la propal des boutons afin de les selectionner pour savoir ceux à ajouter, on sélectionne la quantité a posteriori
+     */
+    $('#product-list-propal ul.list_product li.list-group-item').append('<span class="AddListBtn" style="float:right;"><button class="btn-circle btn btn-warning" type="button" onclick="modifySelect(this)" value=0><span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span></button></span>');    
 }
 
 function modifySelect(param){
-    if(param.val()==0) 
-       param.val(1);
-    else 
-       param.val(0);
+    if($(param).val()==0) 
+    {   
+        $(param).val(1);
+        $(param).css("color:red");
+    }
+    else
+    {
+       $(param).val(0);
+       $(param).css("color:orange");
+    }
+   
 }
 function testconsole(){
     console.log("apres addbutton");
