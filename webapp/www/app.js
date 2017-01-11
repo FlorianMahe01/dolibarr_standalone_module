@@ -25,7 +25,7 @@ function load_tpl()
 		,['tpl/thirdparty.html', '#container']
 		,['tpl/proposal.html', '#container']
     ,['tpl/propal_product.html', '#container']
-    ,['tpl/prospect.html', '#container']
+    ,['tpl/contact.html', '#container']
 		,['tpl/formtosenddata.html', 'body']
 	];
 	
@@ -430,6 +430,13 @@ function showProposal(item, args)
 	setItemInHTML(container, item);
 }
 
+function showContact(item, args)
+{
+	var container = $('#contact-card');
+	if (typeof args != 'undefined' && typeof args.container != 'undefined') container = args.container;
+	setItemInHTML(container, item);
+}
+
 function showOrder(item)
 {
 	setItemInHTML($('#order-card'), item);
@@ -569,9 +576,41 @@ function updateItem($container, type)
 		case 'proposal':
 			var callback = showProposal;
 			break;
+                case 'contact' :
+                        var callback = showContact;
+			break;
 	}
 	
 	doliDb.updateItem(type, id, TValue, callback);
+}
+
+function addItem($container, type)
+{
+	var id = $container.children('input[name=id]').val();
+	var TInput = $container.find('form').find('input, textarea'); // TODO liste à faire évoluer si on ajouter des select ou autres
+	var TValue = {};
+	
+	for (var i=0; i<TInput.length; i++)
+	{
+		TValue[TInput[i].name] = TInput[i].value;
+	}
+	
+	switch (type) {
+		case 'product':
+			var callback = showProduct;
+			break;
+		case 'thirdparty':
+			var callback = showThirdparty;
+			break;
+		case 'proposal':
+			var callback = showProposal;
+			break;
+                case 'contact' :
+                        var callback = showContact;
+			break;
+	}
+	
+	doliDb.addItem(type, id, TValue, callback);
 }
 
 
