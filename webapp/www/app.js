@@ -586,23 +586,14 @@ function addLine(){
 }
 
 function addbouton(){
-    el=document.getElementById('product-list-propal').firstElementChild.firstElementChild.firstElementChild.firstElementChild.firstElementChild;
-    spanbt=document.createElement('span');
-    spanbt.setAttribute('class','AddListBtn'); 
-    bt=document.createElement('button');
-    bt.setAttribute('class','btn btn-default');
-    bt.setAttribute('type','button');
-    btspan=document.createElement('span');
-    btspan.setAttribute('class','glyphicon glyphicon-plus-sign');
-    btspan.setAttribute('aria-hidden','true');
-    bt.appendChild(btspan);
-    spanbt.appendChild(bt);
-    el.appendChild(spanbt);
-    /*<span class="input-group-btn">
-	<button class="btn btn-default" type="button">
-						<span class="glyphicon glyphicon-align-left" aria-hidden="true"></span>
-					</button> </span>*/
+    $('ul.list-group.list_product').children('.list-group-item').append('<span class="AddListBtn" style="float:right;"><button class="btn-circle btn btn-warning" type="button" onclick="modifySelect(this)" value=0><span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span></button></span>');    
+}
 
+function modifySelect(param){
+    if(param.val()==0) 
+       param.val(1);
+    else 
+       param.val(0);
 }
 function testconsole(){
     console.log("apres addbutton");
