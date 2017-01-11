@@ -27,7 +27,8 @@ function load_tpl()
 		,['tpl/product.html', '#container']
 		,['tpl/thirdparty.html', '#container']
 		,['tpl/proposal.html', '#container']
-                ,['tpl/prospect.html', '#container']
+    ,['tpl/propal_product.html', '#container']
+    ,['tpl/prospect.html', '#container']
 		,['tpl/formtosenddata.html', 'body']
 	];
 	
@@ -580,11 +581,24 @@ function addLine(){
 	 *TODO au clic sur un <li> de la propal, on ajoute la ligne comme proposal_line.
 	 * On crée un tableau propal_lignes auquel on ajoute la ligne
 	 * On ajoute ensuite chaque ligne au <ul> sur la fiche d'édition de propale  
-	*/	
-	
+	*/
+    var line;
+    
 }
 
+function addbouton(){
+    $('ul.list-group.list_product').children('.list-group-item').append('<span class="AddListBtn" style="float:right;"><button class="btn-circle btn btn-warning" type="button" onclick="modifySelect(this)" value=0><span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span></button></span>');    
+}
 
+function modifySelect(param){
+    if(param.val()==0) 
+       param.val(1);
+    else 
+       param.val(0);
+}
+function testconsole(){
+    console.log("apres addbutton");
+}
 /**
  * Fonction de communication crossdomain
  */
