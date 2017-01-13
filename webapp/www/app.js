@@ -533,7 +533,7 @@ function editProposal(item){
 }
 
 function createItem($container, type){
-	var id = $containe.children('input[name=id]').val();
+	var id = $container.children('input[name=id]').val();
 	var TInput = $container.find('form').find('input, text');
 	var TValue = {};
 	
@@ -551,6 +551,10 @@ function createItem($container, type){
 		case 'proposal':
 			var callback = showProposal;
 			break;
+                case 'contact' :
+                        var callback = showContact;
+			break;
+                        
 	}
 	doliDb.createItem(type, id, TValue, callback);
 }
@@ -584,36 +588,10 @@ function updateItem($container, type)
 	doliDb.updateItem(type, id, TValue, callback);
 }
 
-function addItem($container, type)
+function createContact()
 {
-	var id = $container.children('input[name=id]').val();
-	var TInput = $container.find('form').find('input, textarea'); // TODO liste à faire évoluer si on ajouter des select ou autres
-	var TValue = {};
-	
-	for (var i=0; i<TInput.length; i++)
-	{
-		TValue[TInput[i].name] = TInput[i].value;
-	}
-	
-	switch (type) {
-		case 'product':
-			var callback = showProduct;
-			break;
-		case 'thirdparty':
-			var callback = showThirdparty;
-			break;
-		case 'proposal':
-			var callback = showProposal;
-			break;
-                case 'contact' :
-                        var callback = showContact;
-			break;
-	}
-	
-	doliDb.addItem(type, id, TValue, callback);
+    doliDb.createContact($('#thirdparty-card').children('input[name=id]').val(), $('#thirdparty-card').children('input[name=id_dolibarr]').val());
 }
-
-
 
 function addLine(){
 	/*
