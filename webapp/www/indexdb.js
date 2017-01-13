@@ -841,6 +841,5 @@ var DoliDb = function () {
  req.onblocked = function () {
  console.log("Couldn't delete database due to the operation being blocked");
  };
- 
- };
  */
+ };
