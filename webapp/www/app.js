@@ -396,8 +396,11 @@ function createItem($container, type) {
         case 'proposal':
             var callback = showProposal;
             break;
+        case 'contact' :
+            var callback = showContact;
+            break;
     }
-    doliDb.createItem(type, id, TValue, callback);
+    doliDb.createItem(type, TValue, callback);
 }
 
 function updateItem($container, type)

@@ -40,6 +40,12 @@ var DoliDb = function () {};
             } catch (e) {
                 console.log(e);
             }
+            
+            try {
+                DoliDb.prototype.db.deleteObjectStore("contact");
+            } catch (e) {
+                console.log(e);
+            }
 
             var objectStore = DoliDb.prototype.db.createObjectStore("product", {keyPath: "id", autoIncrement: true});
             objectStore.createIndex("id", "id", {unique: true});
@@ -50,6 +56,14 @@ var DoliDb = function () {};
             var objectStore = DoliDb.prototype.db.createObjectStore("thirdparty", {keyPath: "id", autoIncrement: true});
             objectStore.createIndex("id", "id", {unique: true});
             objectStore.createIndex("id_dolibarr", "id_dolibarr", {unique: false});
+            objectStore.createIndex("name", "keyname", {unique: false});
+            objectStore.createIndex("create_by_indexedDB", "create_by_indexedDB", {unique: false});
+            objectStore.createIndex("update_by_indexedDB", "update_by_indexedDB", {unique: false});
+            
+            var objectStore = DoliDb.prototype.db.createObjectStore("contact", {keyPath: "id", autoIncrement: true});
+            objectStore.createIndex("id", "id", {unique: true});
+            objectStore.createIndex("id_dolibarr", "id_dolibarr", {unique: false});
+            objectStore.createIndex("fk_thirdparty", "fk_thirdparty", {unique: false});
             objectStore.createIndex("name", "keyname", {unique: false});
             objectStore.createIndex("create_by_indexedDB", "create_by_indexedDB", {unique: false});
             objectStore.createIndex("update_by_indexedDB", "update_by_indexedDB", {unique: false});
@@ -105,19 +119,18 @@ var DoliDb = function () {};
         var transaction = this.db.transaction(storename, "readwrite");
         var objectStore = transaction.objectStore(storename);
 
-            
-            //item = DoliDb.prototype.prepareItem(storename, item, 'add');
-            item.update_by_indexedDB = 1;
-            res=objectStore.add(item);
-            //item.id = res.result;   
-               
-            console.log('Create', 'The current record has been created', 'success');
-            if (typeof callback != 'undefined') {
-                callback(item);
-            }
-            else {
-                return item;               
-            }
+
+        //item = DoliDb.prototype.prepareItem(storename, item, 'add');
+        item.update_by_indexedDB = 1;
+        res=objectStore.add(item); 
+
+        showMessage('Create', 'The current record has been created', 'success');
+        if (typeof callback != 'undefined') {
+            callback(item);
+        }
+        else {
+            return item;               
+        }
     };
 
 
@@ -238,7 +251,7 @@ var DoliDb = function () {};
             showMessage('Warning', 'Can\'t create a proposal without thirdparty id', 'warning');
             return;
         }
-
+        
         var obj = {
             ref: '(PROV' + ($.now()) + ')'
             , socid: fk_soc
@@ -258,14 +271,15 @@ var DoliDb = function () {};
         var objectStore = transaction.objectStore('proposal');
 
         var add_request = objectStore.add(obj);
+        
         add_request.onsuccess = function (event) {
             var id = event.target.result;
             console.log('id generated = ', id);
-            showItem('proposal', id, showProposal, {container: $('#proposal-card-edit')});
+            showItem('proposal', id, showProposal, {container: $('#proposal-card-add')});
         };
 
         add_request.onerror = function (event) {
-            console.log(event);
+            console.log('event',event);
             showMessage('Error', event.target.error.name + ' : ' + event.target.error.message, 'danger');
         };
 
@@ -278,15 +292,16 @@ var DoliDb = function () {};
             showMessage('Warning', 'Can\'t create a contact without thirdparty id', 'warning');
             return;
         }
-           /*
+        /*
         var obj = {
             ref: '(PROV' + ($.now()) + ')'
-            , socid: fk_soc
+            , fk_thirdparty: fk_soc
             , id_dolibarr: 0
             , name: ''
             , create_by_indexedDB: 1
             , update_by_indexedDB: 0
-        };
+        };    
+        =>Faut-il le faire lors de la création d'un contact ?
         
         var transaction = this.db.transaction('contact', "readwrite");
         transaction.oncomplete = function (event) {
@@ -306,10 +321,9 @@ var DoliDb = function () {};
         };
 
         add_request.onerror = function (event) {
-            console.log(event);
             showMessage('Error', event.target.error.name + ' : ' + event.target.error.message, 'danger');
-        };
-        */
+        };*/
+        
 
     };
 
