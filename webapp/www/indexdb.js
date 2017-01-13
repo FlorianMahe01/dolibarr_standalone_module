@@ -31,7 +31,7 @@ var DoliDb = function () {};
 
             try {
                 DoliDb.prototype.db.deleteObjectStore("thirdparty");
-            } catch (e) {
+            } catch (e) { 1 conflict 
                 console.log(e);
             }
 
@@ -854,5 +854,7 @@ var DoliDb = function () {};
  console.log("Couldn't delete database due to the operation being blocked");
  };
  */
+
+
 
 

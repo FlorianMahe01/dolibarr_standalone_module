@@ -1,23 +1,23 @@
-<body  onload="addbouton()"><div id="product-list-propal" class="tab-pane">
-	<div class="container-fluid">
-		<div  class="row">
-			<div class="input-group">
-				<input type="text" id="search-product" class="form-control" placeholder="Product" onchange="doliDb.getItemOnKey('product', this.value, ['label', 'id', 'ref'], refreshProductList, '#product-list');" />
-				<span class="input-group-btn">
-					<button class="btn btn-default" type="button">
-						<span class="glyphicon glyphicon-align-left" aria-hidden="true"></span>
-					</button> </span>
-			</div>
-		</div>
+<div id="product-list-propal" class="tab-pane">
+    <div class="container-fluid">
+        <div  class="row">
+            <div class="input-group">
+                <input type="text" id="search-product" class="form-control" placeholder="Product" onchange="doliDb.getItemOnKey('product', this.value, ['label', 'id', 'ref'], refreshProductList, '#product-list');" />
+                <span class="input-group-btn">
+                    <button class="btn btn-default" type="button">
+                        <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                    </button> </span>
+            </div>
+        </div>
 
-		<div class="row">
-			<ul class="list-group list_product">
+        <div class="row">
+            <ul class="list-group list_product">
 
-			</ul>
-		</div>
-	</div>
+            </ul>
+        </div>
     </div>
-<script type="text/javascript" >
-addbouton();
-</script>
-</body>
+    <div class="row navbar-fixed-bottom">
+        <a data-toggle="tab" href="#proposal-card-edit" class="btn btn-default col-xs-6 move_tab"><langs trans="Cancel"></langs></a>
+        <a data-toggle="tab" href="#proposal-card-edit" class="btn btn-success col-xs-6 move_tab"onclick="addItemToPropal()"><langs trans="Valider"></langs></a>
+    </div>
+</div>
