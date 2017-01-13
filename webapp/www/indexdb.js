@@ -31,7 +31,7 @@ var DoliDb = function () {};
 
             try {
                 DoliDb.prototype.db.deleteObjectStore("thirdparty");
-            } catch (e) { 1 conflict 
+            } catch (e) { 
                 console.log(e);
             }
 
@@ -101,8 +101,7 @@ var DoliDb = function () {};
            
     };
 
-    DoliDb.prototype.createItem = function (storename, item, callback) {
-  console.log(this.db);      
+    DoliDb.prototype.createItem = function (storename, item, callback) {      
         var transaction = this.db.transaction(storename, "readwrite");
         var objectStore = transaction.objectStore(storename);
 
@@ -119,8 +118,8 @@ var DoliDb = function () {};
             else {
                 return item;               
             }
-        //};
     };
+
 
     DoliDb.prototype.getAllItem = function (type, callback, arg1) {
         var TItem = new Array;
@@ -274,12 +273,12 @@ var DoliDb = function () {};
 
 
 
-    DoliDb.prototype.createContact = function (id_object, fk_soc) {
+     DoliDb.prototype.createContact = function (fk_soc) {
         if (typeof fk_soc == 'undefined' || !fk_soc) {
             showMessage('Warning', 'Can\'t create a contact without thirdparty id', 'warning');
             return;
         }
-
+           /*
         var obj = {
             ref: '(PROV' + ($.now()) + ')'
             , socid: fk_soc
@@ -288,7 +287,7 @@ var DoliDb = function () {};
             , create_by_indexedDB: 1
             , update_by_indexedDB: 0
         };
-
+        
         var transaction = this.db.transaction('contact', "readwrite");
         transaction.oncomplete = function (event) {
             console.log('Transaction completed: database modification finished.', event);
@@ -310,8 +309,11 @@ var DoliDb = function () {};
             console.log(event);
             showMessage('Error', event.target.error.name + ' : ' + event.target.error.message, 'danger');
         };
+        */
 
     };
+
+
 
     DoliDb.prototype.updateItem = function (storename, id, TValue, callback) {
         var transaction = this.db.transaction(storename, "readwrite");
