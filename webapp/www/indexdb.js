@@ -1,8 +1,6 @@
 /* Pseudo class DB */
 var DoliDb = function () {};
 
-            
-
     DoliDb.prototype.indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
     DoliDb.prototype.IDBTransaction = window.IDBTransaction || window.webkitIDBTransaction || window.msIDBTransaction;
     DoliDb.prototype.IDBKeyRange = window.IDBKeyRange || window.webkitIDBKeyRange || window.msIDBKeyRange;
@@ -19,7 +17,8 @@ var DoliDb = function () {};
 
         var version = 16;
         var request = this.indexedDB.open(this.dbName, version); // Attention la version ne peut pas être inférieur à la dernière version
-
+        
+       
         request.onupgradeneeded = function (event) { // cette fonction doit normalement mettre à jour le schéma BDD sans qu'on soit obligé de modifier le numéro de version 
             DoliDb.prototype.db = event.currentTarget.result;
 
@@ -115,7 +114,7 @@ var DoliDb = function () {};
            
     };
 
-    DoliDb.prototype.createItem = function (storename, item, callback) {      
+    DoliDb.prototype.createItem = function (storename, item, callback) {   
         var transaction = this.db.transaction(storename, "readwrite");
         var objectStore = transaction.objectStore(storename);
 
@@ -123,7 +122,6 @@ var DoliDb = function () {};
         //item = DoliDb.prototype.prepareItem(storename, item, 'add');
         item.update_by_indexedDB = 1;
         res=objectStore.add(item); 
-
         showMessage('Create', 'The current record has been created', 'success');
         if (typeof callback != 'undefined') {
             callback(item);
